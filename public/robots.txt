@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://vfsvp.fr/sitemap.xml 
