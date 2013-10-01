@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://simonc.github.io/vfsvp.fr/blog/archives/</loc>
+        <loc>http://vfsvp.fr/blog/archives/</loc>
         <lastmod>2013-10-01T09:51:04+02:00</lastmod>
     </url>
     <url>
-        <loc>http://simonc.github.io/vfsvp.fr/</loc>
+        <loc>http://vfsvp.fr/</loc>
         <lastmod>2013-10-01T09:50:38+02:00</lastmod>
     </url>
     <url>
-        <loc>http://simonc.github.io/vfsvp.fr/robots.txt</loc>
+        <loc>http://vfsvp.fr/robots.txt</loc>
         <lastmod>2013-10-01T09:57:27+02:00</lastmod>
     </url>
 </urlset>

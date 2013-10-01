@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://simonc.github.io/vfsvp.fr/sitemap.xml 
+Sitemap: http://vfsvp.fr/sitemap.xml 

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[VF svp]]></title>
-  <link href="http://simonc.github.io/vfsvp.fr/atom.xml" rel="self"/>
-  <link href="http://simonc.github.io/vfsvp.fr/"/>
-  <updated>2013-10-01T11:42:49+02:00</updated>
-  <id>http://simonc.github.io/vfsvp.fr/</id>
+  <link href="http://vfsvp.fr/atom.xml" rel="self"/>
+  <link href="http://vfsvp.fr/"/>
+  <updated>2013-10-01T12:02:59+02:00</updated>
+  <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
     
