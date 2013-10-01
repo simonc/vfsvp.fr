@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[VF svp]]></title>
+  <link href="http://simonc.github.io/vfsvp.fr/atom.xml" rel="self"/>
+  <link href="http://simonc.github.io/vfsvp.fr/"/>
+  <updated>2013-10-01T11:38:29+02:00</updated>
+  <id>http://simonc.github.io/vfsvp.fr/</id>
+  <author>
+    <name><![CDATA[Simon Courtois (simonc)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
