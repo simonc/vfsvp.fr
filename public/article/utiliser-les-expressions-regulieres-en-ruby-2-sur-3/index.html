@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Utiliser les Expressions Régulières en Ruby (2/3) - VF svp</title>
+  <meta name="author" content="Simon Courtois (simonc)">
+
+  
+  <meta name="description" content="Note: Ceci est une traduction de l&#8217;article publié en anglais sur le
+blog de Blue Box. L&#8217;auteur chez Blue Box Nell Shamrell travaille chez &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">VF svp</a></h1>
+  
+    <h2>En français dans le texte</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vfsvp.fr" />
+    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Utiliser les Expressions Régulières en Ruby (2/3)</h1>
+    
+    
+      <p class="meta">
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3" data-via="happynoff" data-counturl="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      </p>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-08T00:30:00+02:00" pubdate data-updated="true">08/09/2013</time>
+        
+        
+         | <a href="#disqus_thread">Commentaires</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>Note:</strong> Ceci est une traduction de l&#8217;article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/">blog de Blue Box</a>.</p>
+
+<!-- more -->
+
+
+<h2>L&#8217;auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu&#8217;Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l&#8217;Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l&#8217;environnement dynamique de la création d&#8217;applications logicielles. Dans ces
+deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l&#8217;art martial appelé Naginata.</p>
+
+<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
+
+<!-- more -->
+
+
+<h2>Les LookArounds</h2>
+
+<p>Les lookarounds me permettent d&#8217;aller plus loin que la simple comparaison avec
+un modèle. En effet, ils offrent la possibilité de donner un contexte à cette
+comparaison. Une expression contenant un lookaround ne retourne un résultat que
+lorsqu&#8217;elle est effectuée dans ce contexte.</p>
+
+<p>Soit une nouvelle chaîne de caractère, une autre citation d&#8217;Obiwan Kenobi dans
+Star Wars.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;Who&#39;s the more foolish?  The fool or the fool who follows him?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je veux connaître tous les emplacements du mot &ldquo;fool&rdquo; dans cette chaîne. Je vais
+donc utiliser l&#8217;expression régulière <code>/fool/</code>. Dans ce cas précis, je vais
+utiliser la méthode <code>scan</code> sur ma chaîne. Cette méthode retourne toutes les
+occurrences de mon expression dans la chaîne :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/fool/</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;fool&quot;, &quot;fool&quot;, &quot;fool&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Comme on peut le voir, scan retourne une partie du mot &ldquo;foolish&rdquo; et les deux
+occurrences du mot &ldquo;fool&rdquo;.</p>
+
+<p>Comment fait-on si l&#8217;on souhaite que notre modèle <code>/fool/</code> retourne un résultat
+seulement s&#8217;il fait partie du mot &ldquo;foolish&rdquo; ? Pour ce cas j&#8217;utiliserais un
+<em>lookahead positif</em> (recherche vers l&#8217;avant). Cela indique à mon expression
+régulière de trouver toutes les correspondances à mon modèle directement suivies
+d&#8217;une correspondance à un autre modèle. En Ruby, un lookahead positif est
+exprimé grâce à l&#8217;opérateur <code>?=</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/fool(?=ish)/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voici mon expression modifiée. Comme vous pouvez le voir, j&#8217;ai mon modèle
+contenant le mot &ldquo;fool&rdquo; directement suivi du modèle lookahead &ldquo;ish&rdquo;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/fool(?=ish)/</span><span class="p">)</span>
+</span><span class='line'><span class="o">&gt;=&gt;</span> <span class="o">[</span><span class="s2">&quot;fool&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cette fois-ci, la méthode <code>scan</code> retourne un seul résultat, la seule occurrence
+de &ldquo;fool&rdquo; suivie de &ldquo;ish&rdquo;.</p>
+
+<p>De nouveau, utilisons la méthode <code>gsub</code> pour modifier notre chaîne. Remplaçons
+chaque occurrence de &ldquo;fool&rdquo; (suivie de &ldquo;ish&rdquo;) par le mot &ldquo;self&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/fool(?=ish)/</span><span class="p">,</span> <span class="s2">&quot;self&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Who&#39;s the more selfish?  The fool or the fool who follows him?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nos excuses à Obiwan Kenobi, nous avons changé la ligne pour <em>&ldquo;Who&rsquo;s the more
+selfish?  The fool or the fool who follows him?&rdquo;</em>.</p>
+
+<p>Techniquement, c&#8217;est ce que l&#8217;on appelle une <em>zero-width, positive lookahead
+assertion</em> (recherche positive vers l&#8217;avant de taille zéro). Facile à prononcer
+n&#8217;est-ce pas ? Dans le livre <em>The Well Grounded Rubyist</em>, David Black
+l&#8217;explique comme ceci :</p>
+
+<p>=Zero-width!=</p>
+
+<pre><code>(taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
+consomme pas de caractères. Cela veut dire que la correspondance est
+cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+est retournée, vrai ou faux.
+</code></pre>
+
+<p>=Positive!=</p>
+
+<pre><code>signifie que le modèle doit être présent, obligatoirement.
+</code></pre>
+
+<p>=lookahead!=</p>
+
+<pre><code>veut dire que cette expression est recherchée après le modèle
+principal.
+</code></pre>
+
+<p>=assertion!=</p>
+
+<pre><code>indique que seule la présence d'une correspondance est retournée sous
+la forme true/false (vrai/faux).
+</code></pre>
+
+<p>Zero-width
+:    (taille zéro) signifie que le modèle lookahead (&ldquo;ish&rdquo; dans notre cas) ne</p>
+
+<pre><code> consomme pas de caractères. Cela veut dire que la correspondance est
+ cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+ est retournée, vrai ou faux.
+</code></pre>
+
+<p>Positive
+:    signifie que le modèle doit être présent, obligatoirement.
+lookahead
+:    veut dire que cette expression est recherchée après le modèle</p>
+
+<pre><code> principal.
+</code></pre>
+
+<p>assertion
+:    indique que seule la présence d&#8217;une correspondance est retournée sous</p>
+
+<pre><code> la forme true/false (vrai/faux).
+</code></pre>
+
+<p>Sailboat
+:    A hole in the water into which one pours money
+:    A challenging, relaxing, enjoyable world of possibilities
+Car
+:    A pollutor that just loses its value</p>
+
+<p>:    Can get you where you want to go</p>
+
+<dl>
+  <dt>Zero-width</dt>
+  <dd>(taille zéro) signifie que le modèle lookahead (&#8220;ish&#8221; dans notre cas) ne
+    consomme pas de caractères. Cela veut dire que la correspondance est
+    cherchée mais n&#8217;est pas retournée. Seule la présence d&#8217;une correspondance
+    est retournée, vrai ou faux.</dd>
+
+  <dt>Positive</dt>
+  <dd>signifie que le modèle doit être présent, obligatoirement.</dd>
+
+  <dt>lookahead</dt>
+  <dd>veut dire que cette expression est recherchée après le modèle
+    principal.</dd>
+
+  <dt>assertion</dt>
+  <dd>indique que seule la présence d&#8217;une correspondance est retournée sous
+    la forme true/false (vrai/faux).</dd>
+</dl>
+
+
+<p>Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
+les occurrences du mot &ldquo;fool&rdquo; qui ne sont <strong>pas</strong> suivies des lettres &ldquo;ish&rdquo; ?
+Dans ce cas, je dois utiliser un lookahead négatif. Techniquement, c&#8217;est ce que
+l&#8217;on appelle une <em>zero-width, negative lookahead assertion</em> (recherche négative
+vers l&#8217;avant de taille zéro). Négative signifie qu&#8217;aucune correspondance à ce
+modèle ne doit être trouvée. Pour effectuer un lookahead négatif, uilisez
+l&#8217;opérateur <code>?!</code>.</p>
+
+<p>Je vais de nouveau appeler <code>scan</code> sur ma chaîne en utilisant cette fois un
+lookahead négatif dans mon expression régulière. Je veux trouver toutes les
+occurrences de &ldquo;fool&rdquo; qui ne font pas partie du mot &ldquo;foolish&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/fool(?!ish)/</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;fool&quot;, &quot;fool&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Deux correspondances sont retournées, les deux fois où le mot &ldquo;fool&rdquo; apparait
+sans faire partie de &ldquo;foolish&rdquo;.</p>
+
+<p>Utilisons maintenant la méthode <code>gsub</code>. À chaque fois que nous
+trouvons le mot &ldquo;fool&rdquo; (non suivi des lettres &ldquo;ish&rdquo;), nous allons le remplacer
+pas le mot &ldquo;self&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/fool(?!ish)/</span><span class="p">,</span> <span class="s2">&quot;self&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Who&#39;s the more foolish?  The self or the self who follows him?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Encore une fois j&#8217;ai changé une réplique classique. On peut maintenant lire
+&ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</p>
+
+<p>Les lookaheads sont très pratiques lorsque l&#8217;on souhaite trouver une
+correspondance en prenant en compte ce qui la suit. Allons de nouveau un peu
+plus loin. Comment dois-je m&#8217;y prendre si je souhaite trouver une correspondance
+à partir de ce qui la précède ? Pour faire cela, je dois utiliser une <em>positive
+lookbehind assertion</em> (recherche positive vers l&#8217;arrière). Cela signifie que je
+veux trouver toutes les correspondances à mon modèle précédées d&#8217;un autre
+modèle.</p>
+
+<p>Utilisons une autre citation de Star Wars, une de Yoda cette fois-ci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;For my ally is the force, and a powerful ally it is.&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The modèle principal que je souhaite chercher est le mot &ldquo;ally&rdquo;, je vais donc
+utiliser l&#8217;expression régulière <code>/ally/</code>. J&#8217;aimerais cependant trouver le mot
+&ldquo;ally&rdquo; uniquement s&#8217;il est directement précédé du mot &ldquo;powerful&rdquo;. C&#8217;est le cas
+parfait pour un <em>positive lookbehind</em> (recherche positive vers l&#8217;arrière). Les
+lookbehinds positifs utilisent l&#8217;opérateur <code>?&lt;=</code>. Utilisons le dans notre
+expression régulière :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/(?&lt;=powerful )ally/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cette expression régulière relève le mot &ldquo;ally&rdquo; chaque fois qu&#8217;il est
+directement précédé du mot &ldquo;powerful&rdquo;. Comme vous pouvez le remarquer, le
+lookbehind est positionné avant le modèle principal. Cela montre bien que le mot
+&ldquo;powerful&rdquo; doit est devant le mot &ldquo;ally&rdquo;.</p>
+
+<p>Je vais maintenant utiliser la méthode <code>gsub</code> sur ma chaîne. Chaque fois que le
+mot &ldquo;ally&rdquo; est précédé par le mot &ldquo;powerful&rdquo;, je veux le remplacer par le mot
+&ldquo;friend&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/(?&lt;=powerful )ally/</span><span class="p">,</span> <span class="s2">&quot;friend&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; For my ally is the force, and a powerful friend it is.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cela change quelque peu les mots de Yoda : &ldquo;For my ally is the force, and a
+powerful friend it is.&rdquo;</p>
+
+<p>Comment dois-je m&#8217;y prendre si je souhaite faire le contraire ? Si par exemple
+je veux toutes les occurrences du mot &ldquo;ally&rdquo; qui ne sont <strong>pas</strong> précédées du
+mot &ldquo;powerful&rdquo;. Dans ce cas, je dois utiliser un <em>negative lookbehind</em>
+(recherche négative vers l&#8217;arrière). Pour cela on trouve l&#8217;opérateur <code>?&lt;!</code>.
+Utilisons-le dans notre expression régulière :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/(?&lt;!powerful )ally/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Utilisons maintenant <code>gsub</code> sur notre chaîne pour remplacer chaque occurence du
+mot &ldquo;ally&rdquo;, non précédée du mot &ldquo;powerful&rdquo;, par le mot &ldquo;friend&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/(?&lt;!powerful )ally/</span><span class="p">,</span> <span class="s2">&quot;friend&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;For my friend is the force, and a powerful ally it is.&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>J&#8217;ai de nouveau changé les paroles de Yoda : &ldquo;For my ally is the force, and a
+powerful friend it is.&rdquo;.</p>
+
+<p>Les lookarounds donnent une puissance incroyable à vos expressions régulières en
+leur apportant un contexte. Plutôt que d&#8217;utiliser un modèle strict qui
+correspond ou non, vos expressions régulières deviennent puissantes, flexibles
+et capables de trouver bien plus de choses.</p>
+
+<p><a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-08T00:30:00+02:00" pubdate data-updated="true">08/09/2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/tags/regex/'>regex</a>, <a class='category' href='/tags/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3" title="Previous Post: Utiliser les Expressions Régulières en Ruby (1/3)">&laquo; Utiliser les Expressions Régulières en Ruby (1/3)</a>
+      
+      
+        <a class="basic-alignment right" href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3" title="Next Post: Utiliser les Expressions Régulières en Ruby (3/3)">Utiliser les Expressions Régulières en Ruby (3/3) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Commentaires</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Simon Courtois (simonc) -
+  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+<script type="text/javascript">
+    var disqus_shortname = 'happyblog-happynoff';
+    
+      var disqus_identifier = 'http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3';
+      var disqus_url = 'http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3';
+      var disqus_script = 'embed.js';
+    
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+<script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</body>
+</html>

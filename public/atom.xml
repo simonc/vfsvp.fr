@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[VF svp]]></title>
+  <link href="http://vfsvp.fr/atom.xml" rel="self"/>
+  <link href="http://vfsvp.fr/"/>
+  <updated>2013-10-01T09:59:03+02:00</updated>
+  <id>http://vfsvp.fr/</id>
+  <author>
+    <name><![CDATA[Simon Courtois (simonc)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (3/3)]]></title>
+    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3"/>
+    <updated>2013-09-08T00:30:00+02:00</updated>
+    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3</id>
+    <content type="html"><![CDATA[<p><strong>Note:</strong> Ceci est une traduction de l&#8217;article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/">blog de Blue Box</a>.</p>
+
+<!-- more -->
+
+
+<h2>L&#8217;auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu&#8217;Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l&#8217;Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l&#8217;environnement dynamique de la création d&#8217;applications logicielles. Dans ces
+deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l&#8217;art martial appelé Naginata.</p>
+
+<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a>.</p>
+
+<!-- more -->
+
+
+<h2>Le comportement des Expressions Régulières</h2>
+
+<p>Les expressions régulières sont puissantes. Comme un célèbre super-héros l&#8217;a dit
+un jour &ldquo;with great power comes great responsibility&rdquo; (à grands pouvoirs,
+grande responsabilité). Pour éviter qu&#8217;une expression régulière ne cause une
+catastrophe, vous devez être capable d&#8217;en contrôler le comportement.</p>
+
+<p>Les expressions régulières ont trois comportements distincts : greedy
+(gourmande), lazy (fainéante) et possessive. Ces termes peuvent sembler
+négatifs mais ne sont pas pour autant de mauvaises attitudes pour vos
+expressions. Ce sont simplement des descriptions des différentes façon d&#8217;agir
+que peuvent utiliser vos expressions et que vous pouvez contrôler. Je vais vous
+expliquer comment.</p>
+
+<p>Pour comprendre ces comportements, il nous faut d&#8217;abord comprendre les
+quantificateurs. Ils permettent de dire au moteur d&#8217;expressions régulières
+combien de fois un caractère ou un groupe de caractères doit apparaitre dans
+notre chaîne.</p>
+
+<p>Un des quantificateurs que j&#8217;utilise le plus souvent est le <code>+</code>. Lorsque je le
+place derrière un caractère, j&#8217;indique que ce dernier doit apparaitre au moins
+une fois. Il peut apparaitre autant de fois qu&#8217;il le souhaite mais doit être au
+minimum présent une fois.</p>
+
+<p>Prenons l&#8217;expression suivante :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Celle-ci trouverait une correspondance pour tout caractère apparaissant au moins
+une fois. Elle garantie donc la présence d&#8217;un caractère dans la chaîne.</p>
+
+<p>Les quantificateurs sont à la base même du comportement de votre expression, à
+savoir gourmande, fainéante ou possessive. Par défaut, elle est gourmande.</p>
+
+<p>Un quantificateur gourmand tente de trouver la correspondance la plus longue
+possible au sein de la chaîne. Il attrape autant de caractères que ses petites
+mains gourmandes le lui permettent et tente de trouver une correspondance. Si
+toute la chaîne ne correspond pas, il prend un caractère de moins et tente de
+nouveau la recherche. Il recommence ce processus jusqu&#8217;à ce qu&#8217;il ne trouve
+plus de caractères à tester.</p>
+
+<p>Les quantificateurs gourmands fournissent un effort maximum pour un retour
+maximum. Un quantificateur gourmand essaie autant de cas que possible pour
+trouver une correspondance et retourne le maximum de caractères en faisant
+partie.</p>
+
+<p>Pour l&#8217;exemple suivant, je vais changer de science fiction et emprunter une
+citation de <em>Star Trek: First Contact</em> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;There&#39;s no time to talk about time we don&#39;t have the time&quot;</span>
+</span><span class='line'><span class="sr">/.+time/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cette expression régulière capture tout caractère apparaissant au moins une
+fois, le tout suivi du mot &ldquo;time&rdquo;. Si je fais appel à la méthode <code>match</code> sur
+mon expression régulière en lui passant ma chaîne en paramètre :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+time/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;There&#39;s no time to talk about time we don&#39;t have the time&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Toute la chaîne correspond.</p>
+
+<p>Lorsque cette expression analyse la chaîne, elle tente d&#8217;abord de trouver la
+première partie du modèle, <code>.+</code>. Cela correspond à toute la chaîne. Elle essaie
+ensuite de trouver la deuxième partie, le mot <code>time</code>. Comme toute la chaîne a
+été consommée, elle cherche &ldquo;time&rdquo; après la fin de cette dernière et ne trouve
+rien. Elle recule donc d&#8217;un caractère (<em>backtrack</em>) et retente le test pour
+trouver une correspondance. Une fois celle-ci trouvée, elle est retournée. Dans
+notre cas, cela représente toute la chaîne.</p>
+
+<p>Les quantificateurs gourmands tentent de faire correspondre toute la chaine puis
+reculent progressivement. Ce recule progressif signifie que, si notre chaîne ne
+correspond pas du tout au modèle, l&#8217;expression va tenter autant que possible de
+trouver une correspondance. Elle doit garder en mémoire les possibilités déjà
+tentées ce qui peut prendre beaucoup de ressources systèmes, en particulier
+lorsque vous avez plusieurs tests effectués sur un texte long.</p>
+
+<p>Oniguruma a certaines optimisations qui rendent le recule progressif plus
+rapide. Patrick Shaughnessy a écrit un fantastique article sur son blog qui
+détail comment Oniguruma gère le recul progressif. Malgré les optimisations, une
+expression régulière gourmande consommera tout de même beaucoup de ressources.</p>
+
+<p>Lorsque vous souhaitez une recherche plus réduite et qui consomme moins de
+ressources, vous devez utiliser un quantificateurs fainéant. Également appelé
+quantificateur réticent, celui-ci va commencer sa recherche au tout début
+de la chaîne et tenter de faire correspondre le premier caractère. Si cela ne
+suffit pas, il va consommer un caractère supplémentaire. En dernier ressort il
+tentera de consommer toute la chaîne.</p>
+
+<p>Un quantificateur fainéant fournit l&#8217;effort minimum pour un retour minimum. Il
+retourne le moins de caractères possible pour une correspondance. S&#8217;il trouve ce
+qu&#8217;il cherche avec le premier caractère de la chaîne, il va simplement retourner
+celui-ci. Il est fainéant, il fait le minimum demandé et rien de plus.</p>
+
+<p>Pour utiliser un quantificateur fainéant, il suffit de lui ajouter un point
+d&#8217;interrogation.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+?time/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si j&#8217;appelle la méthode <code>match</code> sur ma chaîne en utilisant un quantificateur
+fainéant</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+?time/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;There&#39;s no time&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je récupère seulement &ldquo;There&rsquo;s no time&rdquo;. La recherche a commencé au tout début
+de la chaîne et retourne la correspondance minimum. Les expressions régulière
+fainéantes utilisent beaucoup moins de recul progressif et, par conséquent,
+moins de ressources que les expressions gourmandes.</p>
+
+<p>Comment faire lorsque l&#8217;on souhaite récupérer un maximum de caractères tout en
+limitant le recul progressif et la consommation de ressources ? Pour cela, il
+existe un troisième quantificateur, le quantificateur possessif. Il fonctionne
+sur le principe de tout ou rien, soit il trouve une correspondance au premier
+essai soit il échoue. Comme le gourmand, il consomme le plus de caractères possibles (la chaîne entière) et tente la correspondance. Si cette tentative
+échoue, il n&#8217;y aura ni recul ni nouvel essai.</p>
+
+<p>Les quantificateurs possessifs utilisent un effort minimum pour un retour
+maximum. Ils tentent de retournent autant de caractères que possible en en
+faisant le moins possible (ils tentent une fois puis abandonnent).</p>
+
+<p>Pour rendre un quantificateur possessif, il suffit de lui ajouter un plus <code>+</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.++time/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lançons la méthode <code>match</code> sur notre chaîne en lui passant cette expression
+possessive :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.++time/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; nil</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cet appel retourne <code>nil</code> car le test a échoué. Pourquoi cet échec ? Il semble
+pourtant que notre chaîne corresponde à l&#8217;expression. La raison est qu&#8217;aucun
+recul progressif n&#8217;est effectué.</p>
+
+<p>L&#8217;expression va d&#8217;abord tenter de trouver <code>.++</code> ce qui va consommer tout la
+chaîne. Lorsqu&#8217;elle tente de trouver le mot <code>time</code>, il ne reste plus de
+caractère à consommer. L&#8217;expression ne peut pas reculer à cause du
+quantificateur possessif et va donc échouer.</p>
+
+<p>Le principal avantage des quantificateurs possessifs est l&#8217;échec rapide.
+L&#8217;absence de recul consomme très peu de ressources. Un quantificateur gourmand
+va tenter tout ce qui est possible pour trouver une correspondance. En cas
+d&#8217;échec, tout ce travail et toutes ces ressources n&#8217;auront servi à rien. Un
+quantificateur possessif évite cela, si aucune correspondance n&#8217;existe l&#8217;échec
+sera rapide.</p>
+
+<p>En général, l&#8217;utilisation de quantificateurs possessifs se limite à des
+expressions très courte, lorsque vous avez une petite sous-expression au sein
+d&#8217;une expression plus large. Ils sont très utiles mais à utiliser avec
+précaution.</p>
+
+<h2>Conclusion</h2>
+
+<p>Les expressions régulières peuvent sembler extrêmement complexes. Lorsque j&#8217;ai
+appris à aller plus loin que les bases, au delà des petites astuces de
+validation d&#8217;email par exemple, j&#8217;ai trouvé que cela m&#8217;aidait de les voir comme
+un sous-programme dans un langage différent. En réalité c&#8217;est exactement ça.
+Vous écrivez un programme, au sein d&#8217;un autre programme, au sein de Ruby
+lui-même.</p>
+
+<p>Comme tout langage de programmation, il est plus simple d&#8217;écrire vos expressions
+par petites parties. Lorsque j&#8217;écris un <em>lookbehind</em>, j&#8217;écris d&#8217;abord le modèle
+principal, m&#8217;assure qu&#8217;il fonctionne. J&#8217;écris ensuite le modèle du lookbehind,
+séparément, et m&#8217;assure qu&#8217;il fonctionne également. Une fois cela fait, je
+joins les deux modèles pour valider qu&#8217;ils fonctionnent ensemble.</p>
+
+<p><a href="http://rubular.com/">Rubular</a> est un site fantastic pour écrire et tester vos
+expressions régulières. Testez le, utilisez le, il m&#8217;a vraiment facilité la vie.</p>
+
+<p>Comme tout programme informatique, les expressions régulières s&#8217;écrivent en
+plusieurs fois. Lorsque vous concevez une expression, il est tout à fait normal
+que celle-ci soit laide au début. Faites la fonctionner et après seulement
+tentez de la rendre plus lisible. C&#8217;est le même processus rouge, vert,
+réusinage (red, green, refector) qui est utilisé dans le développement dirigé
+par les tests.</p>
+
+<p>Les expressions régulières sont puissantes. Si puissantes qu&#8217;elles font peur à
+beaucoup d&#8217;entre-nous. Cette peur peut être surpassée. Aussi obscures qu&#8217;elle
+peuvent paraître, elles ont une structure logique et réfléchie. Utilisez-les,
+lancez Rubular et essayez quelques <em>lookaheads</em> et <em>lookbehinds</em>. Tentez les
+quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
+intégration des expressions régulières dans Ruby, je pense que vous en serez
+surpris ce que vous trouverez.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (2/3)]]></title>
+    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3"/>
+    <updated>2013-09-08T00:30:00+02:00</updated>
+    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3</id>
+    <content type="html"><![CDATA[<p><strong>Note:</strong> Ceci est une traduction de l&#8217;article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/">blog de Blue Box</a>.</p>
+
+<!-- more -->
+
+
+<h2>L&#8217;auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu&#8217;Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l&#8217;Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l&#8217;environnement dynamique de la création d&#8217;applications logicielles. Dans ces
+deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l&#8217;art martial appelé Naginata.</p>
+
+<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
+
+<!-- more -->
+
+
+<h2>Les LookArounds</h2>
+
+<p>Les lookarounds me permettent d&#8217;aller plus loin que la simple comparaison avec
+un modèle. En effet, ils offrent la possibilité de donner un contexte à cette
+comparaison. Une expression contenant un lookaround ne retourne un résultat que
+lorsqu&#8217;elle est effectuée dans ce contexte.</p>
+
+<p>Soit une nouvelle chaîne de caractère, une autre citation d&#8217;Obiwan Kenobi dans
+Star Wars.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;Who&#39;s the more foolish?  The fool or the fool who follows him?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je veux connaître tous les emplacements du mot &ldquo;fool&rdquo; dans cette chaîne. Je vais
+donc utiliser l&#8217;expression régulière <code>/fool/</code>. Dans ce cas précis, je vais
+utiliser la méthode <code>scan</code> sur ma chaîne. Cette méthode retourne toutes les
+occurrences de mon expression dans la chaîne :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/fool/</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;fool&quot;, &quot;fool&quot;, &quot;fool&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Comme on peut le voir, scan retourne une partie du mot &ldquo;foolish&rdquo; et les deux
+occurrences du mot &ldquo;fool&rdquo;.</p>
+
+<p>Comment fait-on si l&#8217;on souhaite que notre modèle <code>/fool/</code> retourne un résultat
+seulement s&#8217;il fait partie du mot &ldquo;foolish&rdquo; ? Pour ce cas j&#8217;utiliserais un
+<em>lookahead positif</em> (recherche vers l&#8217;avant). Cela indique à mon expression
+régulière de trouver toutes les correspondances à mon modèle directement suivies
+d&#8217;une correspondance à un autre modèle. En Ruby, un lookahead positif est
+exprimé grâce à l&#8217;opérateur <code>?=</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/fool(?=ish)/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voici mon expression modifiée. Comme vous pouvez le voir, j&#8217;ai mon modèle
+contenant le mot &ldquo;fool&rdquo; directement suivi du modèle lookahead &ldquo;ish&rdquo;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/fool(?=ish)/</span><span class="p">)</span>
+</span><span class='line'><span class="o">&gt;=&gt;</span> <span class="o">[</span><span class="s2">&quot;fool&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cette fois-ci, la méthode <code>scan</code> retourne un seul résultat, la seule occurrence
+de &ldquo;fool&rdquo; suivie de &ldquo;ish&rdquo;.</p>
+
+<p>De nouveau, utilisons la méthode <code>gsub</code> pour modifier notre chaîne. Remplaçons
+chaque occurrence de &ldquo;fool&rdquo; (suivie de &ldquo;ish&rdquo;) par le mot &ldquo;self&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/fool(?=ish)/</span><span class="p">,</span> <span class="s2">&quot;self&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Who&#39;s the more selfish?  The fool or the fool who follows him?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nos excuses à Obiwan Kenobi, nous avons changé la ligne pour <em>&ldquo;Who&rsquo;s the more
+selfish?  The fool or the fool who follows him?&rdquo;</em>.</p>
+
+<p>Techniquement, c&#8217;est ce que l&#8217;on appelle une <em>zero-width, positive lookahead
+assertion</em> (recherche positive vers l&#8217;avant de taille zéro). Facile à prononcer
+n&#8217;est-ce pas ? Dans le livre <em>The Well Grounded Rubyist</em>, David Black
+l&#8217;explique comme ceci :</p>
+
+<p>=Zero-width!=</p>
+
+<pre><code>(taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
+consomme pas de caractères. Cela veut dire que la correspondance est
+cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+est retournée, vrai ou faux.
+</code></pre>
+
+<p>=Positive!=</p>
+
+<pre><code>signifie que le modèle doit être présent, obligatoirement.
+</code></pre>
+
+<p>=lookahead!=</p>
+
+<pre><code>veut dire que cette expression est recherchée après le modèle
+principal.
+</code></pre>
+
+<p>=assertion!=</p>
+
+<pre><code>indique que seule la présence d'une correspondance est retournée sous
+la forme true/false (vrai/faux).
+</code></pre>
+
+<p>Zero-width
+:    (taille zéro) signifie que le modèle lookahead (&ldquo;ish&rdquo; dans notre cas) ne</p>
+
+<pre><code> consomme pas de caractères. Cela veut dire que la correspondance est
+ cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+ est retournée, vrai ou faux.
+</code></pre>
+
+<p>Positive
+:    signifie que le modèle doit être présent, obligatoirement.
+lookahead
+:    veut dire que cette expression est recherchée après le modèle</p>
+
+<pre><code> principal.
+</code></pre>
+
+<p>assertion
+:    indique que seule la présence d&#8217;une correspondance est retournée sous</p>
+
+<pre><code> la forme true/false (vrai/faux).
+</code></pre>
+
+<p>Sailboat
+:    A hole in the water into which one pours money
+:    A challenging, relaxing, enjoyable world of possibilities
+Car
+:    A pollutor that just loses its value</p>
+
+<p>:    Can get you where you want to go</p>
+
+<dl>
+  <dt>Zero-width</dt>
+  <dd>(taille zéro) signifie que le modèle lookahead (&#8220;ish&#8221; dans notre cas) ne
+    consomme pas de caractères. Cela veut dire que la correspondance est
+    cherchée mais n&#8217;est pas retournée. Seule la présence d&#8217;une correspondance
+    est retournée, vrai ou faux.</dd>
+
+  <dt>Positive</dt>
+  <dd>signifie que le modèle doit être présent, obligatoirement.</dd>
+
+  <dt>lookahead</dt>
+  <dd>veut dire que cette expression est recherchée après le modèle
+    principal.</dd>
+
+  <dt>assertion</dt>
+  <dd>indique que seule la présence d&#8217;une correspondance est retournée sous
+    la forme true/false (vrai/faux).</dd>
+</dl>
+
+
+<p>Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
+les occurrences du mot &ldquo;fool&rdquo; qui ne sont <strong>pas</strong> suivies des lettres &ldquo;ish&rdquo; ?
+Dans ce cas, je dois utiliser un lookahead négatif. Techniquement, c&#8217;est ce que
+l&#8217;on appelle une <em>zero-width, negative lookahead assertion</em> (recherche négative
+vers l&#8217;avant de taille zéro). Négative signifie qu&#8217;aucune correspondance à ce
+modèle ne doit être trouvée. Pour effectuer un lookahead négatif, uilisez
+l&#8217;opérateur <code>?!</code>.</p>
+
+<p>Je vais de nouveau appeler <code>scan</code> sur ma chaîne en utilisant cette fois un
+lookahead négatif dans mon expression régulière. Je veux trouver toutes les
+occurrences de &ldquo;fool&rdquo; qui ne font pas partie du mot &ldquo;foolish&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/fool(?!ish)/</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;fool&quot;, &quot;fool&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Deux correspondances sont retournées, les deux fois où le mot &ldquo;fool&rdquo; apparait
+sans faire partie de &ldquo;foolish&rdquo;.</p>
+
+<p>Utilisons maintenant la méthode <code>gsub</code>. À chaque fois que nous
+trouvons le mot &ldquo;fool&rdquo; (non suivi des lettres &ldquo;ish&rdquo;), nous allons le remplacer
+pas le mot &ldquo;self&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/fool(?!ish)/</span><span class="p">,</span> <span class="s2">&quot;self&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;Who&#39;s the more foolish?  The self or the self who follows him?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Encore une fois j&#8217;ai changé une réplique classique. On peut maintenant lire
+&ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</p>
+
+<p>Les lookaheads sont très pratiques lorsque l&#8217;on souhaite trouver une
+correspondance en prenant en compte ce qui la suit. Allons de nouveau un peu
+plus loin. Comment dois-je m&#8217;y prendre si je souhaite trouver une correspondance
+à partir de ce qui la précède ? Pour faire cela, je dois utiliser une <em>positive
+lookbehind assertion</em> (recherche positive vers l&#8217;arrière). Cela signifie que je
+veux trouver toutes les correspondances à mon modèle précédées d&#8217;un autre
+modèle.</p>
+
+<p>Utilisons une autre citation de Star Wars, une de Yoda cette fois-ci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;For my ally is the force, and a powerful ally it is.&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The modèle principal que je souhaite chercher est le mot &ldquo;ally&rdquo;, je vais donc
+utiliser l&#8217;expression régulière <code>/ally/</code>. J&#8217;aimerais cependant trouver le mot
+&ldquo;ally&rdquo; uniquement s&#8217;il est directement précédé du mot &ldquo;powerful&rdquo;. C&#8217;est le cas
+parfait pour un <em>positive lookbehind</em> (recherche positive vers l&#8217;arrière). Les
+lookbehinds positifs utilisent l&#8217;opérateur <code>?&lt;=</code>. Utilisons le dans notre
+expression régulière :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/(?&lt;=powerful )ally/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cette expression régulière relève le mot &ldquo;ally&rdquo; chaque fois qu&#8217;il est
+directement précédé du mot &ldquo;powerful&rdquo;. Comme vous pouvez le remarquer, le
+lookbehind est positionné avant le modèle principal. Cela montre bien que le mot
+&ldquo;powerful&rdquo; doit est devant le mot &ldquo;ally&rdquo;.</p>
+
+<p>Je vais maintenant utiliser la méthode <code>gsub</code> sur ma chaîne. Chaque fois que le
+mot &ldquo;ally&rdquo; est précédé par le mot &ldquo;powerful&rdquo;, je veux le remplacer par le mot
+&ldquo;friend&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/(?&lt;=powerful )ally/</span><span class="p">,</span> <span class="s2">&quot;friend&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; For my ally is the force, and a powerful friend it is.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cela change quelque peu les mots de Yoda : &ldquo;For my ally is the force, and a
+powerful friend it is.&rdquo;</p>
+
+<p>Comment dois-je m&#8217;y prendre si je souhaite faire le contraire ? Si par exemple
+je veux toutes les occurrences du mot &ldquo;ally&rdquo; qui ne sont <strong>pas</strong> précédées du
+mot &ldquo;powerful&rdquo;. Dans ce cas, je dois utiliser un <em>negative lookbehind</em>
+(recherche négative vers l&#8217;arrière). Pour cela on trouve l&#8217;opérateur <code>?&lt;!</code>.
+Utilisons-le dans notre expression régulière :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/(?&lt;!powerful )ally/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Utilisons maintenant <code>gsub</code> sur notre chaîne pour remplacer chaque occurence du
+mot &ldquo;ally&rdquo;, non précédée du mot &ldquo;powerful&rdquo;, par le mot &ldquo;friend&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/(?&lt;!powerful )ally/</span><span class="p">,</span> <span class="s2">&quot;friend&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;For my friend is the force, and a powerful ally it is.&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>J&#8217;ai de nouveau changé les paroles de Yoda : &ldquo;For my ally is the force, and a
+powerful friend it is.&rdquo;.</p>
+
+<p>Les lookarounds donnent une puissance incroyable à vos expressions régulières en
+leur apportant un contexte. Plutôt que d&#8217;utiliser un modèle strict qui
+correspond ou non, vos expressions régulières deviennent puissantes, flexibles
+et capables de trouver bien plus de choses.</p>
+
+<p><a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (1/3)]]></title>
+    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3"/>
+    <updated>2013-09-08T00:30:00+02:00</updated>
+    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3</id>
+    <content type="html"><![CDATA[<p><strong>Note:</strong> Ceci est une traduction de l&#8217;article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/">blog de Blue Box</a>.</p>
+
+<!-- more -->
+
+
+<h2>L&#8217;auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu&#8217;Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l&#8217;Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l&#8217;environnement dynamique de la création d&#8217;applications logicielles. Dans ces
+deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l&#8217;art martial appelé Naginata.</p>
+
+<p>Voici la première partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a> et la
+<a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
+
+<!-- more -->
+
+
+<h2>Introduction</h2>
+
+<p>Pour être honnête, la première fois que j&#8217;ai vu une expression régulière,
+j&#8217;étais intimidée. Cela semblait si cryptique et mystérieux. Je peinais à voir
+comment la comprendre et a fortiori en écrire une. Encore récemment, je
+n&#8217;utilisais les expressions régulières qu&#8217;en cas d&#8217;absolue nécessité (une
+validation d&#8217;email par ici, un remplacement basique par là). Cela m&#8217;a empêché
+d&#8217;approfondir ma connaissance de leur utilisation en Ruby. Ruby travaille avec
+les expressions régulière dans une harmonie, une symphonie de code. Pour
+exploiter pleinement Ruby, je devais surpasser mon intimidation, ma peur des
+expressions régulières.</p>
+
+<p>J&#8217;ai dépassé cette peur. Comme toute chose dans la vie, les expressions
+régulières semblent insurmontables jusqu&#8217;à ce qu&#8217;on les découpe. Je veux vous
+aider à dépasser votre peur des expressions régulières. Pour cela, je vais les
+découper, étape par étape, et vous guider au travers du concept d&#8217;expressions
+régulières en Ruby et ce jusqu&#8217;aux techniques avancées. J&#8217;espère que vous verrez
+la beauté, surpasserez votre intimidation et les adopterez dans votre code.</p>
+
+<h2>Les Expressions Régulières</h2>
+
+<p>Une expression régulière est simplement un modèle. Un modèle auquel une chaîne
+de caractères correspond ou non. Le livre <em>Programming Ruby 1.9</em> de Dave Thomas
+(plus connu sous le nom <em>Pickaxe Book</em> [livre pic-à-glace]) regroupe en trois
+catégories ce que l&#8217;on peut faire avec une expression régulière : tester,
+extraire et modifier. Vous pouvez tester une chaîne de caractères pour voir si
+elle correspond au modèle. Vous pouvez également modifier une chaîne de
+caractères en remplaçant les parties correspondant au modèle par un autre texte.
+Tester, extraire, modifier. Si simple et à la fois si puissant.</p>
+
+<h2>Les Expressions Régulières en Ruby</h2>
+
+<p>Ruby vous permet de pousser les expressions régulières plus loin. En Ruby, tout
+est objet. Cela inclus les expressions régulières. Vous pouvez envoyer des
+messages aux objets, vous pouvez donc envoyer des messages aux expressions
+régulières. Vous pouvez également les assigner à des variables, les passer à une
+méthode et bien plus.</p>
+
+<p>Depuis la version 1.9, Ruby utilise la bibliothèque d&#8217;expressions régulières
+Oniguruma. Cette dernière fournit toutes les fonctionnalités standards des
+expressions régulières ainsi qu&#8217;un certain nombre d&#8217;extensions. Elle supporte
+parfaitement les caractères complexes comme les caractères japonais par exemple.
+Une fonctionnalité que j&#8217;apprécie particulièrement est la possibilité d&#8217;utiliser
+<code>\h</code> et <code>\H</code> comme raccourcis pour les chiffres hexadécimaux.</p>
+
+<p>J&#8217;ai découvert récemment que Ruby 2.0 utilisait une bibliothèque différente,
+Onigmo. Onigmo est un <em>fork</em> d&#8217;Oniguruma et ajoute encore plus de
+fonctionnalités exploitables par Ruby. Il sera intéressant de voir jusqu&#8217;où cela
+peut aller.</p>
+
+<p>Malgré les modifications apportées par Onigmo, les fondamentaux de l&#8217;utilisation
+des expressions régulières ne changent pas. Vous testez vos chaînes de
+caractères avec une expression régulière. Vous composez un modèle auquel la
+chaîne doit correspondre.</p>
+
+<h2>Test basique</h2>
+
+<p>Dans la plupart des cas en Ruby, j&#8217;utilise l&#8217;opérateur <code>=~</code>. C&#8217;est l&#8217;opérateur
+de test basique. Lorsque j&#8217;utilise cet opérateur, je demande à Ruby &ldquo;Est-ce que
+cette chaîne de caractères contient ce modèle ?&rdquo;.</p>
+
+<p>Voyons un premier exemple :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/force/</span> <span class="o">=~</span> <span class="s2">&quot;Use the force&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>À gauche, on trouve une expression régulière qui représente le mot <em>force</em>. À
+droite, une citation d&#8217;un de mes films préférés, Star Wars, &ldquo;Use the force&rdquo;.
+Lorsque je lance ce code, je demande à Ruby si mon modèle, à gauche, est présent
+dans la chaîne de caractères située à droite.</p>
+
+<p>Détail appréciable, je peux en inverser l&#8217;écriture si je le souhaite.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;Use the force&quot;</span> <span class="o">=~</span> <span class="sr">/force/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je peux mettre la chaîne à gauche et l&#8217;expression régulière à droite. Je fais le
+même travail, simplement formulé autrement, &ldquo;Est-ce que ma chaîne contient mon
+expression régulière ?&rdquo;. Certains trouvent cette formulation plus lisible.</p>
+
+<p>Lorsque je lance ce code, il retourne le numéro du caractère auquel la
+correspondance commence. Ici, le modèle <code>/force/</code> est trouvé au huitième
+caractère de ma chaîne.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;Use the force&quot;</span> <span class="o">=~</span> <span class="sr">/force/</span>
+</span><span class='line'><span class="c1">#=&gt; 8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je peux également tester si une chaîne <strong>ne contient pas</strong> un modèle en
+utilisant l&#8217;opérateur <code>!~</code>. Cela retourne vrai (<em>true</em>) ou faux (<em>false</em>).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/dark side/</span> <span class="o">!~</span> <span class="s2">&quot;Use the force&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si je lance ce code, je demande si l&#8217;expression <code>/dark side/</code> est absente de la
+chaîne <code>"Use the force"</code>. Dans le cas présent, vrai est retourné.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/dark side/</span> <span class="o">!~</span> <span class="s2">&quot;Use the force&quot;</span>
+</span><span class='line'><span class="c1">#=&gt; true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Les opérateurs sont parfaits pour la vérification simple, savoir si ma chaîne
+correspond à mon expression régulière ou non paer exemple. Ruby fournit
+cependant bien plus d&#8217;informations sur la correspondance. Tout ce que j&#8217;ai à
+faire, c&#8217;est demander.</p>
+
+<h2>MatchData</h2>
+
+<p>Le secret c&#8217;est de transformer ma correspondance en un objet <code>MatchData</code>. Je
+peux créer cet objet avec la méthode <code>match</code>.</p>
+
+<p>Soit la chaîne de caractères suivante :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;The force will be with you always&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je veux savoir si cette chaîne contient le mot <em>force</em>. Je peux utiliser
+l&#8217;expression régulière suivante :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/force/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>J&#8217;appelle la méthode <code>match</code> sur mon expression régulière et lui passe ma
+chaîne. Lorsque je lance ce code, il retourne une instance de la classe
+<code>MatchData</code> pour ma correspondance.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span> <span class="o">=</span> <span class="sr">/force/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; #&lt;MatchData &quot;force&quot;&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Depuis Ruby 1.9, la correspondance ne se fait plus obligatoirement au début de
+la chaîne. Je peux passer un second argument, un entier, qui indique que la
+correspondance doit commencer à partir de ce numéro de caractère.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span> <span class="o">=</span> <span class="sr">/force/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; nil</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ici, le code retourne <code>nil</code>. Pour trouver une correspondance au mot <em>force</em>, il
+faudrait commencer plus tôt dans la chaîne.</p>
+
+<p>Pour les exemples suivants, je me contenterai de passer simplement ma chaîne de
+caractères :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span> <span class="o">=</span> <span class="sr">/force/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; #&lt;MatchData &quot;force&quot;&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>J&#8217;ai accès à des méthodes qui fournissent <strong>bien plus</strong> d&#8217;informations sur ma
+correspondance car c&#8217;est maintenant une instance de la classe <code>MatchData</code>.</p>
+
+<p>Si j&#8217;appelle <code>to_s</code> sur ma correspondance, cela va retourner l&#8217;intégralité de
+son texte :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;force&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si j&#8217;appelle <code>pre_match</code> dessus, cela retourne la partie de ma chaîne qui
+<strong>précède</strong> ma correspondance :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">.</span><span class="n">pre_match</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;The &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si j&#8217;appelle <code>post_match</code> dessus, cela retourne la partie de ma chaîne qui
+<strong>suit</strong> ma correspondance :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">.</span><span class="n">post_match</span>
+</span><span class='line'><span class="c1">#=&gt; &quot; will be with you&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Toutes ces méthodes (et il y en a d&#8217;autres) sont bien utiles. <code>MatchData</code>
+montre cependant sa réelle utilité lorsque l&#8217;on parle de groupes de captures.
+Les groupes de captures sont des sous expressions au sein d&#8217;une expression
+régulière. Voici un exemple :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/(.*)force(.*)/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pour qu&#8217;une chaîne de caractères contienne cette expression régulière, elle doit
+avoir n&#8217;importe quel caractère zéro, une ou plusieurs fois (c&#8217;est la
+signification de <code>.*</code>), suivi du mot <em>force</em>, suivi par n&#8217;importe quel caractère
+zéro, une ou plusieurs fois.</p>
+
+<p>Notez bien que la première et la dernière partie de l&#8217;expression sont en entre
+parenthèses. C&#8217;est ce qu&#8217;on appelle des groupes. Lorsque que je lance ce modèle
+sur ma chaîne, ce qui correspond à ces groupes va être mémorisé. Je peux ensuite
+accéder à ces groupes et les utiliser dans d&#8217;autres parties de mon code.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span> <span class="o">=</span> <span class="sr">/(.*)force(.*)/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si je souhaite voir tous ces groupes, mes groupes de captures, je peux appeler
+la méthode <code>captures</code> sur ma correspondance.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">.</span><span class="n">captures</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;The &quot;, &quot; will be with you always&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Les objets <code>MatchData</code> sont très proches des tableaux. Je peux accéder à
+chaque capture en utilisant les crochets, de la même façon que pour accéder aux
+éléments d&#8217;un tableau.</p>
+
+<p>Si j&#8217;appelle <code>my_match[1]</code>, j&#8217;obtiens le premier groupe de capture, <code>"The "</code>.</p>
+
+<p>De la même manière, <code>my_match[2]</code> retourne mon second groupe de captures, <code>"
+will be with you always"</code>.</p>
+
+<p>Notez bien que je ne commence pas avec <code>my_match[0]</code> comme je le ferais pour un
+tableau classique. Si j&#8217;appelle <code>my_match[0]</code>, plutôt que de récupérer le
+premier groupe, j&#8217;obtiens la chaîne sur laquelle j&#8217;ai lancé le modèle.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;The force will be with you always&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Il est important de garder en mémoire que malgré leur ressemblance avec les
+tableaux, les objets <code>MatchData</code> ne sont pas des tableaux.</p>
+
+<p>Si j&#8217;essaie d&#8217;appeler une méthode de tableau comme <code>each</code> sur mon objet
+<code>MatchData</code>, j&#8217;obtiens une erreur :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+</span><span class='line'> <span class="nb">puts</span> <span class="n">m</span><span class="o">.</span><span class="n">upcase</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="c1">#=&gt; NoMethodError</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cependant, je peux facilement corriger cela en convertissant mon objet
+<code>MatchData</code> en tableau grâce à la méthode <code>to_a</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">my_match</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
+</span><span class='line'> <span class="nb">puts</span> <span class="n">m</span><span class="o">.</span><span class="n">upcase</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="c1">#=&gt; THE FORCE WILL BE WITH YOU ALWAYS THE WILL BE WITH YOU ALWAYS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://vfsvp.fr/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">Lire le second article de cette série</a></p>
+]]></content>
+  </entry>
+  
+</feed>

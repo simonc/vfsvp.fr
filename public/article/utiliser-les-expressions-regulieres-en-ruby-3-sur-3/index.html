@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Utiliser les Expressions Régulières en Ruby (3/3) - VF svp</title>
+  <meta name="author" content="Simon Courtois (simonc)">
+
+  
+  <meta name="description" content="Note: Ceci est une traduction de l&#8217;article publié en anglais sur le
+blog de Blue Box. L&#8217;auteur chez Blue Box Nell Shamrell travaille chez &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">VF svp</a></h1>
+  
+    <h2>En français dans le texte</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vfsvp.fr" />
+    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Utiliser les Expressions Régulières en Ruby (3/3)</h1>
+    
+    
+      <p class="meta">
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3" data-via="happynoff" data-counturl="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      </p>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-08T00:30:00+02:00" pubdate data-updated="true">08/09/2013</time>
+        
+        
+         | <a href="#disqus_thread">Commentaires</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>Note:</strong> Ceci est une traduction de l&#8217;article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/">blog de Blue Box</a>.</p>
+
+<!-- more -->
+
+
+<h2>L&#8217;auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu&#8217;Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l&#8217;Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l&#8217;environnement dynamique de la création d&#8217;applications logicielles. Dans ces
+deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l&#8217;art martial appelé Naginata.</p>
+
+<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a>.</p>
+
+<!-- more -->
+
+
+<h2>Le comportement des Expressions Régulières</h2>
+
+<p>Les expressions régulières sont puissantes. Comme un célèbre super-héros l&#8217;a dit
+un jour &ldquo;with great power comes great responsibility&rdquo; (à grands pouvoirs,
+grande responsabilité). Pour éviter qu&#8217;une expression régulière ne cause une
+catastrophe, vous devez être capable d&#8217;en contrôler le comportement.</p>
+
+<p>Les expressions régulières ont trois comportements distincts : greedy
+(gourmande), lazy (fainéante) et possessive. Ces termes peuvent sembler
+négatifs mais ne sont pas pour autant de mauvaises attitudes pour vos
+expressions. Ce sont simplement des descriptions des différentes façon d&#8217;agir
+que peuvent utiliser vos expressions et que vous pouvez contrôler. Je vais vous
+expliquer comment.</p>
+
+<p>Pour comprendre ces comportements, il nous faut d&#8217;abord comprendre les
+quantificateurs. Ils permettent de dire au moteur d&#8217;expressions régulières
+combien de fois un caractère ou un groupe de caractères doit apparaitre dans
+notre chaîne.</p>
+
+<p>Un des quantificateurs que j&#8217;utilise le plus souvent est le <code>+</code>. Lorsque je le
+place derrière un caractère, j&#8217;indique que ce dernier doit apparaitre au moins
+une fois. Il peut apparaitre autant de fois qu&#8217;il le souhaite mais doit être au
+minimum présent une fois.</p>
+
+<p>Prenons l&#8217;expression suivante :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Celle-ci trouverait une correspondance pour tout caractère apparaissant au moins
+une fois. Elle garantie donc la présence d&#8217;un caractère dans la chaîne.</p>
+
+<p>Les quantificateurs sont à la base même du comportement de votre expression, à
+savoir gourmande, fainéante ou possessive. Par défaut, elle est gourmande.</p>
+
+<p>Un quantificateur gourmand tente de trouver la correspondance la plus longue
+possible au sein de la chaîne. Il attrape autant de caractères que ses petites
+mains gourmandes le lui permettent et tente de trouver une correspondance. Si
+toute la chaîne ne correspond pas, il prend un caractère de moins et tente de
+nouveau la recherche. Il recommence ce processus jusqu&#8217;à ce qu&#8217;il ne trouve
+plus de caractères à tester.</p>
+
+<p>Les quantificateurs gourmands fournissent un effort maximum pour un retour
+maximum. Un quantificateur gourmand essaie autant de cas que possible pour
+trouver une correspondance et retourne le maximum de caractères en faisant
+partie.</p>
+
+<p>Pour l&#8217;exemple suivant, je vais changer de science fiction et emprunter une
+citation de <em>Star Trek: First Contact</em> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;There&#39;s no time to talk about time we don&#39;t have the time&quot;</span>
+</span><span class='line'><span class="sr">/.+time/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cette expression régulière capture tout caractère apparaissant au moins une
+fois, le tout suivi du mot &ldquo;time&rdquo;. Si je fais appel à la méthode <code>match</code> sur
+mon expression régulière en lui passant ma chaîne en paramètre :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+time/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;There&#39;s no time to talk about time we don&#39;t have the time&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Toute la chaîne correspond.</p>
+
+<p>Lorsque cette expression analyse la chaîne, elle tente d&#8217;abord de trouver la
+première partie du modèle, <code>.+</code>. Cela correspond à toute la chaîne. Elle essaie
+ensuite de trouver la deuxième partie, le mot <code>time</code>. Comme toute la chaîne a
+été consommée, elle cherche &ldquo;time&rdquo; après la fin de cette dernière et ne trouve
+rien. Elle recule donc d&#8217;un caractère (<em>backtrack</em>) et retente le test pour
+trouver une correspondance. Une fois celle-ci trouvée, elle est retournée. Dans
+notre cas, cela représente toute la chaîne.</p>
+
+<p>Les quantificateurs gourmands tentent de faire correspondre toute la chaine puis
+reculent progressivement. Ce recule progressif signifie que, si notre chaîne ne
+correspond pas du tout au modèle, l&#8217;expression va tenter autant que possible de
+trouver une correspondance. Elle doit garder en mémoire les possibilités déjà
+tentées ce qui peut prendre beaucoup de ressources systèmes, en particulier
+lorsque vous avez plusieurs tests effectués sur un texte long.</p>
+
+<p>Oniguruma a certaines optimisations qui rendent le recule progressif plus
+rapide. Patrick Shaughnessy a écrit un fantastique article sur son blog qui
+détail comment Oniguruma gère le recul progressif. Malgré les optimisations, une
+expression régulière gourmande consommera tout de même beaucoup de ressources.</p>
+
+<p>Lorsque vous souhaitez une recherche plus réduite et qui consomme moins de
+ressources, vous devez utiliser un quantificateurs fainéant. Également appelé
+quantificateur réticent, celui-ci va commencer sa recherche au tout début
+de la chaîne et tenter de faire correspondre le premier caractère. Si cela ne
+suffit pas, il va consommer un caractère supplémentaire. En dernier ressort il
+tentera de consommer toute la chaîne.</p>
+
+<p>Un quantificateur fainéant fournit l&#8217;effort minimum pour un retour minimum. Il
+retourne le moins de caractères possible pour une correspondance. S&#8217;il trouve ce
+qu&#8217;il cherche avec le premier caractère de la chaîne, il va simplement retourner
+celui-ci. Il est fainéant, il fait le minimum demandé et rien de plus.</p>
+
+<p>Pour utiliser un quantificateur fainéant, il suffit de lui ajouter un point
+d&#8217;interrogation.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+?time/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si j&#8217;appelle la méthode <code>match</code> sur ma chaîne en utilisant un quantificateur
+fainéant</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.+?time/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;There&#39;s no time&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je récupère seulement &ldquo;There&rsquo;s no time&rdquo;. La recherche a commencé au tout début
+de la chaîne et retourne la correspondance minimum. Les expressions régulière
+fainéantes utilisent beaucoup moins de recul progressif et, par conséquent,
+moins de ressources que les expressions gourmandes.</p>
+
+<p>Comment faire lorsque l&#8217;on souhaite récupérer un maximum de caractères tout en
+limitant le recul progressif et la consommation de ressources ? Pour cela, il
+existe un troisième quantificateur, le quantificateur possessif. Il fonctionne
+sur le principe de tout ou rien, soit il trouve une correspondance au premier
+essai soit il échoue. Comme le gourmand, il consomme le plus de caractères possibles (la chaîne entière) et tente la correspondance. Si cette tentative
+échoue, il n&#8217;y aura ni recul ni nouvel essai.</p>
+
+<p>Les quantificateurs possessifs utilisent un effort minimum pour un retour
+maximum. Ils tentent de retournent autant de caractères que possible en en
+faisant le moins possible (ils tentent une fois puis abandonnent).</p>
+
+<p>Pour rendre un quantificateur possessif, il suffit de lui ajouter un plus <code>+</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.++time/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lançons la méthode <code>match</code> sur notre chaîne en lui passant cette expression
+possessive :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">/.++time/</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; nil</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cet appel retourne <code>nil</code> car le test a échoué. Pourquoi cet échec ? Il semble
+pourtant que notre chaîne corresponde à l&#8217;expression. La raison est qu&#8217;aucun
+recul progressif n&#8217;est effectué.</p>
+
+<p>L&#8217;expression va d&#8217;abord tenter de trouver <code>.++</code> ce qui va consommer tout la
+chaîne. Lorsqu&#8217;elle tente de trouver le mot <code>time</code>, il ne reste plus de
+caractère à consommer. L&#8217;expression ne peut pas reculer à cause du
+quantificateur possessif et va donc échouer.</p>
+
+<p>Le principal avantage des quantificateurs possessifs est l&#8217;échec rapide.
+L&#8217;absence de recul consomme très peu de ressources. Un quantificateur gourmand
+va tenter tout ce qui est possible pour trouver une correspondance. En cas
+d&#8217;échec, tout ce travail et toutes ces ressources n&#8217;auront servi à rien. Un
+quantificateur possessif évite cela, si aucune correspondance n&#8217;existe l&#8217;échec
+sera rapide.</p>
+
+<p>En général, l&#8217;utilisation de quantificateurs possessifs se limite à des
+expressions très courte, lorsque vous avez une petite sous-expression au sein
+d&#8217;une expression plus large. Ils sont très utiles mais à utiliser avec
+précaution.</p>
+
+<h2>Conclusion</h2>
+
+<p>Les expressions régulières peuvent sembler extrêmement complexes. Lorsque j&#8217;ai
+appris à aller plus loin que les bases, au delà des petites astuces de
+validation d&#8217;email par exemple, j&#8217;ai trouvé que cela m&#8217;aidait de les voir comme
+un sous-programme dans un langage différent. En réalité c&#8217;est exactement ça.
+Vous écrivez un programme, au sein d&#8217;un autre programme, au sein de Ruby
+lui-même.</p>
+
+<p>Comme tout langage de programmation, il est plus simple d&#8217;écrire vos expressions
+par petites parties. Lorsque j&#8217;écris un <em>lookbehind</em>, j&#8217;écris d&#8217;abord le modèle
+principal, m&#8217;assure qu&#8217;il fonctionne. J&#8217;écris ensuite le modèle du lookbehind,
+séparément, et m&#8217;assure qu&#8217;il fonctionne également. Une fois cela fait, je
+joins les deux modèles pour valider qu&#8217;ils fonctionnent ensemble.</p>
+
+<p><a href="http://rubular.com/">Rubular</a> est un site fantastic pour écrire et tester vos
+expressions régulières. Testez le, utilisez le, il m&#8217;a vraiment facilité la vie.</p>
+
+<p>Comme tout programme informatique, les expressions régulières s&#8217;écrivent en
+plusieurs fois. Lorsque vous concevez une expression, il est tout à fait normal
+que celle-ci soit laide au début. Faites la fonctionner et après seulement
+tentez de la rendre plus lisible. C&#8217;est le même processus rouge, vert,
+réusinage (red, green, refector) qui est utilisé dans le développement dirigé
+par les tests.</p>
+
+<p>Les expressions régulières sont puissantes. Si puissantes qu&#8217;elles font peur à
+beaucoup d&#8217;entre-nous. Cette peur peut être surpassée. Aussi obscures qu&#8217;elle
+peuvent paraître, elles ont une structure logique et réfléchie. Utilisez-les,
+lancez Rubular et essayez quelques <em>lookaheads</em> et <em>lookbehinds</em>. Tentez les
+quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
+intégration des expressions régulières dans Ruby, je pense que vous en serez
+surpris ce que vous trouverez.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-08T00:30:00+02:00" pubdate data-updated="true">08/09/2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/tags/regex/'>regex</a>, <a class='category' href='/tags/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3" title="Previous Post: Utiliser les Expressions Régulières en Ruby (2/3)">&laquo; Utiliser les Expressions Régulières en Ruby (2/3)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Commentaires</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Simon Courtois (simonc) -
+  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+<script type="text/javascript">
+    var disqus_shortname = 'happyblog-happynoff';
+    
+      var disqus_identifier = 'http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3';
+      var disqus_url = 'http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3';
+      var disqus_script = 'embed.js';
+    
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+<script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</body>
+</html>
