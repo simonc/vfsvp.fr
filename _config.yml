@@ -91,7 +91,7 @@ disqus_short_name: 'vfsvp-fr'
 disqus_show_comment_count: true
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-15419839-2
 
 # Facebook Like
 # facebook_like: true
