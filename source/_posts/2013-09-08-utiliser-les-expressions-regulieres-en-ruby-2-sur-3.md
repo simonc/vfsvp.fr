@@ -97,42 +97,6 @@ assertion_ (recherche positive vers l'avant de taille zéro). Facile à prononce
 n'est-ce pas ? Dans le livre _The Well Grounded Rubyist_, David Black
 l'explique comme ceci :
 
-=Zero-width!=
-    (taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
-    consomme pas de caractères. Cela veut dire que la correspondance est
-    cherchée mais n'est pas retournée. Seule la présence d'une correspondance
-    est retournée, vrai ou faux.
-=Positive!=
-    signifie que le modèle doit être présent, obligatoirement.
-=lookahead!=
-    veut dire que cette expression est recherchée après le modèle
-    principal.
-=assertion!=
-    indique que seule la présence d'une correspondance est retournée sous
-    la forme true/false (vrai/faux).
-
-Zero-width
-:    (taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
-     consomme pas de caractères. Cela veut dire que la correspondance est
-     cherchée mais n'est pas retournée. Seule la présence d'une correspondance
-     est retournée, vrai ou faux.
-Positive
-:    signifie que le modèle doit être présent, obligatoirement.
-lookahead
-:    veut dire que cette expression est recherchée après le modèle
-     principal.
-assertion
-:    indique que seule la présence d'une correspondance est retournée sous
-     la forme true/false (vrai/faux).
-
-Sailboat
-:    A hole in the water into which one pours money
-:    A challenging, relaxing, enjoyable world of possibilities
-Car
-:    A pollutor that just loses its value
-
-:    Can get you where you want to go
-
 <dl>
   <dt>Zero-width</dt>
   <dd>(taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
