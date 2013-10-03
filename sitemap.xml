@@ -1,12 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby</loc>
+        <lastmod>2013-10-03T13:03:39+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://vfsvp.fr/blog/archives/</loc>
-        <lastmod>2013-10-01T09:51:04+02:00</lastmod>
+        <lastmod>2013-10-03T13:03:39+02:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/</loc>
-        <lastmod>2013-10-01T09:50:38+02:00</lastmod>
+        <lastmod>2013-10-03T13:03:39+02:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/robots.txt</loc>
