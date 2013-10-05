@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: ruby | VF svp]]></title>
+  <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
+  <link href="http://vfsvp.fr/"/>
+  <updated>2013-10-05T12:24:38+02:00</updated>
+  <id>http://vfsvp.fr/</id>
+  <author>
+    <name><![CDATA[Simon Courtois (simonc)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (3/3)]]></title>
+    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3"/>
+    <updated>2013-10-05T12:00:00+02:00</updated>
+    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3</id>
+    <content type="html"><![CDATA[<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a>.</p>
+
+<h2>Le comportement des Expressions Régulières</h2>
+
+<p>Les expressions régulières sont puissantes. Comme un célèbre super-héros l'a dit
+un jour &ldquo;with great power comes great responsibility&rdquo; (à grands pouvoirs,
+grande responsabilité). Pour éviter qu'une expression régulière ne cause une
+catastrophe, vous devez être capable d'en contrôler le comportement.</p>
+
+<!-- more -->
+
+
+<p>Les expressions régulières ont trois comportements distincts : greedy
+(gourmande), lazy (fainéante) et possessive. Ces termes peuvent sembler
+négatifs mais ne sont pas pour autant de mauvaises attitudes pour vos
+expressions. Ce sont simplement des descriptions des différentes façon d'agir
+que peuvent utiliser vos expressions et que vous pouvez contrôler. Je vais vous
+expliquer comment.</p>
+
+<p>Pour comprendre ces comportements, il nous faut d'abord comprendre les
+quantificateurs. Ils permettent de dire au moteur d'expressions régulières
+combien de fois un caractère ou un groupe de caractères doit apparaitre dans
+notre chaîne.</p>
+
+<p>Un des quantificateurs que j'utilise le plus souvent est le <code>+</code>. Lorsque je le
+place derrière un caractère, j'indique que ce dernier doit apparaitre au moins
+une fois. Il peut apparaitre autant de fois qu'il le souhaite mais doit être au
+minimum présent une fois.</p>
+
+<p>Prenons l'expression suivante :</p>
+
+<p><code>ruby
+/.+/
+</code></p>
+
+<p>Celle-ci trouverait une correspondance pour tout caractère apparaissant au moins
+une fois. Elle garantie donc la présence d'un caractère dans la chaîne.</p>
+
+<p>Les quantificateurs sont à la base même du comportement de votre expression, à
+savoir gourmande, fainéante ou possessive. Par défaut, elle est gourmande.</p>
+
+<p>Un quantificateur gourmand tente de trouver la correspondance la plus longue
+possible au sein de la chaîne. Il attrape autant de caractères que ses petites
+mains gourmandes le lui permettent et tente de trouver une correspondance. Si
+toute la chaîne ne correspond pas, il prend un caractère de moins et tente de
+nouveau la recherche. Il recommence ce processus jusqu'à ce qu'il ne trouve
+plus de caractères à tester.</p>
+
+<p>Les quantificateurs gourmands fournissent un effort maximum pour un retour
+maximum. Un quantificateur gourmand essaie autant de cas que possible pour
+trouver une correspondance et retourne le maximum de caractères en faisant
+partie.</p>
+
+<p>Pour l'exemple suivant, je vais changer de science fiction et emprunter une
+citation de <em>Star Trek: First Contact</em> :</p>
+
+<p><code>ruby
+string = "There's no time to talk about time we don't have the time"
+/.+time/
+</code></p>
+
+<p>Cette expression régulière capture tout caractère apparaissant au moins une
+fois, le tout suivi du mot &ldquo;time&rdquo;. Si je fais appel à la méthode <code>match</code> sur
+mon expression régulière en lui passant ma chaîne en paramètre :</p>
+
+<p>``` ruby
+/.+time/.match(string)</p>
+
+<h1>=> &ldquo;There&rsquo;s no time to talk about time we don&rsquo;t have the time&rdquo;</h1>
+
+<p>```</p>
+
+<p>Toute la chaîne correspond.</p>
+
+<p>Lorsque cette expression analyse la chaîne, elle tente d'abord de trouver la
+première partie du modèle, <code>.+</code>. Cela correspond à toute la chaîne. Elle essaie
+ensuite de trouver la deuxième partie, le mot <code>time</code>. Comme toute la chaîne a
+été consommée, elle cherche &ldquo;time&rdquo; après la fin de cette dernière et ne trouve
+rien. Elle recule donc d'un caractère (<em>backtrack</em>) et retente le test pour
+trouver une correspondance. Une fois celle-ci trouvée, elle est retournée. Dans
+notre cas, cela représente toute la chaîne.</p>
+
+<p>Les quantificateurs gourmands tentent de faire correspondre toute la chaine puis
+reculent progressivement. Ce recule progressif signifie que, si notre chaîne ne
+correspond pas du tout au modèle, l'expression va tenter autant que possible de
+trouver une correspondance. Elle doit garder en mémoire les possibilités déjà
+tentées ce qui peut prendre beaucoup de ressources systèmes, en particulier
+lorsque vous avez plusieurs tests effectués sur un texte long.</p>
+
+<p>Oniguruma a certaines optimisations qui rendent le recule progressif plus
+rapide. Patrick Shaughnessy a écrit un fantastique article sur son blog qui
+détail comment Oniguruma gère le recul progressif. Malgré les optimisations, une
+expression régulière gourmande consommera tout de même beaucoup de ressources.</p>
+
+<p>Lorsque vous souhaitez une recherche plus réduite et qui consomme moins de
+ressources, vous devez utiliser un quantificateurs fainéant. Également appelé
+quantificateur réticent, celui-ci va commencer sa recherche au tout début
+de la chaîne et tenter de faire correspondre le premier caractère. Si cela ne
+suffit pas, il va consommer un caractère supplémentaire. En dernier ressort il
+tentera de consommer toute la chaîne.</p>
+
+<p>Un quantificateur fainéant fournit l'effort minimum pour un retour minimum. Il
+retourne le moins de caractères possible pour une correspondance. S'il trouve ce
+qu'il cherche avec le premier caractère de la chaîne, il va simplement retourner
+celui-ci. Il est fainéant, il fait le minimum demandé et rien de plus.</p>
+
+<p>Pour utiliser un quantificateur fainéant, il suffit de lui ajouter un point
+d'interrogation.</p>
+
+<p><code>ruby
+/.+?time/
+</code></p>
+
+<p>Si j'appelle la méthode <code>match</code> sur ma chaîne en utilisant un quantificateur
+fainéant</p>
+
+<p>``` ruby
+/.+?time/.match(string)</p>
+
+<h1>=> &ldquo;There&rsquo;s no time&rdquo;</h1>
+
+<p>```</p>
+
+<p>Je récupère seulement &ldquo;There&rsquo;s no time&rdquo;. La recherche a commencé au tout début
+de la chaîne et retourne la correspondance minimum. Les expressions régulière
+fainéantes utilisent beaucoup moins de recul progressif et, par conséquent,
+moins de ressources que les expressions gourmandes.</p>
+
+<p>Comment faire lorsque l'on souhaite récupérer un maximum de caractères tout en
+limitant le recul progressif et la consommation de ressources ? Pour cela, il
+existe un troisième quantificateur, le quantificateur possessif. Il fonctionne
+sur le principe de tout ou rien, soit il trouve une correspondance au premier
+essai soit il échoue. Comme le gourmand, il consomme le plus de caractères possibles (la chaîne entière) et tente la correspondance. Si cette tentative
+échoue, il n'y aura ni recul ni nouvel essai.</p>
+
+<p>Les quantificateurs possessifs utilisent un effort minimum pour un retour
+maximum. Ils tentent de retournent autant de caractères que possible en en
+faisant le moins possible (ils tentent une fois puis abandonnent).</p>
+
+<p>Pour rendre un quantificateur possessif, il suffit de lui ajouter un plus <code>+</code> :</p>
+
+<p><code>ruby
+/.++time/
+</code></p>
+
+<p>Lançons la méthode <code>match</code> sur notre chaîne en lui passant cette expression
+possessive :</p>
+
+<p>``` ruby
+/.++time/.match(string)</p>
+
+<h1>=> nil</h1>
+
+<p>```</p>
+
+<p>Cet appel retourne <code>nil</code> car le test a échoué. Pourquoi cet échec ? Il semble
+pourtant que notre chaîne corresponde à l'expression. La raison est qu'aucun
+recul progressif n'est effectué.</p>
+
+<p>L'expression va d'abord tenter de trouver <code>.++</code> ce qui va consommer tout la
+chaîne. Lorsqu'elle tente de trouver le mot <code>time</code>, il ne reste plus de
+caractère à consommer. L'expression ne peut pas reculer à cause du
+quantificateur possessif et va donc échouer.</p>
+
+<p>Le principal avantage des quantificateurs possessifs est l'échec rapide.
+L'absence de recul consomme très peu de ressources. Un quantificateur gourmand
+va tenter tout ce qui est possible pour trouver une correspondance. En cas
+d'échec, tout ce travail et toutes ces ressources n'auront servi à rien. Un
+quantificateur possessif évite cela, si aucune correspondance n'existe l'échec
+sera rapide.</p>
+
+<p>En général, l'utilisation de quantificateurs possessifs se limite à des
+expressions très courte, lorsque vous avez une petite sous-expression au sein
+d'une expression plus large. Ils sont très utiles mais à utiliser avec
+précaution.</p>
+
+<h2>Conclusion</h2>
+
+<p>Les expressions régulières peuvent sembler extrêmement complexes. Lorsque j'ai
+appris à aller plus loin que les bases, au delà des petites astuces de
+validation d'email par exemple, j'ai trouvé que cela m'aidait de les voir comme
+un sous-programme dans un langage différent. En réalité c'est exactement ça.
+Vous écrivez un programme, au sein d'un autre programme, au sein de Ruby
+lui-même.</p>
+
+<p>Comme tout langage de programmation, il est plus simple d'écrire vos expressions
+par petites parties. Lorsque j'écris un <em>lookbehind</em>, j'écris d'abord le modèle
+principal, m'assure qu'il fonctionne. J'écris ensuite le modèle du lookbehind,
+séparément, et m'assure qu'il fonctionne également. Une fois cela fait, je
+joins les deux modèles pour valider qu'ils fonctionnent ensemble.</p>
+
+<p><a href="http://rubular.com/">Rubular</a> est un site fantastic pour écrire et tester vos
+expressions régulières. Testez le, utilisez le, il m'a vraiment facilité la vie.</p>
+
+<p>Comme tout programme informatique, les expressions régulières s'écrivent en
+plusieurs fois. Lorsque vous concevez une expression, il est tout à fait normal
+que celle-ci soit laide au début. Faites la fonctionner et après seulement
+tentez de la rendre plus lisible. C'est le même processus rouge, vert,
+réusinage (red, green, refector) qui est utilisé dans le développement dirigé
+par les tests.</p>
+
+<p>Les expressions régulières sont puissantes. Si puissantes qu'elles font peur à
+beaucoup d'entre-nous. Cette peur peut être surpassée. Aussi obscures qu'elle
+peuvent paraître, elles ont une structure logique et réfléchie. Utilisez-les,
+lancez Rubular et essayez quelques <em>lookaheads</em> et <em>lookbehinds</em>. Tentez les
+quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
+intégration des expressions régulières dans Ruby, je pense que vous en serez
+surpris ce que vous trouverez.</p>
+
+<h2>Note</h2>
+
+<p>Ceci est une traduction de l'article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/">blog de Blue Box</a>.</p>
+
+<h2>L'auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l'environnement dynamique de la création d'applications logicielles. Dans ces
+deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l'art martial appelé Naginata.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (2/3)]]></title>
+    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3"/>
+    <updated>2013-09-08T00:30:00+02:00</updated>
+    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3</id>
+    <content type="html"><![CDATA[<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+Vous pouvez lire la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
+
+<h2>Les LookArounds</h2>
+
+<p>Les lookarounds me permettent d'aller plus loin que la simple comparaison avec
+un modèle. En effet, ils offrent la possibilité de donner un contexte à cette
+comparaison. Une expression contenant un lookaround ne retourne un résultat que
+lorsqu'elle est effectuée dans ce contexte.</p>
+
+<!-- more -->
+
+
+<p>Soit une nouvelle chaîne de caractère, une autre citation d'Obiwan Kenobi dans
+Star Wars.</p>
+
+<p><code>ruby
+string = "Who's the more foolish?  The fool or the fool who follows him?"
+</code></p>
+
+<p>Je veux connaître tous les emplacements du mot &ldquo;fool&rdquo; dans cette chaîne. Je vais
+donc utiliser l'expression régulière <code>/fool/</code>. Dans ce cas précis, je vais
+utiliser la méthode <code>scan</code> sur ma chaîne. Cette méthode retourne toutes les
+occurrences de mon expression dans la chaîne :</p>
+
+<p>``` ruby
+string.scan(/fool/)</p>
+
+<h1>=> [&ldquo;fool&rdquo;, &ldquo;fool&rdquo;, &ldquo;fool&rdquo;]</h1>
+
+<p>```</p>
+
+<p>Comme on peut le voir, scan retourne une partie du mot &ldquo;foolish&rdquo; et les deux
+occurrences du mot &ldquo;fool&rdquo;.</p>
+
+<p>Comment fait-on si l'on souhaite que notre modèle <code>/fool/</code> retourne un résultat
+seulement s'il fait partie du mot &ldquo;foolish&rdquo; ? Pour ce cas j'utiliserais un
+<em>lookahead positif</em> (recherche vers l'avant). Cela indique à mon expression
+régulière de trouver toutes les correspondances à mon modèle directement suivies
+d'une correspondance à un autre modèle. En Ruby, un lookahead positif est
+exprimé grâce à l'opérateur <code>?=</code> :</p>
+
+<p><code>ruby
+/fool(?=ish)/
+</code></p>
+
+<p>Voici mon expression modifiée. Comme vous pouvez le voir, j'ai mon modèle
+contenant le mot &ldquo;fool&rdquo; directement suivi du modèle lookahead &ldquo;ish&rdquo;.</p>
+
+<p>``` ruby
+string.scan(/fool(?=ish)/)</p>
+
+<blockquote><p>=> [&ldquo;fool&rdquo;]
+```</p></blockquote>
+
+<p>Cette fois-ci, la méthode <code>scan</code> retourne un seul résultat, la seule occurrence
+de &ldquo;fool&rdquo; suivie de &ldquo;ish&rdquo;.</p>
+
+<p>De nouveau, utilisons la méthode <code>gsub</code> pour modifier notre chaîne. Remplaçons
+chaque occurrence de &ldquo;fool&rdquo; (suivie de &ldquo;ish&rdquo;) par le mot &ldquo;self" :</p>
+
+<p>``` ruby
+string.gsub(/fool(?=ish)/, &ldquo;self&rdquo;)</p>
+
+<h1>=> &ldquo;Who&rsquo;s the more selfish?  The fool or the fool who follows him?&rdquo;</h1>
+
+<p>```</p>
+
+<p>Nos excuses à Obiwan Kenobi, nous avons changé la ligne pour <em>&ldquo;Who&rsquo;s the more
+selfish?  The fool or the fool who follows him?&rdquo;</em>.</p>
+
+<p>Techniquement, c'est ce que l'on appelle une <em>zero-width, positive lookahead
+assertion</em> (recherche positive vers l'avant de taille zéro). Facile à prononcer
+n'est-ce pas ? Dans le livre <em>The Well Grounded Rubyist</em>, David Black
+l'explique comme ceci :</p>
+
+<dl>
+  <dt>Zero-width</dt>
+  <dd>(taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
+    consomme pas de caractères. Cela veut dire que la correspondance est
+    cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+    est retournée, vrai ou faux.</dd>
+
+  <dt>Positive</dt>
+  <dd>signifie que le modèle doit être présent, obligatoirement.</dd>
+
+  <dt>lookahead</dt>
+  <dd>veut dire que cette expression est recherchée après le modèle
+    principal.</dd>
+
+  <dt>assertion</dt>
+  <dd>indique que seule la présence d'une correspondance est retournée sous
+    la forme true/false (vrai/faux).</dd>
+</dl>
+
+
+<p>Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
+les occurrences du mot &ldquo;fool&rdquo; qui ne sont <strong>pas</strong> suivies des lettres &ldquo;ish&rdquo; ?
+Dans ce cas, je dois utiliser un lookahead négatif. Techniquement, c'est ce que
+l'on appelle une <em>zero-width, negative lookahead assertion</em> (recherche négative
+vers l'avant de taille zéro). Négative signifie qu'aucune correspondance à ce
+modèle ne doit être trouvée. Pour effectuer un lookahead négatif, uilisez
+l'opérateur <code>?!</code>.</p>
+
+<p>Je vais de nouveau appeler <code>scan</code> sur ma chaîne en utilisant cette fois un
+lookahead négatif dans mon expression régulière. Je veux trouver toutes les
+occurrences de &ldquo;fool&rdquo; qui ne font pas partie du mot &ldquo;foolish" :</p>
+
+<p>``` ruby
+string.scan(/fool(?!ish)/)</p>
+
+<h1>=> [&ldquo;fool&rdquo;, &ldquo;fool&rdquo;]</h1>
+
+<p>```</p>
+
+<p>Deux correspondances sont retournées, les deux fois où le mot &ldquo;fool&rdquo; apparait
+sans faire partie de &ldquo;foolish&rdquo;.</p>
+
+<p>Utilisons maintenant la méthode <code>gsub</code>. À chaque fois que nous
+trouvons le mot &ldquo;fool&rdquo; (non suivi des lettres &ldquo;ish&rdquo;), nous allons le remplacer
+pas le mot &ldquo;self" :</p>
+
+<p>``` ruby
+string.gsub(/fool(?!ish)/, &ldquo;self&rdquo;)</p>
+
+<h1>=> &ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</h1>
+
+<p>```
+Encore une fois j'ai changé une réplique classique. On peut maintenant lire
+&ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</p>
+
+<p>Les lookaheads sont très pratiques lorsque l'on souhaite trouver une
+correspondance en prenant en compte ce qui la suit. Allons de nouveau un peu
+plus loin. Comment dois-je m'y prendre si je souhaite trouver une correspondance
+à partir de ce qui la précède ? Pour faire cela, je dois utiliser une <em>positive
+lookbehind assertion</em> (recherche positive vers l'arrière). Cela signifie que je
+veux trouver toutes les correspondances à mon modèle précédées d'un autre
+modèle.</p>
+
+<p>Utilisons une autre citation de Star Wars, une de Yoda cette fois-ci :</p>
+
+<p><code>ruby
+string = "For my ally is the force, and a powerful ally it is."
+</code></p>
+
+<p>The modèle principal que je souhaite chercher est le mot &ldquo;ally&rdquo;, je vais donc
+utiliser l'expression régulière <code>/ally/</code>. J'aimerais cependant trouver le mot
+&ldquo;ally&rdquo; uniquement s'il est directement précédé du mot &ldquo;powerful&rdquo;. C'est le cas
+parfait pour un <em>positive lookbehind</em> (recherche positive vers l'arrière). Les
+lookbehinds positifs utilisent l'opérateur <code>?&lt;=</code>. Utilisons le dans notre
+expression régulière :</p>
+
+<p><code>ruby
+/(?&lt;=powerful )ally/
+</code></p>
+
+<p>Cette expression régulière relève le mot &ldquo;ally&rdquo; chaque fois qu'il est
+directement précédé du mot &ldquo;powerful&rdquo;. Comme vous pouvez le remarquer, le
+lookbehind est positionné avant le modèle principal. Cela montre bien que le mot
+&ldquo;powerful&rdquo; doit est devant le mot &ldquo;ally&rdquo;.</p>
+
+<p>Je vais maintenant utiliser la méthode <code>gsub</code> sur ma chaîne. Chaque fois que le
+mot &ldquo;ally&rdquo; est précédé par le mot &ldquo;powerful&rdquo;, je veux le remplacer par le mot
+&ldquo;friend" :</p>
+
+<p>``` ruby
+string.gsub(/(?&lt;=powerful )ally/, &ldquo;friend&rdquo;)</p>
+
+<h1>=> For my ally is the force, and a powerful friend it is.</h1>
+
+<p>```</p>
+
+<p>Cela change quelque peu les mots de Yoda : &ldquo;For my ally is the force, and a
+powerful friend it is.&rdquo;</p>
+
+<p>Comment dois-je m'y prendre si je souhaite faire le contraire ? Si par exemple
+je veux toutes les occurrences du mot &ldquo;ally&rdquo; qui ne sont <strong>pas</strong> précédées du
+mot &ldquo;powerful&rdquo;. Dans ce cas, je dois utiliser un <em>negative lookbehind</em>
+(recherche négative vers l'arrière). Pour cela on trouve l'opérateur <code>?&lt;!</code>.
+Utilisons-le dans notre expression régulière :</p>
+
+<p><code>ruby
+/(?&lt;!powerful )ally/
+</code></p>
+
+<p>Utilisons maintenant <code>gsub</code> sur notre chaîne pour remplacer chaque occurence du
+mot &ldquo;ally&rdquo;, non précédée du mot &ldquo;powerful&rdquo;, par le mot &ldquo;friend" :</p>
+
+<p>``` ruby
+string.gsub(/(?&lt;!powerful )ally/, &ldquo;friend&rdquo;)</p>
+
+<h1>=> &ldquo;For my friend is the force, and a powerful ally it is.&rdquo;</h1>
+
+<p>```</p>
+
+<p>J'ai de nouveau changé les paroles de Yoda : &ldquo;For my ally is the force, and a
+powerful friend it is.&rdquo;.</p>
+
+<p>Les lookarounds donnent une puissance incroyable à vos expressions régulières en
+leur apportant un contexte. Plutôt que d'utiliser un modèle strict qui
+correspond ou non, vos expressions régulières deviennent puissantes, flexibles
+et capables de trouver bien plus de choses.</p>
+
+<p><a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
+
+<h2>Note</h2>
+
+<p>Ceci est une traduction de l'article publié en anglais sur le
+<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/">blog de Blue Box</a>.</p>
+
+<h2>L'auteur chez Blue Box</h2>
+
+<p>Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l'environnement dynamique de la création d'applications logicielles. Dans ces
+deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l'art martial appelé Naginata.</p>
+]]></content>
+  </entry>
+  
+</feed>

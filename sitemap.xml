@@ -1,12 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3</loc>
+        <lastmod>2013-10-05T12:21:48+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3</loc>
+        <lastmod>2013-10-05T12:22:42+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://vfsvp.fr/blog/archives/</loc>
-        <lastmod>2013-10-01T09:51:04+02:00</lastmod>
+        <lastmod>2013-10-05T12:22:42+02:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/</loc>
-        <lastmod>2013-10-01T09:50:38+02:00</lastmod>
+        <lastmod>2013-10-05T12:22:42+02:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/robots.txt</loc>
