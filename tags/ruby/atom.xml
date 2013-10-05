@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-05T12:29:00+02:00</updated>
+  <updated>2013-10-05T12:37:45+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -18,10 +18,12 @@
     <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3"/>
     <updated>2013-10-05T12:00:00+02:00</updated>
     <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3</id>
-    <content type="html"><![CDATA[<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/">Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box</a></p>
+
+<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
-<a href="/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
-<a href="/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a>.</p>
+<a href="/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a>.</p>
 
 <h2>Le comportement des Expressions Régulières</h2>
 
@@ -230,11 +232,6 @@ quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
 intégration des expressions régulières dans Ruby, je pense que vous en serez
 surpris ce que vous trouverez.</p>
 
-<h2>Note</h2>
-
-<p>Ceci est une traduction de l'article publié en anglais sur le
-<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/">blog de Blue Box</a>.</p>
-
 <h2>L'auteur chez Blue Box</h2>
 
 <p>Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
@@ -253,10 +250,12 @@ libre, elle pratique l'art martial appelé Naginata.</p>
     <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3"/>
     <updated>2013-10-05T12:00:00+02:00</updated>
     <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3</id>
-    <content type="html"><![CDATA[<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/">Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box</a></p>
+
+<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
-<a href="/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
-<a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
+<a href="/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
+<a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
 
 <h2>Les LookArounds</h2>
 
@@ -458,12 +457,7 @@ leur apportant un contexte. Plutôt que d'utiliser un modèle strict qui
 correspond ou non, vos expressions régulières deviennent puissantes, flexibles
 et capables de trouver bien plus de choses.</p>
 
-<p><a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
-
-<h2>Note</h2>
-
-<p>Ceci est une traduction de l'article publié en anglais sur le
-<a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/">blog de Blue Box</a>.</p>
+<p><a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
 
 <h2>L'auteur chez Blue Box</h2>
 
@@ -483,10 +477,12 @@ libre, elle pratique l'art martial appelé Naginata.</p>
     <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3"/>
     <updated>2013-10-05T12:00:00+02:00</updated>
     <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3</id>
-    <content type="html"><![CDATA[<p>Voici la première partie d'une série sur les Expressions Régulières en Ruby.
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/">Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box</a></p>
+
+<p>Voici la première partie d'une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
-<a href="/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a> et la
-<a href="/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
+<a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a> et la
+<a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
 
 <h2>Introduction</h2>
 
@@ -772,12 +768,7 @@ end</p>
 
 <p>```</p>
 
-<p><a href="/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">Lire le deuxième article de cette série</a></p>
-
-<h2>Note</h2>
-
-<p>Ceci est une traduction de l'article publié en anglais sur le
-<a href="http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/">blog de Blue Box</a>.</p>
+<p><a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">Lire le deuxième article de cette série</a></p>
 
 <h2>L'auteur chez Blue Box</h2>
 
