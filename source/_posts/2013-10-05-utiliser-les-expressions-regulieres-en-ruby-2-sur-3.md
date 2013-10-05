@@ -8,10 +8,12 @@ categories:
 - ruby
 ---
 
+Source: [Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box](http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/)
+
 Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
-[première partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3) et la
-[troisième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3).
+[première partie ici](/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3) et la
+[troisième partie ici](/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3).
 
 ## Les LookArounds
 
@@ -198,12 +200,7 @@ leur apportant un contexte. Plutôt que d'utiliser un modèle strict qui
 correspond ou non, vos expressions régulières deviennent puissantes, flexibles
 et capables de trouver bien plus de choses.
 
-[Lire le troisième article de cette série](/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3)
-
-## Note
-
-Ceci est une traduction de l'article publié en anglais sur le
-[blog de Blue Box](http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/).
+[Lire le troisième article de cette série](/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3)
 
 ## L'auteur chez Blue Box
 

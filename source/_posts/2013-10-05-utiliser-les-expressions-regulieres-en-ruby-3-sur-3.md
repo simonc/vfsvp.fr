@@ -8,10 +8,12 @@ categories:
 - ruby
 ---
 
+Source: [Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box](http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/)
+
 Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
-[première partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3) et la
-[deuxième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3).
+[première partie ici](/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3) et la
+[deuxième partie ici](/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3).
 
 ## Le comportement des Expressions Régulières
 
@@ -212,11 +214,6 @@ lancez Rubular et essayez quelques _lookaheads_ et _lookbehinds_. Tentez les
 quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
 intégration des expressions régulières dans Ruby, je pense que vous en serez
 surpris ce que vous trouverez.
-
-## Note
-
-Ceci est une traduction de l'article publié en anglais sur le
-[blog de Blue Box](http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/).
 
 ## L'auteur chez Blue Box
 

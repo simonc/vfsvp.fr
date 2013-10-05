@@ -8,10 +8,12 @@ categories:
 - ruby
 ---
 
+Source: [Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box](http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/)
+
 Voici la première partie d'une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
-[deuxième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3) et la
-[troisième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3).
+[deuxième partie ici](/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3) et la
+[troisième partie ici](/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3).
 
 ## Introduction
 
@@ -273,12 +275,7 @@ end
 #=> THE FORCE WILL BE WITH YOU ALWAYS THE WILL BE WITH YOU ALWAYS
 ```
 
-[Lire le deuxième article de cette série](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3)
-
-## Note
-
-Ceci est une traduction de l'article publié en anglais sur le
-[blog de Blue Box](http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/).
+[Lire le deuxième article de cette série](/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3)
 
 ## L'auteur chez Blue Box
 
