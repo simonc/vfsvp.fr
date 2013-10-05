@@ -2,35 +2,16 @@
 author: Simon Courtois (simonc)
 layout: post
 title: "Utiliser les Expressions Régulières en Ruby (3/3)"
-date: 2013-09-08 00:30
-published: false
+date: 2013-10-05 12:00
 categories:
 - regex
 - ruby
 ---
 
-**Note:** Ceci est une traduction de l'article publié en anglais sur le
-[blog de Blue Box](http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/).
-
-<!-- more -->
-
-## L'auteur chez Blue Box
-
-Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
-Logiciel. Elle siège également au conseil de Certification de Programmation
-Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
-Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
-et travaillé dans le domaine du théâtre, une excellente préparation à
-l'environnement dynamique de la création d'applications logicielles. Dans ces
-deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
-libre, elle pratique l'art martial appelé Naginata.
-
 Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
 [première partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-1-sur-3) et la
 [deuxième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3).
-
-<!-- more -->
 
 ## Le comportement des Expressions Régulières
 
@@ -38,6 +19,8 @@ Les expressions régulières sont puissantes. Comme un célèbre super-héros l'
 un jour "with great power comes great responsibility" (à grands pouvoirs,
 grande responsabilité). Pour éviter qu'une expression régulière ne cause une
 catastrophe, vous devez être capable d'en contrôler le comportement.
+
+<!-- more -->
 
 Les expressions régulières ont trois comportements distincts : greedy
 (gourmande), lazy (fainéante) et possessive. Ces termes peuvent sembler
@@ -229,3 +212,19 @@ lancez Rubular et essayez quelques _lookaheads_ et _lookbehinds_. Tentez les
 quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
 intégration des expressions régulières dans Ruby, je pense que vous en serez
 surpris ce que vous trouverez.
+
+## Note
+
+Ceci est une traduction de l'article publié en anglais sur le
+[blog de Blue Box](http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/).
+
+## L'auteur chez Blue Box
+
+Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l'environnement dynamique de la création d'applications logicielles. Dans ces
+deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l'art martial appelé Naginata.

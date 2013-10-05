@@ -2,35 +2,16 @@
 author: Simon Courtois (simonc)
 layout: post
 title: "Utiliser les Expressions Régulières en Ruby (1/3)"
-date: 2013-09-08 00:30
-published: false
+date: 2013-10-05 12:00
 categories:
 - regex
 - ruby
 ---
 
-**Note:** Ceci est une traduction de l'article publié en anglais sur le
-[blog de Blue Box](http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/).
-
-<!-- more -->
-
-## L'auteur chez Blue Box
-
-Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
-Logiciel. Elle siège également au conseil de Certification de Programmation
-Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
-Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
-et travaillé dans le domaine du théâtre, une excellente préparation à
-l'environnement dynamique de la création d'applications logicielles. Dans ces
-deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
-libre, elle pratique l'art martial appelé Naginata.
-
 Voici la première partie dans une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
 [deuxième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3) et la
 [troisième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3).
-
-<!-- more -->
 
 ## Introduction
 
@@ -50,6 +31,9 @@ aider à dépasser votre peur des expressions régulières. Pour cela, je vais l
 découper, étape par étape, et vous guider au travers du concept d'expressions
 régulières en Ruby et ce jusqu'aux techniques avancées. J'espère que vous verrez
 la beauté, surpasserez votre intimidation et les adopterez dans votre code.
+
+
+<!-- more -->
 
 ## Les Expressions Régulières
 
@@ -289,4 +273,20 @@ end
 #=> THE FORCE WILL BE WITH YOU ALWAYS THE WILL BE WITH YOU ALWAYS
 ```
 
-[Lire le second article de cette série](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3)
+[Lire le deuxième article de cette série](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3)
+
+## Note
+
+Ceci est une traduction de l'article publié en anglais sur le
+[blog de Blue Box](http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/).
+
+## L'auteur chez Blue Box
+
+Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
+Logiciel. Elle siège également au conseil de Certification de Programmation
+Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
+Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
+et travaillé dans le domaine du théâtre, une excellente préparation à
+l'environnement dynamique de la création d'applications logicielles. Dans ces
+deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
+libre, elle pratique l'art martial appelé Naginata.
