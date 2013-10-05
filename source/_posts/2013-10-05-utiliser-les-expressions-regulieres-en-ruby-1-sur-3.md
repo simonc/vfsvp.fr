@@ -8,7 +8,7 @@ categories:
 - ruby
 ---
 
-Voici la première partie dans une série sur les Expressions Régulières en Ruby.
+Voici la première partie d'une série sur les Expressions Régulières en Ruby.
 Vous pouvez lire la
 [deuxième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-2-sur-3) et la
 [troisième partie ici](/post/utiliser-les-expressions-regulieres-en-ruby-3-sur-3).
