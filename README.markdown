@@ -38,7 +38,7 @@ J'accepte les traductions par email sur l'adresse scourtois+vfsvp@cubyx.fr.
 ### Sur Gihub
 
 * Forkez le dépôt
-* Écrivez votre article dans _source/_posts_
+* Écrivez votre article dans `source/_posts`
 * Faites une Pull Request
 
 ## TODO
