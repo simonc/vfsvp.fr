@@ -72,10 +72,8 @@ est cependant capable de donner les deux représentations. Cette méthode peut
 prendre `b*` ou `B*` en entrée, voici leur différence selon la documentation de
 Ruby :
 
-``` 
-B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
-b | bit string (LSB first) | représentation binaire (bit de poids faible en
-```
+    B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
+    b | bit string (LSB first) | représentation binaire (bit de poids faible en
 
 Voyons maintenant deux exemples.
 
@@ -147,10 +145,8 @@ Observez la différence entre les deux cas suivants :
 
 La documentation Ruby indique
 
-```
-H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
-h | hex string (low nibble first)  | représentation hexadécimale (moitié basse en premier)
-```
+    H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
+    h | hex string (low nibble first)  | représentation hexadécimale (moitié basse en premier)
 
 Un octet est composé de 8 bits. Une moitié contient donc 4 bits. Un octet
 donc deux moitiés. La valeur ASCII de `h` est 104. 104 en hexadécimale s'écrit
@@ -160,7 +156,8 @@ moitié haute puis moitié basse, de gauche à droite, la valeur 6 pour la
 valeur 8.
 
 Si cependant vous devez utiliser la notation moitié basse puis moitié haute, la
-valeur 8 prendra la première place suivie de la valeur 6. La notation _moitié basse en premier_ donne donc 86.
+valeur 8 prendra la première place suivie de la valeur 6. La notation _moitié
+basse en premier_ donne donc 86.
 
 Cette notation est utilisée pour chaque octet. Pour cette raison, la version
 _moitié basse en premier_ de `68 65 6c 6c 6f` est `86 56 c6 c6 f6`.
