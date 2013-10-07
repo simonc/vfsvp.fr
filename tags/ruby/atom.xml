@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-06T18:41:53+02:00</updated>
+  <updated>2013-10-07T09:50:11+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -12,6 +12,347 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Les méthodes pack et unpack en Ruby]]></title>
+    <link href="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby"/>
+    <updated>2013-10-07T10:00:00+02:00</updated>
+    <id>http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html">Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary</a></p>
+
+<p>Le langage C permet aux développeurs d'accéder directement à la mémoire où sont
+stockées les variables. Ruby ne le permet pas. Il est cependant des cas dans
+lesquels on peut avoir besoin d'accéder aux bits et octets contenus dans cette
+mémoire tout en travaillant avec Ruby. Ce dernier fournit deux méthods <code>pack</code> et
+<code>unpack</code> pour cela.</p>
+
+<p>Voici un exemple :</p>
+
+<p>``` ruby
+&lsquo;A&rsquo;.unpack(&lsquo;b*&rsquo;)</p>
+
+<h1>=> [&ldquo;10000010&rdquo;]</h1>
+
+<p>```</p>
+
+<!-- more -->
+
+
+<p>Dans le cas ci-dessus, <code>'A'</code> est une chaîne de caractères stockée et, grâce à
+<code>unpack</code> je tente d'en lire la valeur binaire. La table ASCII indique que la
+valeur de <code>'A'</code> est 65 et la représentation binaire de 65 est <code>10000010</code>.</p>
+
+<p>Un autre exemple :</p>
+
+<p>``` ruby
+&lsquo;A&rsquo;.unpack(&lsquo;B*&rsquo;)</p>
+
+<h1>=> [&ldquo;01000001&rdquo;]</h1>
+
+<p>```</p>
+
+<p>Notez bien le changement de résultat entre les deux exemples. Quelle est la
+différence entre <code>b*</code> et <code>B*</code> ? Pour le comprendre nous devons d'abord parler
+de <em>MSB</em> et <em>LSB</em>.</p>
+
+<h2>Bit de poids fort et bit de poids faible</h2>
+
+<p>Tous les bits ne sont pas créés égaux. <code>'C'</code> a la valeur ASCII 67. La
+représentation binaire de 67 est <code>1000011</code>.</p>
+
+<p>Parlons d'abord du style <em>MSB</em> (most significant bit, bit de poids fort). Si
+vous utilisez le style <em>MSB</em>, et lisez donc de gauche à droite (en lisant tout
+le temps de gauche à droite), le bit de poids le plus fort est donc le premier.
+Puisque le bit de poids le plus fort vient en premier, nous pouvons ajouter un
+<code>0</code> devant pour obtenir huit bits. Après avoir ajouté un <code>0</code> la représentation
+binaire est donc <code>01000011</code>.</p>
+
+<p>Pour convertir cette valeur en <em>LSB</em> (least significant bit, bit de poids
+faible), nous devons stocker le bit de poids faible en premier (à gauche). Nous
+pouvons voir ci-dessous comment les bits vont être déplacés lors de la
+convertion de <em>MSB</em> vers <em>LSB</em>. Notez qu'ici la position 1 indique le bit le
+plus à gauche.</p>
+
+<ul>
+<li>déplacer la valeur 1 de la position <em>MSB</em> 8 à la position <em>LSB</em> 1</li>
+<li>déplacer la valeur 1 de la position <em>MSB</em> 7 à la position <em>LSB</em> 2</li>
+<li>déplacer la valeur 0 de la position <em>MSB</em> 6 à la position <em>LSB</em> 3</li>
+<li>et ainsi de suite</li>
+</ul>
+
+
+<p>Une fois l'exercice terminé, la valeur sera <code>11000010</code>.</p>
+
+<p>Nous avons effectué cette transformation à la main pour bien comprendre la
+différence entre bit de poids fort et bit de poids faible. La méthode <code>unpack</code>
+est cependant capable de donner les deux représentations. Cette méthode peut
+prendre <code>b*</code> ou <code>B*</code> en entrée, voici leur différence selon la documentation de
+Ruby :</p>
+
+<p><code>
+B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
+b | bit string (LSB first) | représentation binaire (bit de poids faible en
+</code></p>
+
+<p>Voyons maintenant deux exemples.</p>
+
+<p>``` ruby
+&lsquo;C&rsquo;.unpack(&lsquo;b*&rsquo;)</p>
+
+<h1>=> [&ldquo;11000010&rdquo;]</h1>
+
+<p>&lsquo;C&rsquo;.unpack(&lsquo;B*&rsquo;)</p>
+
+<h1>=> [&ldquo;01000011&rdquo;]</h1>
+
+<p>```</p>
+
+<p><code>b*</code> et <code>B*</code> voient tous les deux là même donnée. Ils représentent simplement
+cette donnée différemment.</p>
+
+<h2>Différentes façons de représenter une même donnée</h2>
+
+<p>Disons que je souhaite la représentation binaire de la chaîne <code>hello</code>. D'après
+ce que nous avons vu précédemment cela devrait être assez facile :</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;B*&rsquo;)</p>
+
+<h1>=> [&ldquo;0110100001100101011011000110110001101111&rdquo;]</h1>
+
+<p>```</p>
+
+<p>Nous pouvons également obtenir le résultat suivant</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;).map {|e| e.to_s 2}</p>
+
+<h1>=> [&ldquo;1101000&rdquo;, &ldquo;1100101&rdquo;, &ldquo;1101100&rdquo;, &ldquo;1101100&rdquo;, &ldquo;1101111&rdquo;]</h1>
+
+<p>```</p>
+
+<p>Voyons un exemple similaire mais en découpant les étapes cette fois.</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;)</p>
+
+<h1>=> [104, 101, 108, 108, 111]</h1>
+
+<p>```</p>
+
+<p>La directive <code>C*</code> retourne les caractères sous la forme d'un entier non signé
+tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et celle de
+<code>e</code> est 101, etc.</p>
+
+<p>En utilisant la technique vu précédemment, nous pouvons obtenir une
+représentation hexadécimale de notre chaîne :</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;).map {|e| e.to_s 16}</p>
+
+<h1>=> [&ldquo;68&rdquo;, &ldquo;65&rdquo;, &ldquo;6c&rdquo;, &ldquo;6c&rdquo;, &ldquo;6f&rdquo;]</h1>
+
+<p>```</p>
+
+<p>Il est toutefois possible d'obtenir directement cette valeur hexadécimale :</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;H*&rsquo;)</p>
+
+<h1>=> [&ldquo;68656c6c6f&rdquo;]</h1>
+
+<p>```</p>
+
+<h2>High nibble first vs Low nibble first</h2>
+
+<p>Observez la différence entre les deux cas suivants :</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;H*&rsquo;)</p>
+
+<h1>=> [&ldquo;68656c6c6f&rdquo;]</h1>
+
+<p>&ldquo;hello&rdquo;.unpack(&lsquo;h*&rsquo;)</p>
+
+<h1>=> [&ldquo;8656c6c6f6&rdquo;]</h1>
+
+<p>```</p>
+
+<p>La documentation Ruby indique</p>
+
+<p><code>
+H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
+h | hex string (low nibble first)  | représentation hexadécimale (moitié basse en premier)
+</code></p>
+
+<p>Un octet est composé de 8 bits. Une moitié contient donc 4 bits. Un octet
+donc deux moitiés. La valeur ASCII de <code>h</code> est 104. 104 en hexadécimale s'écrit
+68. Ce nombre 68 est stocké en deux moitiés. La première contient la valeur 6
+sur 4 bits et la seconde contient la valeur 8. En général on utilise la notation
+moitié haute puis moitié basse, de gauche à droite, la valeur 6 pour la
+valeur 8.</p>
+
+<p>Si cependant vous devez utiliser la notation moitié basse puis moitié haute, la
+valeur 8 prendra la première place suivie de la valeur 6. La notation <em>moitié basse en premier</em> donne donc 86.</p>
+
+<p>Cette notation est utilisée pour chaque octet. Pour cette raison, la version
+<em>moitié basse en premier</em> de <code>68 65 6c 6c 6f</code> est <code>86 56 c6 c6 f6</code>.</p>
+
+<h2>Mélanger les directives</h2>
+
+<p>Dans les exemples précédents, nous avons utilisé le caractère <code>*</code>. Cela indique
+de traiter autant de caractères que possible. Par exemple :</p>
+
+<p>A single C will get a single byte.</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;C&rsquo;)</p>
+
+<h1>=> [104]</h1>
+
+<p>```</p>
+
+<p>Vous pouvez ajouter plus de <code>C</code> si vous le souhaitez.</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;CC&rsquo;)</p>
+
+<h1>=> [104, 101]</h1>
+
+<p>&ldquo;hello&rdquo;.unpack(&lsquo;CCC&rsquo;)</p>
+
+<h1>=> [104, 101, 108]</h1>
+
+<p>&ldquo;hello&rdquo;.unpack(&lsquo;CCCCC&rsquo;)</p>
+
+<h1>=> [104, 101, 108, 108, 111]</h1>
+
+<p>```</p>
+
+<p>Plutôt que de répéter ces directives, nous pouvons utiliser un nombre pour
+indiquer combien de fois la directive doit être répétée.</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;C5&rsquo;)</p>
+
+<h1>=> [104, 101, 108, 108, 111]</h1>
+
+<p>```</p>
+
+<p>Nous pouvons utiliser <code>*</code> pour capturer toutes les octets restants.</p>
+
+<p>``` ruby
+&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;)</p>
+
+<h1>=> [104, 101, 108, 108, 111]</h1>
+
+<p>```</p>
+
+<p>Voyons un exemple dans lequel nous mélangeons les notations <em>MSB</em> et <em>LSB</em> :</p>
+
+<p>``` ruby
+&ldquo;aa&rdquo;.unpack(&lsquo;b8B8&rsquo;)</p>
+
+<h1>=> [&ldquo;10000110&rdquo;, &ldquo;01100001&rdquo;]</h1>
+
+<p>```</p>
+
+<h2>pack est l'inverse de unpack</h2>
+
+<p>La méthode <code>pack</code> est utilisée pour lire les données stockées. Voyons quelques
+exemples d'utilisation :</p>
+
+<p>``` ruby
+[1000001].pack(&lsquo;C&rsquo;)</p>
+
+<h1>=> &ldquo;A&rdquo;</h1>
+
+<p>```</p>
+
+<p>Dans le code ci-dessus, le valeur binaire est interpretée comme un entier non
+signé sur 8 bits et le résultat est <code>'A'</code>.</p>
+
+<p>``` ruby
+[&lsquo;A&rsquo;].pack(&lsquo;H&rsquo;)</p>
+
+<h1>=> &ldquo;\xA0&rdquo;</h1>
+
+<p>```</p>
+
+<p>Ici, l'entrée <code>'A'</code> n'est pas le <code>A</code> ASCII mais le <code>A</code> hexadécimale. C'est
+la version hexadécimale à cause de la directive <code>H</code>. Cette dernière indique à
+<code>pack</code> de traiter l'entrée comme une valeur hexadécimale. Comme <code>H</code> utilise la
+notation <em>moitié haute en premier</em>, puisque l'entrée ne contient qu'une moitié,
+cela signifie que la deuxième moitié, la moitié basse, a la valeur <code>0</code>. L'entrée
+est donc vue comme <code>'A0'</code>.</p>
+
+<p>Comme la valeur hexadécimale <code>A0</code> ne correspond à rien dans la table ASCII, le
+résultat final est laissé tel quel et vaut donc <code>'\xA0'</code>. Le préfix <code>\x</code> indique
+qu'il s'agit d'une valeur hexadécimale.</p>
+
+<p>En hexadécimale, <code>a</code> a la même valeur que <code>A</code>. Nous pouvons donc remplacer <code>A</code>
+par <code>a</code> dans notre exemple précédent et le résultat reste inchangé. Essayons
+pour voir :</p>
+
+<p>``` ruby
+[&lsquo;a&rsquo;].pack(&lsquo;H&rsquo;)</p>
+
+<h1>=> &ldquo;\xA0&rdquo;</h1>
+
+<p>```</p>
+
+<p>Un autre exemple :</p>
+
+<p>``` ruby
+[&lsquo;a&rsquo;].pack(&lsquo;h&rsquo;)</p>
+
+<h1>=> &ldquo;\n&rdquo;</h1>
+
+<p>```</p>
+
+<p>Dans le code ci-dessus, il y a une différence notable dans le résultat. Nous
+avons changé la directive de <code>H</code> à <code>h</code>. Comme <code>h</code> indique d'utiliser la notation
+<em>moitié basse en premier</em> et que l'entrée ne contient qu'une moitié, la moitié
+basse vaut <code>0</code> et l'entrée est donc <code>0a</code>. Le résultat est <code>\x0A</code> et si l'on
+regarde dans la table ASCII, <code>0A</code> vaut 10 et le caractère correspondant est
+<code>NL</code>, <em>new line</em> soit un saut de ligne. C'est pour cela que nous voyons
+s'afficher <code>\n</code> qui représente un saut de ligne.</p>
+
+<h2>Utilisation de unpack dans le code de Rails</h2>
+
+<p>J'ai cherché un peu dans le code source de Rails et trouvé les utilisations
+suivantes de la méthode <code>unpack</code> :</p>
+
+<p><code>ruby
+email_address_obfuscated.unpack('C*')
+'mailto:'.unpack('C*')
+email_address.unpack('C*')
+char.unpack('H2')
+column.class.string_to_binary(value).unpack("H*")
+data.unpack("m")
+s.unpack("U*")
+</code></p>
+
+<p>Nous avons déjà vu les directives <code>C*</code> et <code>H</code>, les directives <code>m</code> et <code>U</code> sont
+cependant nouvelles. La première sert à donner une représentation encodée en
+base64 de la valeur, la seconde retourne le caractère UTF-8 correspondant. Voici
+un exemple :</p>
+
+<p>``` ruby
+&ldquo;Hello&rdquo;.unpack(&lsquo;U*&rsquo;)</p>
+
+<h1>=> [72, 101, 108, 108, 111]</h1>
+
+<p>```</p>
+
+<h2>Versions de test</h2>
+
+<p>Les exmples de code précédents ont été testés avec la version <em>1.9.2</em> de Ruby.</p>
+
+<p>NDT: J'ai testé avec les versions 1.9.3 et 2.0.0, les exemples sont toujours
+valides.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (3/3)]]></title>

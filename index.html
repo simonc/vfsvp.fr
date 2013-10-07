@@ -9,7 +9,7 @@
   <meta name="author" content="Simon Courtois (simonc)">
 
   
-  <meta name="description" content="Source: Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box Voici la seconde partie dans une série sur les Expressions &hellip;">
+  <meta name="description" content="Source: Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary Le langage C permet aux développeurs d&#8217;accéder directement à la mémoire où &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -59,6 +59,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/article/les-methodes-pack-et-unpack-en-ruby">Les méthodes pack et unpack en Ruby</a></h1>
+    
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-07T10:00:00+02:00" pubdate data-updated="true">07/10/2013</time>
+        
+        
+         | <a href="/article/les-methodes-pack-et-unpack-en-ruby#disqus_thread">Commentaires</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Source: <a href="http://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html">Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary</a></p>
+
+<p>Le langage C permet aux développeurs d&#8217;accéder directement à la mémoire où sont
+stockées les variables. Ruby ne le permet pas. Il est cependant des cas dans
+lesquels on peut avoir besoin d&#8217;accéder aux bits et octets contenus dans cette
+mémoire tout en travaillant avec Ruby. Ce dernier fournit deux méthods <code>pack</code> et
+<code>unpack</code> pour cela.</p>
+
+<p>Voici un exemple :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b*&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; [&quot;10000010&quot;]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/article/les-methodes-pack-et-unpack-en-ruby">Lire la suite</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
