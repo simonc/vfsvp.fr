@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: rails | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/rails/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-07T09:50:11+02:00</updated>
+  <updated>2013-10-07T09:53:49+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -89,10 +89,9 @@ est cependant capable de donner les deux représentations. Cette méthode peut
 prendre <code>b*</code> ou <code>B*</code> en entrée, voici leur différence selon la documentation de
 Ruby :</p>
 
-<p><code>
-B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
+<pre><code>B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
 b | bit string (LSB first) | représentation binaire (bit de poids faible en
-</code></p>
+</code></pre>
 
 <p>Voyons maintenant deux exemples.</p>
 
@@ -180,10 +179,9 @@ représentation hexadécimale de notre chaîne :</p>
 
 <p>La documentation Ruby indique</p>
 
-<p><code>
-H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
+<pre><code>H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
 h | hex string (low nibble first)  | représentation hexadécimale (moitié basse en premier)
-</code></p>
+</code></pre>
 
 <p>Un octet est composé de 8 bits. Une moitié contient donc 4 bits. Un octet
 donc deux moitiés. La valeur ASCII de <code>h</code> est 104. 104 en hexadécimale s'écrit
@@ -193,7 +191,8 @@ moitié haute puis moitié basse, de gauche à droite, la valeur 6 pour la
 valeur 8.</p>
 
 <p>Si cependant vous devez utiliser la notation moitié basse puis moitié haute, la
-valeur 8 prendra la première place suivie de la valeur 6. La notation <em>moitié basse en premier</em> donne donc 86.</p>
+valeur 8 prendra la première place suivie de la valeur 6. La notation <em>moitié
+basse en premier</em> donne donc 86.</p>
 
 <p>Cette notation est utilisée pour chaque octet. Pour cette raison, la version
 <em>moitié basse en premier</em> de <code>68 65 6c 6c 6f</code> est <code>86 56 c6 c6 f6</code>.</p>

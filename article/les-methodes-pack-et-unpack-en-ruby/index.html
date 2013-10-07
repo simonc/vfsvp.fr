@@ -175,12 +175,9 @@ est cependant capable de donner les deux représentations. Cette méthode peut
 prendre <code>b*</code> ou <code>B*</code> en entrée, voici leur différence selon la documentation de
 Ruby :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">B</span> <span class="o">|</span> <span class="n">bit</span> <span class="n">string</span> <span class="p">(</span><span class="no">MSB</span> <span class="n">first</span><span class="p">)</span> <span class="o">|</span> <span class="n">repr</span><span class="err">é</span><span class="n">sentation</span> <span class="n">binaire</span> <span class="p">(</span><span class="n">bit</span> <span class="n">de</span> <span class="n">poids</span> <span class="n">fort</span> <span class="n">en</span> <span class="n">premier</span><span class="p">)</span>
-</span><span class='line'><span class="n">b</span> <span class="o">|</span> <span class="n">bit</span> <span class="n">string</span> <span class="p">(</span><span class="no">LSB</span> <span class="n">first</span><span class="p">)</span> <span class="o">|</span> <span class="n">repr</span><span class="err">é</span><span class="n">sentation</span> <span class="n">binaire</span> <span class="p">(</span><span class="n">bit</span> <span class="n">de</span> <span class="n">poids</span> <span class="n">faible</span> <span class="n">en</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
+b | bit string (LSB first) | représentation binaire (bit de poids faible en
+</code></pre>
 
 <p>Voyons maintenant deux exemples.</p>
 
@@ -272,12 +269,9 @@ représentation hexadécimale de notre chaîne :</p>
 
 <p>La documentation Ruby indique</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">H</span> <span class="o">|</span> <span class="n">hex</span> <span class="n">string</span> <span class="p">(</span><span class="n">high</span> <span class="n">nibble</span> <span class="n">first</span><span class="p">)</span> <span class="o">|</span> <span class="n">repr</span><span class="err">é</span><span class="n">sentation</span> <span class="n">hexad</span><span class="err">é</span><span class="n">cimale</span> <span class="p">(</span><span class="n">moiti</span><span class="err">é</span> <span class="n">haute</span> <span class="n">en</span> <span class="n">premier</span><span class="p">)</span>
-</span><span class='line'><span class="n">h</span> <span class="o">|</span> <span class="n">hex</span> <span class="n">string</span> <span class="p">(</span><span class="n">low</span> <span class="n">nibble</span> <span class="n">first</span><span class="p">)</span>  <span class="o">|</span> <span class="n">repr</span><span class="err">é</span><span class="n">sentation</span> <span class="n">hexad</span><span class="err">é</span><span class="n">cimale</span> <span class="p">(</span><span class="n">moiti</span><span class="err">é</span> <span class="n">basse</span> <span class="n">en</span> <span class="n">premier</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
+h | hex string (low nibble first)  | représentation hexadécimale (moitié basse en premier)
+</code></pre>
 
 <p>Un octet est composé de 8 bits. Une moitié contient donc 4 bits. Un octet
 donc deux moitiés. La valeur ASCII de <code>h</code> est 104. 104 en hexadécimale s&#8217;écrit
@@ -287,7 +281,8 @@ moitié haute puis moitié basse, de gauche à droite, la valeur 6 pour la
 valeur 8.</p>
 
 <p>Si cependant vous devez utiliser la notation moitié basse puis moitié haute, la
-valeur 8 prendra la première place suivie de la valeur 6. La notation <em>moitié basse en premier</em> donne donc 86.</p>
+valeur 8 prendra la première place suivie de la valeur 6. La notation <em>moitié
+basse en premier</em> donne donc 86.</p>
 
 <p>Cette notation est utilisée pour chaque octet. Pour cette raison, la version
 <em>moitié basse en premier</em> de <code>68 65 6c 6c 6f</code> est <code>86 56 c6 c6 f6</code>.</p>
