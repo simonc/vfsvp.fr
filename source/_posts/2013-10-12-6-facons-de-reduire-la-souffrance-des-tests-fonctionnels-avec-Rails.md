@@ -4,7 +4,6 @@ layout: post
 title: "6 façons de réduire la souffrance due aux tests fonctionnels avec Rails"
 date: 2013-10-12 13:00
 comment: true
-published: false
 categories:
 - rails
 - ruby
