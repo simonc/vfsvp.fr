@@ -1,0 +1,693 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>6 façons de réduire la souffrance due aux tests fonctionnels avec Rails - VF svp</title>
+  <meta name="author" content="Simon Courtois (simonc)">
+
+  
+  <meta name="description" content="Source: 6 Ways to Remove Pain From Feature Testing in Ruby on Rails de Mitch Lloyd L&#8217;écriture des tests fonctionnels a été une des parts les &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">VF svp</a></h1>
+  
+    <h2>En français dans le texte</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vfsvp.fr" />
+    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">6 façons de réduire la souffrance due aux tests fonctionnels avec Rails</h1>
+    
+    
+      <p class="meta">
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+      </p>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-12T13:00:00+02:00" pubdate data-updated="true">12/10/2013</time>
+        
+        
+         | <a href="#disqus_thread">Commentaires</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Source: <a href="http://gaslight.co/blog/6-ways-to-remove-pain-from-feature-testing-in-ruby-on-rails">6 Ways to Remove Pain From Feature Testing in Ruby on Rails de Mitch Lloyd</a></p>
+
+<p>L&#8217;écriture des tests fonctionnels a été une des parts les plus douloureuses de
+mon travail avec Ruby on Rails. Mais aujourd&#8217;hui c&#8217;est quelque chose que
+j&#8217;apprécie et voici pourquoi :</p>
+
+<h2>1. Je n&#8217;utilise pas Cucumber</h2>
+
+<p><strong>Attention:</strong> Le point de vue exprimé dans le paragraphe suivant ne reflète pas
+forcement celui de l&#8217;équipe ou des partenaires de Gaslight Software, LLC.</p>
+
+<p>Si vous avez installé Cucumber, supprimez-le. Les tests sont déjà assez
+difficiles sans que l&#8217;on ait besoin de transformer le langage naturel en code
+Ruby.</p>
+
+<!-- more -->
+
+
+<p>J&#8217;utilise :</p>
+
+<ul>
+<li>Rspec &mdash; DSL spécialisé dans les tests</li>
+<li>FactoryGirl &mdash; Constructeur de modèles</li>
+<li>Capybara &mdash; DOM Dominator</li>
+<li>Database Cleaner &ndash; Nettoyeur de bases de données</li>
+<li>Spring &ndash; Accélérateur de démarrage</li>
+</ul>
+
+
+<p>Et j&#8217;en suis très content. Écrivons une spec.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">feature</span> <span class="s1">&#39;Navigating through workpapers&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">let</span><span class="p">(</span><span class="ss">:audit</span><span class="p">)</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:audit</span><span class="p">,</span> <span class="ss">users</span><span class="p">:</span> <span class="o">[</span><span class="n">user</span><span class="o">]</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">scenario</span> <span class="s2">&quot;User sees workpapers within an audit&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">workpaper</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:workpaper</span><span class="p">,</span> <span class="ss">audit</span><span class="p">:</span> <span class="n">audit</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">visit</span> <span class="s1">&#39;/&#39;</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span>
+</span><span class='line'>    <span class="n">click_on</span> <span class="s1">&#39;Log In&#39;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">find</span><span class="p">(</span><span class="s1">&#39;#audit-selector&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="n">audit</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_css?</span><span class="p">(</span><span class="s1">&#39;.workpaper&#39;</span><span class="p">,</span> <span class="ss">text</span><span class="p">:</span> <span class="n">workpaper</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tout cela est plutôt pas mal mais une <em>feature</em> un peu plus complexe deviendrait
+vite illisible. La logique de connexion va immanquablement être dupliquée entre
+plusieurs tests. Même cette <em>feature</em> n&#8217;est pas aussi lisible que je le
+souhaiterais.</p>
+
+<h2>2. Utilisez des <em>Page Objects</em></h2>
+
+<p>Les sélecteurs Capybara ont une forte probabilité de casser au fur et à mesure
+que le développement avance. Le responsable du contenu décide que le bouton du
+formulaire de connexion va maintenant indiquer &ldquo;Connectez-vous à un monde où
+tout est possible&rdquo;, vous devez maintenant corriger tous vos tests.</p>
+
+<p>Les <em>page objects</em> sont des interfaces spécifiques à votre DOM. Lorsque le HTML
+change, vous saurez exactement où corriger cela dans vos tests.</p>
+
+<p>Voici un <em>page objet</em> &ldquo;page de connexion&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">LoginPage</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Capybara</span><span class="p">:</span><span class="ss">:DSL</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">visit_page</span>
+</span><span class='line'>    <span class="n">visit</span> <span class="s1">&#39;/&#39;</span>
+</span><span class='line'>    <span class="nb">self</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span>
+</span><span class='line'>    <span class="n">click_on</span> <span class="s1">&#39;Log In&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voici un autre <em>page object</em> &ldquo;index des documents&#8221; :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">WorkpaperIndexPage</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Capybara</span><span class="p">:</span><span class="ss">:DSL</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">select_audit</span><span class="p">(</span><span class="n">audit</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">find</span><span class="p">(</span><span class="s1">&#39;#audit-selector&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="n">audit</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">has_workpaper?</span><span class="p">(</span><span class="n">workpaper</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">has_css?</span><span class="p">(</span><span class="s1">&#39;.workpaper&#39;</span><span class="p">,</span> <span class="ss">text</span><span class="p">:</span> <span class="n">workpaper</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et voici maintenant un test utilisant ces <em>page objects</em> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">feature</span> <span class="s1">&#39;Navigating through workpapers&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">let</span><span class="p">(</span><span class="ss">:audit</span><span class="p">)</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:audit</span><span class="p">,</span> <span class="ss">users</span><span class="p">:</span> <span class="o">[</span><span class="n">user</span><span class="o">]</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">let</span><span class="p">(</span><span class="ss">:login_page</span><span class="p">)</span> <span class="p">{</span> <span class="no">LoginPage</span><span class="o">.</span><span class="n">new</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">let</span><span class="p">(</span><span class="ss">:workpaper_page</span><span class="p">)</span> <span class="p">{</span> <span class="no">WorkpaperIndexPage</span><span class="o">.</span><span class="n">new</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">scenario</span> <span class="s2">&quot;User sees workpapers within an audit&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">workpaper</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:workpaper</span><span class="p">,</span> <span class="ss">audit</span><span class="p">:</span> <span class="n">audit</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">login_page</span><span class="o">.</span><span class="n">visit_page</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">workpaper_page</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">audit</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">workpaper_page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_workpaper</span><span class="p">(</span><span class="n">workpaper</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Considérons maintenant que quelqu&#8217;un modifie sans arrêt ce bouton de connexion.
+Vous avez simplement à modifier <code>LoginPage</code> et utiliser un ID ou une entrée I18n
+(ce qui aurait été une bonne idée dés le départ). Vous n&#8217;avez à vous inquiéter
+d&#8217;aucun autre test, tout ce qui concerne cette page est contenu dans ce <em>page
+object</em>.</p>
+
+<p>Ces objets sont assez simples mais peuvent tout à fait grossir pour fournir des
+fonctionnalités supplémentaires comme la vérification d&#8217;erreurs au fur et à
+mesure que l&#8217;utilisateur au travers des pages (ou sections) du site. Le retour
+sur investissement des <em>page objects</em> est si rapide que j&#8217;utilise toujours ce
+type d&#8217;objet dans mes tests fonctionnels. De la même façon que je n&#8217;écris jamais
+de SQL dans mes vues Rails, je n&#8217;accède pas au DOM depuis un test fonctionnel
+sans <em>page object</em>.</p>
+
+<h2>3. Créer des messages d&#8217;erreur utiles</h2>
+
+<p>Un test fonctionnel qui échoue peut être difficile à diagnostiquer. Mettons que
+vous utilisez un <em>page object</em> comme ceci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">expect</span><span class="p">(</span><span class="n">workpaper_page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_one_workpaper</span><span class="p">(</span><span class="n">workpaper</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<pre><code>Failure/Error: expect(workpaper_page).to have_one_workpaper(workpaper)
+  expected #has_one_workpaper?(workpaper) to return true, got false
+</code></pre>
+
+<p>L&#8217;erreur est lisible mais il serait plus facile de savoir si elle est provoquée
+par l&#8217;absence du document ou si la présence d&#8217;autres documents.</p>
+
+<p>En général, je lève une exception lorsque j&#8217;appelle ce genre de prédicat sur
+un <em>page object</em>.</p>
+
+<pre><code>Failure/Error: expect(workpaper_page).to have_one_workpaper(workpaper)
+  PageExpectationNotMetError:
+    expected one workpaper called "My Sweet Workpaper", but the following
+    workpapers were on the page:
+      * "Bogus Workpaper"
+      * "My Sweet Workpaper"
+</code></pre>
+
+<p>J&#8217;utilise cette technique avec modération et je cherche toujours une approche
+plus élégante. Cela me donne tout de même des messages d&#8217;erreur plus précis et
+m&#8217;épargne quelques aller-retours avec le navigateur. Faites moi signe si vous
+utilisez une autre technique de retour d&#8217;erreur dans vos tests.</p>
+
+<h2>4. Embrassez les tests asynchrones</h2>
+
+<p>Une grande part de la frustration relative aux tests automatisés dans un
+navigateur est due aux assertions qui doivent attendre. Ajouter un <code>sleep</code> à vos
+tests est passable si vous pensez que l&#8217;un de vos tests a un souci de timing
+mais un <code>sleep</code> ne devrait jamais se trouver dans votre code de test final.</p>
+
+<p>Les tests clignotants (ceux qui échouent de façon intermittente) tuent la
+confiance que vous avez envers votre suite de tests. Ils devraient être corrigés
+ou supprimés.</p>
+
+<p>En général, je conseille surtout de bien apprendre l&#8217;API de Capybara. Voici
+quelques pointeurs :</p>
+
+<ul>
+<li><code>#all</code> n&#8217;attend pas, ce n&#8217;est dont probablement pas le <em>matcher</em> que vous
+cherchez ;</li>
+<li>La méthode <code>#has_css?</code> peut prendre un compteur en paramètre de façon à
+indiquer combien d&#8217;éléments vous voulez attendre ;</li>
+<li>Écrire un test comme <code>expect(page).to_not have_css('.post')</code> est, en général,
+une mauvaise idée. Ce matcher attend l&#8217;apparition d&#8217;éléments <code>.post</code> pour
+passer ce qui peut engendrer un certain ralentissement. Dans ce genre de cas,
+il est préférable d&#8217;utiliser <code>expect(page).to have_no_css('.post')</code> qui
+passera immédiatement si les éléments sont absents de la page ou attendra
+leur disparition s&#8217;ils sont présents. Dans ce dernier cas, il vaut mieux
+s&#8217;assurer de leur présence au préalable.</li>
+</ul>
+
+
+<p>Il peut arriver que vous souhaitiez attendre que quelque chose se produise en
+dehors de Capybara. Pour cela, <a href="https://gist.github.com/mattwynne/1228927">ce helper</a>
+<code>eventually</code> est très pratique :</p>
+
+<p>Le code suivant attend que le document soit <em>awesome</em> et échoue si ce n&#8217;est pas le cas après deux secondes.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">eventually</span> <span class="p">{</span> <span class="n">expect</span><span class="p">(</span><span class="n">workpaper</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">be_awesome</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quand pourriez-vous avoir besoin de ce type d&#8217;assertion en dehors de Capybara ?
+Lisez la suite…</p>
+
+<h2>5. Prenez la construction de données au sérieux</h2>
+
+<p>Je me souviens avoir entendu un mantra pour les tests fonctionnels qui disait
+&ldquo;Tout faire du point de vue de l&#8217;utilisateur&rdquo;. Ce conseil visait à l&#8217;origine à
+décourager les testeurs de manipuler les données directement dans les tests
+fonctionnels. Je peux vous assurer que c&#8217;était un mauvais conseil. Il est juste
+impensable d&#8217;inscrire un utilisateur et de passer au travers de vingt autres
+étapes simplement pour le faire cliquer sur un bouton.</p>
+
+<p>J&#8217;utilise beaucoup FactoryGirl pour mettre en place mes données de test. Cela
+signifie que j&#8217;ai des factories permettant de générer des objets complexes.
+Voici, par exemple, comment faire un document avec un workflow ayant des étapes
+assignées à certains utilisateurs appelés <code>preparers</code> et <code>reviewers</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:workpaper</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;workpaper </span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:assigned_workpaper</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">ignore</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">preparer</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>        <span class="n">reviewer</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">after</span><span class="p">(</span><span class="ss">:create</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">workpaper</span><span class="p">,</span> <span class="n">evaluator</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">create</span><span class="p">(</span><span class="ss">:assigned_workflow</span><span class="p">,</span> <span class="ss">workpaper</span><span class="p">:</span> <span class="n">workpaper</span><span class="p">,</span> <span class="ss">preparer</span><span class="p">:</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">preparer</span><span class="p">,</span> <span class="ss">reviewer</span><span class="p">:</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">reviewer</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:workflow</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:assigned_workflow</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">ignore</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">preparer</span> <span class="p">{</span> <span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>        <span class="n">reviewer</span> <span class="kp">false</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">after</span><span class="p">(</span><span class="ss">:create</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">workflow</span><span class="p">,</span> <span class="n">evaluator</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">create</span><span class="p">(</span><span class="ss">:step</span><span class="p">,</span> <span class="ss">workflow</span><span class="p">:</span> <span class="n">workflow</span><span class="p">,</span> <span class="ss">user</span><span class="p">:</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">preparer</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">reviewer</span>
+</span><span class='line'>          <span class="n">create</span><span class="p">(</span><span class="ss">:step</span><span class="p">,</span> <span class="ss">workflow</span><span class="p">:</span> <span class="n">workflow</span><span class="p">,</span> <span class="ss">user</span><span class="p">:</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">reviewer</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:step</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cela me permet de créer de façon déclarative des objets spécifiques à mes tests.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:assigned_workpaper</span><span class="p">,</span> <span class="ss">preparer</span><span class="p">:</span> <span class="n">first_user</span><span class="p">,</span> <span class="ss">reviewer</span><span class="p">:</span> <span class="n">second_user</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je crée toujours des instances de mes modèles via FactoryGirl dans mes tests
+fonctionnels. Je suis fan de FactoryGirl mais je pense qu&#8217;il est possible de
+faire encore mieux en ce qui concerne la construction de données complexes comme
+celles-ci. Quel que soit l&#8217;outil utilisé, la mise en place des données de test
+doit toujours être lisible et facilement exploitable.</p>
+
+<p>Il est non seulement acceptable de mettre en place des données avant de
+commencer vos tests mais il est également acceptable de vérifier les effets de
+bord qui ne sont pas nécessairement visibles par l&#8217;utilisateur. Dans le monde
+des applications en client riche par exemple, voir quelque chose à l&#8217;écran ne
+signifie pas forcement que tout a été sauvegardé en base de données.</p>
+
+<p>Tout comme nous avons des helpers pour construire nos données, nous devrions
+avoir des helpers pour les inspecter. Ce test va s&#8217;assurer que le <em>preparer</em>
+d&#8217;un document a été sauvegardé en base de données :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">eventually</span> <span class="p">{</span> <span class="n">preparer_for</span><span class="p">(</span><span class="n">workpaper</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="n">be</span><span class="p">(</span><span class="n">preparer</span><span class="p">)</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>6. Créez moins de tests, affinez ceux existant</h2>
+
+<p>Lorsque j&#8217;ai commencé à écrire des tests fonctionnels avec Rails, on m&#8217;a donné
+le conseil suivant &ldquo;chaque test doit contenir une action et une assertion&rdquo;. J&#8217;ai
+donc travaillé comme ceci :</p>
+
+<ul>
+<li>Écrire un scénario cucumber pour une fonctionnalité</li>
+<li>Faire fonctionner le code</li>
+<li>Écrire un scénario cucumber pour un autre aspect de la fonctionnalité</li>
+<li>Faire fonctionner le code</li>
+</ul>
+
+
+<p>C&#8217;est une bonne méthodologie pour les tests unitaires mais c&#8217;est une mauvaise
+idée en ce qui concerne les tests fonctionnels.</p>
+
+<p>Prenons le test suivant :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">scenario</span> <span class="s2">&quot;assigning a reviewer to a workpaper&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">user_visits_workpaper</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">workpaper</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">ui</span><span class="o">.</span><span class="n">begin_assigning_reviewer</span>
+</span><span class='line'>  <span class="n">ui</span><span class="o">.</span><span class="n">assign_work_to</span><span class="p">(</span><span class="n">reviewer</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">eventually</span> <span class="p">{</span> <span class="n">expect</span><span class="p">(</span><span class="n">reviewer_for</span> <span class="n">workpaper</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span><span class="p">(</span><span class="n">other_tester</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lorsque l&#8217;on appelle <code>ui.begin_assigning_reviewer</code> une boite de dialogue
+s&#8217;ouvre pour permettre à l&#8217;utilisateur de choisir qui qui sera le <code>reviewer</code>.
+Cette fonctionnalité marche. Très bien.</p>
+
+<p>Je veux maintenant m&#8217;assurer que le seuls les utilisateurs ayant le droit de
+faire des relectures soient listés. Plutôt que de créer un nouveau test, je vais
+affiner celui que je viens d&#8217;écrire :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">scenario</span> <span class="s2">&quot;assigning a reviewer to a workpaper&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">user_visits_workpaper</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">workpaper</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">ui</span><span class="o">.</span><span class="n">begin_assigning_reviewer</span>
+</span><span class='line'>  <span class="n">expect</span><span class="p">(</span><span class="n">ui</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_excluded_user</span><span class="p">(</span><span class="n">non_reviewer</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">ui</span><span class="o">.</span><span class="n">assign_work_to</span><span class="p">(</span><span class="n">reviewer</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">eventually</span> <span class="p">{</span> <span class="n">expect</span><span class="p">(</span><span class="n">reviewer_for</span> <span class="n">workpaper</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span><span class="p">(</span><span class="n">other_tester</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Je n&#8217;utiliserais bien sûr pas cette technique pour les tests unitaires mais elle
+est efficace pour les tests fonctionnels dont le but est de guider votre
+progression et détecter les régressions.</p>
+
+<h2>Mais qui teste vos tests ?</h2>
+
+<p>Lorsque vos tests commencent à contenir beaucoup de logique, quelqu&#8217;un va finir
+par vous dire &ldquo;Mais qui teste vos tests ?&rdquo; pour vous signifier que vos tests
+sont trop compliqués, trop complexes. Votre code de production teste vos tests.
+Ce n&#8217;est pas pour autant une excuse pour écrire de mauvais tests ou des tests
+illisibles.</p>
+
+<p>Les outils et techniques cités ci-dessus vont changer au fur et à mesure que le
+temps passe mais j&#8217;ai augmenté ma sensibilité aux mauvais tests fonctionnels
+pour toujours. Refactorez de façon agressive, concevez intelligemment et aimez
+vos tests fonctionnels.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-12T13:00:00+02:00" pubdate data-updated="true">12/10/2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/tags/rails/'>rails</a>, <a class='category' href='/tags/ruby/'>ruby</a>, <a class='category' href='/tags/tests/'>tests</a>
+  
+</span>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/article/les-methodes-pack-et-unpack-en-ruby" title="Previous Post: Les méthodes pack et unpack en Ruby">&laquo; Les méthodes pack et unpack en Ruby</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Commentaires</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Simon Courtois (simonc) -
+  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+<script type="text/javascript">
+    var disqus_shortname = 'vfsvp';
+    
+      var disqus_identifier = 'http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails';
+      var disqus_url = 'http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails';
+      var disqus_script = 'embed.js';
+    
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+<script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</body>
+</html>
