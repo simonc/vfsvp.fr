@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-12T13:09:12+02:00</updated>
+  <updated>2013-10-14T11:25:53+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -39,11 +39,11 @@ Ruby.</p>
 <p>J&#8217;utilise :</p>
 
 <ul>
-<li>Rspec &mdash; DSL spécialisé dans les tests</li>
-<li>FactoryGirl &mdash; Constructeur de modèles</li>
-<li>Capybara &mdash; DOM Dominator</li>
-<li>Database Cleaner &ndash; Nettoyeur de bases de données</li>
-<li>Spring &ndash; Accélérateur de démarrage</li>
+<li>Rspec &ndash; DSL spécialisé dans les tests</li>
+<li>FactoryGirl &ndash; Constructeur de modèles</li>
+<li>Capybara &ndash; DOM Dominator</li>
+<li>Database Cleaner - Nettoyeur de bases de données</li>
+<li>Spring - Accélérateur de démarrage</li>
 </ul>
 
 
@@ -1158,24 +1158,19 @@ n&#8217;est-ce pas ? Dans le livre <em>The Well Grounded Rubyist</em>, David Bl
 l&#8217;explique comme ceci :</p>
 
 <dl>
-  <dt>Zero-width</dt>
-  <dd>(taille zéro) signifie que le modèle lookahead (&#8220;ish&#8221; dans notre cas) ne
-    consomme pas de caractères. Cela veut dire que la correspondance est
-    cherchée mais n&#8217;est pas retournée. Seule la présence d&#8217;une correspondance
-    est retournée, vrai ou faux.</dd>
-
-  <dt>Positive</dt>
-  <dd>signifie que le modèle doit être présent, obligatoirement.</dd>
-
-  <dt>lookahead</dt>
-  <dd>veut dire que cette expression est recherchée après le modèle
-    principal.</dd>
-
-  <dt>assertion</dt>
-  <dd>indique que seule la présence d&#8217;une correspondance est retournée sous
-    la forme true/false (vrai/faux).</dd>
+<dt>Zero-width</dt>
+<dd>   (taille zéro) signifie que le modèle lookahead (&ldquo;ish&rdquo; dans notre cas) ne
+   consomme pas de caractères. Cela veut dire que la correspondance est
+   cherchée mais n&#8217;est pas retournée. Seule la présence d&#8217;une correspondance
+   est retournée, vrai ou faux.</dd>
+<dt>Positive</dt>
+<dd>   signifie que le modèle doit être présent, obligatoirement.</dd>
+<dt>Lookahead</dt>
+<dd>   veut dire que cette expression est recherchée après le modèle principal.</dd>
+<dt>Assertion</dt>
+<dd>   indique que seule la présence d&#8217;une correspondance est retournée sous la
+   forme true/false (vrai/faux).</dd>
 </dl>
-
 
 <p>Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
 les occurrences du mot &ldquo;fool&rdquo; qui ne sont <strong>pas</strong> suivies des lettres &ldquo;ish&rdquo; ?

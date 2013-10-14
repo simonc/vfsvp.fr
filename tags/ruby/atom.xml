@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-12T13:09:12+02:00</updated>
+  <updated>2013-10-14T11:25:53+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -39,37 +39,33 @@ Ruby.</p>
 <p>J'utilise :</p>
 
 <ul>
-<li>Rspec &mdash; DSL spécialisé dans les tests</li>
-<li>FactoryGirl &mdash; Constructeur de modèles</li>
-<li>Capybara &mdash; DOM Dominator</li>
-<li>Database Cleaner &ndash; Nettoyeur de bases de données</li>
-<li>Spring &ndash; Accélérateur de démarrage</li>
+<li>Rspec &ndash; DSL spécialisé dans les tests</li>
+<li>FactoryGirl &ndash; Constructeur de modèles</li>
+<li>Capybara &ndash; DOM Dominator</li>
+<li>Database Cleaner - Nettoyeur de bases de données</li>
+<li>Spring - Accélérateur de démarrage</li>
 </ul>
 
 
 <p>Et j'en suis très content. Écrivons une spec.</p>
 
-<p>``` ruby
-feature &lsquo;Navigating through workpapers&rsquo; do
+<pre><code class="ruby">feature 'Navigating through workpapers' do
   let(:user) { create(:user) }
-  let(:audit) { create(:audit, users: [user]) }</p>
+  let(:audit) { create(:audit, users: [user]) }
 
-<p>  scenario &ldquo;User sees workpapers within an audit&rdquo; do</p>
+  scenario "User sees workpapers within an audit" do
+    workpaper = create(:workpaper, audit: audit)
 
-<pre><code>workpaper = create(:workpaper, audit: audit)
+    visit '/'
+    fill_in 'email', with: user.email
+    fill_in 'password', with: 'password'
+    click_on 'Log In'
 
-visit '/'
-fill_in 'email', with: user.email
-fill_in 'password', with: 'password'
-click_on 'Log In'
-
-find('#audit-selector').select audit.name
-expect(page).to have_css?('.workpaper', text: workpaper.name)
-</code></pre>
-
-<p>  end
+    find('#audit-selector').select audit.name
+    expect(page).to have_css?('.workpaper', text: workpaper.name)
+  end
 end
-```</p>
+</code></pre>
 
 <p>Tout cela est plutôt pas mal mais une <em>feature</em> un peu plus complexe deviendrait
 vite illisible. La logique de connexion va immanquablement être dupliquée entre
@@ -88,72 +84,54 @@ change, vous saurez exactement où corriger cela dans vos tests.</p>
 
 <p>Voici un <em>page objet</em> &ldquo;page de connexion" :</p>
 
-<p>``` ruby
-class LoginPage
-  include Capybara::DSL</p>
+<pre><code class="ruby">class LoginPage
+  include Capybara::DSL
 
-<p>  def visit_page</p>
+  def visit_page
+    visit '/'
+    self
+  end
 
-<pre><code>visit '/'
-self
-</code></pre>
-
-<p>  end</p>
-
-<p>  def login(user)</p>
-
-<pre><code>fill_in 'email', with: user.email
-fill_in 'password', with: 'password'
-click_on 'Log In'
-</code></pre>
-
-<p>  end
+  def login(user)
+    fill_in 'email', with: user.email
+    fill_in 'password', with: 'password'
+    click_on 'Log In'
+  end
 end
-```</p>
+</code></pre>
 
 <p>Voici un autre <em>page object</em> &ldquo;index des documents" :</p>
 
-<p>``` ruby
-class WorkpaperIndexPage
-  include Capybara::DSL</p>
+<pre><code class="ruby">class WorkpaperIndexPage
+  include Capybara::DSL
 
-<p>  def select_audit(audit)</p>
+  def select_audit(audit)
+    find('#audit-selector').select audit.name
+  end
 
-<pre><code>find('#audit-selector').select audit.name
-</code></pre>
-
-<p>  end</p>
-
-<p>  def has_workpaper?(workpaper)</p>
-
-<pre><code>has_css?('.workpaper', text: workpaper.name)
-</code></pre>
-
-<p>  end
+  def has_workpaper?(workpaper)
+    has_css?('.workpaper', text: workpaper.name)
+  end
 end
-```</p>
+</code></pre>
 
 <p>Et voici maintenant un test utilisant ces <em>page objects</em> :</p>
 
-<p>``` ruby
-feature &lsquo;Navigating through workpapers&rsquo; do
+<pre><code class="ruby">feature 'Navigating through workpapers' do
   let(:user) { create(:user) }
   let(:audit) { create(:audit, users: [user]) }
   let(:login_page) { LoginPage.new }
-  let(:workpaper_page) { WorkpaperIndexPage.new }</p>
+  let(:workpaper_page) { WorkpaperIndexPage.new }
 
-<p>  scenario &ldquo;User sees workpapers within an audit&rdquo; do</p>
+  scenario "User sees workpapers within an audit" do
+    workpaper = create(:workpaper, audit: audit)
 
-<pre><code>workpaper = create(:workpaper, audit: audit)
-
-login_page.visit_page.login(user)
-workpaper_page.select(audit)
-expect(workpaper_page).to have_workpaper(workpaper)
-</code></pre>
-
-<p>  end
+    login_page.visit_page.login(user)
+    workpaper_page.select(audit)
+    expect(workpaper_page).to have_workpaper(workpaper)
+  end
 end
-```</p>
+</code></pre>
 
 <p>Considérons maintenant que quelqu'un modifie sans arrêt ce bouton de connexion.
 Vous avez simplement à modifier <code>LoginPage</code> et utiliser un ID ou une entrée I18n
@@ -174,9 +152,8 @@ sans <em>page object</em>.</p>
 <p>Un test fonctionnel qui échoue peut être difficile à diagnostiquer. Mettons que
 vous utilisez un <em>page object</em> comme ceci :</p>
 
-<p><code>ruby
-expect(workpaper_page).to have_one_workpaper(workpaper)
-</code></p>
+<pre><code class="ruby">expect(workpaper_page).to have_one_workpaper(workpaper)
+</code></pre>
 
 <pre><code>Failure/Error: expect(workpaper_page).to have_one_workpaper(workpaper)
   expected #has_one_workpaper?(workpaper) to return true, got false
@@ -236,9 +213,8 @@ dehors de Capybara. Pour cela, <a href="https://gist.github.com/mattwynne/122892
 
 <p>Le code suivant attend que le document soit <em>awesome</em> et échoue si ce n'est pas le cas après deux secondes.</p>
 
-<p><code>ruby
-eventually { expect(workpaper).to be_awesome }
-</code></p>
+<pre><code class="ruby">eventually { expect(workpaper).to be_awesome }
+</code></pre>
 
 <p>Quand pourriez-vous avoir besoin de ce type d'assertion en dehors de Capybara ?
 Lisez la suite…</p>
@@ -257,55 +233,47 @@ signifie que j'ai des factories permettant de générer des objets complexes.
 Voici, par exemple, comment faire un document avec un workflow ayant des étapes
 assignées à certains utilisateurs appelés <code>preparers</code> et <code>reviewers</code>.</p>
 
-<p>``` ruby
-FactoryGirl.define do
-  factory :workpaper do</p>
+<pre><code class="ruby">FactoryGirl.define do
+  factory :workpaper do
+    sequence(:name) {|n| "workpaper #{n}"}
 
-<pre><code>sequence(:name) {|n| "workpaper #{n}"}
+    factory :assigned_workpaper do
+      ignore do
+        preparer { create(:user) }
+        reviewer { create(:user) }
+      end
 
-factory :assigned_workpaper do
-  ignore do
-    preparer { create(:user) }
-    reviewer { create(:user) }
-  end
-
-  after(:create) do |workpaper, evaluator|
-    create(:assigned_workflow, workpaper: workpaper, preparer: evaluator.preparer, reviewer: evaluator.reviewer)
-  end
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  factory :workflow do</p>
-
-<pre><code>factory :assigned_workflow do
-  ignore do
-    preparer { create(:user) }
-    reviewer false
-  end
-
-  after(:create) do |workflow, evaluator|
-    create(:step, workflow: workflow, user: evaluator.preparer)
-
-    if evaluator.reviewer
-      create(:step, workflow: workflow, user: evaluator.reviewer)
+      after(:create) do |workpaper, evaluator|
+        create(:assigned_workflow, workpaper: workpaper, preparer: evaluator.preparer, reviewer: evaluator.reviewer)
+      end
     end
   end
+
+  factory :workflow do
+    factory :assigned_workflow do
+      ignore do
+        preparer { create(:user) }
+        reviewer false
+      end
+
+      after(:create) do |workflow, evaluator|
+        create(:step, workflow: workflow, user: evaluator.preparer)
+
+        if evaluator.reviewer
+          create(:step, workflow: workflow, user: evaluator.reviewer)
+        end
+      end
+    end
+  end
+
+  factory :step
 end
 </code></pre>
-
-<p>  end</p>
-
-<p>  factory :step
-end
-```</p>
 
 <p>Cela me permet de créer de façon déclarative des objets spécifiques à mes tests.</p>
 
-<p><code>ruby
-create(:assigned_workpaper, preparer: first_user, reviewer: second_user)
-</code></p>
+<pre><code class="ruby">create(:assigned_workpaper, preparer: first_user, reviewer: second_user)
+</code></pre>
 
 <p>Je crée toujours des instances de mes modèles via FactoryGirl dans mes tests
 fonctionnels. Je suis fan de FactoryGirl mais je pense qu'il est possible de
@@ -323,9 +291,8 @@ signifie pas forcement que tout a été sauvegardé en base de données.</p>
 avoir des helpers pour les inspecter. Ce test va s'assurer que le <em>preparer</em>
 d'un document a été sauvegardé en base de données :</p>
 
-<p><code>ruby
-eventually { preparer_for(workpaper).should be(preparer) }
-</code></p>
+<pre><code class="ruby">eventually { preparer_for(workpaper).should be(preparer) }
+</code></pre>
 
 <h2>6. Créez moins de tests, affinez ceux existant</h2>
 
@@ -346,14 +313,13 @@ idée en ce qui concerne les tests fonctionnels.</p>
 
 <p>Prenons le test suivant :</p>
 
-<p><code>ruby
-scenario "assigning a reviewer to a workpaper" do
+<pre><code class="ruby">scenario "assigning a reviewer to a workpaper" do
   user_visits_workpaper(user, workpaper)
   ui.begin_assigning_reviewer
   ui.assign_work_to(reviewer)
   eventually { expect(reviewer_for workpaper).to eq(other_tester) }
 end
-</code></p>
+</code></pre>
 
 <p>Lorsque l'on appelle <code>ui.begin_assigning_reviewer</code> une boite de dialogue
 s'ouvre pour permettre à l'utilisateur de choisir qui qui sera le <code>reviewer</code>.
@@ -363,15 +329,14 @@ Cette fonctionnalité marche. Très bien.</p>
 faire des relectures soient listés. Plutôt que de créer un nouveau test, je vais
 affiner celui que je viens d'écrire :</p>
 
-<p><code>ruby
-scenario "assigning a reviewer to a workpaper" do
+<pre><code class="ruby">scenario "assigning a reviewer to a workpaper" do
   user_visits_workpaper(user, workpaper)
   ui.begin_assigning_reviewer
   expect(ui).to have_excluded_user(non_reviewer)
   ui.assign_work_to(reviewer)
   eventually { expect(reviewer_for workpaper).to eq(other_tester) }
 end
-</code></p>
+</code></pre>
 
 <p>Je n'utiliserais bien sûr pas cette technique pour les tests unitaires mais elle
 est efficace pour les tests fonctionnels dont le but est de guider votre
@@ -407,12 +372,9 @@ mémoire tout en travaillant avec Ruby. Ce dernier fournit deux méthods <code>p
 
 <p>Voici un exemple :</p>
 
-<p>``` ruby
-&lsquo;A&rsquo;.unpack(&lsquo;b*&rsquo;)</p>
-
-<h1>=> [&ldquo;10000010&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">'A'.unpack('b*')
+#=&gt; ["10000010"]
+</code></pre>
 
 <!-- more -->
 
@@ -423,12 +385,9 @@ valeur de <code>'A'</code> est 65 et la représentation binaire de 65 est <code>
 
 <p>Un autre exemple :</p>
 
-<p>``` ruby
-&lsquo;A&rsquo;.unpack(&lsquo;B*&rsquo;)</p>
-
-<h1>=> [&ldquo;01000001&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">'A'.unpack('B*')
+#=&gt; ["01000001"]
+</code></pre>
 
 <p>Notez bien le changement de résultat entre les deux exemples. Quelle est la
 différence entre <code>b*</code> et <code>B*</code> ? Pour le comprendre nous devons d'abord parler
@@ -474,16 +433,12 @@ b | bit string (LSB first) | représentation binaire (bit de poids faible en
 
 <p>Voyons maintenant deux exemples.</p>
 
-<p>``` ruby
-&lsquo;C&rsquo;.unpack(&lsquo;b*&rsquo;)</p>
+<pre><code class="ruby">'C'.unpack('b*')
+#=&gt; ["11000010"]
 
-<h1>=> [&ldquo;11000010&rdquo;]</h1>
-
-<p>&lsquo;C&rsquo;.unpack(&lsquo;B*&rsquo;)</p>
-
-<h1>=> [&ldquo;01000011&rdquo;]</h1>
-
-<p>```</p>
+'C'.unpack('B*')
+#=&gt; ["01000011"]
+</code></pre>
 
 <p><code>b*</code> et <code>B*</code> voient tous les deux là même donnée. Ils représentent simplement
 cette donnée différemment.</p>
@@ -493,30 +448,21 @@ cette donnée différemment.</p>
 <p>Disons que je souhaite la représentation binaire de la chaîne <code>hello</code>. D'après
 ce que nous avons vu précédemment cela devrait être assez facile :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;B*&rsquo;)</p>
-
-<h1>=> [&ldquo;0110100001100101011011000110110001101111&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('B*')
+#=&gt; ["0110100001100101011011000110110001101111"]
+</code></pre>
 
 <p>Nous pouvons également obtenir le résultat suivant</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;).map {|e| e.to_s 2}</p>
-
-<h1>=> [&ldquo;1101000&rdquo;, &ldquo;1100101&rdquo;, &ldquo;1101100&rdquo;, &ldquo;1101100&rdquo;, &ldquo;1101111&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*').map {|e| e.to_s 2}
+#=&gt; ["1101000", "1100101", "1101100", "1101100", "1101111"]
+</code></pre>
 
 <p>Voyons un exemple similaire mais en découpant les étapes cette fois.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>La directive <code>C*</code> retourne les caractères sous la forme d'un entier non signé
 tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et celle de
@@ -525,36 +471,26 @@ tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et
 <p>En utilisant la technique vu précédemment, nous pouvons obtenir une
 représentation hexadécimale de notre chaîne :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;).map {|e| e.to_s 16}</p>
-
-<h1>=> [&ldquo;68&rdquo;, &ldquo;65&rdquo;, &ldquo;6c&rdquo;, &ldquo;6c&rdquo;, &ldquo;6f&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*').map {|e| e.to_s 16}
+#=&gt; ["68", "65", "6c", "6c", "6f"]
+</code></pre>
 
 <p>Il est toutefois possible d'obtenir directement cette valeur hexadécimale :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;H*&rsquo;)</p>
-
-<h1>=> [&ldquo;68656c6c6f&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('H*')
+#=&gt; ["68656c6c6f"]
+</code></pre>
 
 <h2>High nibble first vs Low nibble first</h2>
 
 <p>Observez la différence entre les deux cas suivants :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;H*&rsquo;)</p>
+<pre><code class="ruby">"hello".unpack('H*')
+#=&gt; ["68656c6c6f"]
 
-<h1>=> [&ldquo;68656c6c6f&rdquo;]</h1>
-
-<p>&ldquo;hello&rdquo;.unpack(&lsquo;h*&rsquo;)</p>
-
-<h1>=> [&ldquo;8656c6c6f6&rdquo;]</h1>
-
-<p>```</p>
+"hello".unpack('h*')
+#=&gt; ["8656c6c6f6"]
+</code></pre>
 
 <p>La documentation Ruby indique</p>
 
@@ -583,79 +519,56 @@ de traiter autant de caractères que possible. Par exemple :</p>
 
 <p>A single C will get a single byte.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C&rsquo;)</p>
-
-<h1>=> [104]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C')
+#=&gt; [104]
+</code></pre>
 
 <p>Vous pouvez ajouter plus de <code>C</code> si vous le souhaitez.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;CC&rsquo;)</p>
+<pre><code class="ruby">"hello".unpack('CC')
+#=&gt; [104, 101]
 
-<h1>=> [104, 101]</h1>
+"hello".unpack('CCC')
+#=&gt; [104, 101, 108]
 
-<p>&ldquo;hello&rdquo;.unpack(&lsquo;CCC&rsquo;)</p>
-
-<h1>=> [104, 101, 108]</h1>
-
-<p>&ldquo;hello&rdquo;.unpack(&lsquo;CCCCC&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+"hello".unpack('CCCCC')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>Plutôt que de répéter ces directives, nous pouvons utiliser un nombre pour
 indiquer combien de fois la directive doit être répétée.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C5&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C5')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>Nous pouvons utiliser <code>*</code> pour capturer toutes les octets restants.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>Voyons un exemple dans lequel nous mélangeons les notations <em>MSB</em> et <em>LSB</em> :</p>
 
-<p>``` ruby
-&ldquo;aa&rdquo;.unpack(&lsquo;b8B8&rsquo;)</p>
-
-<h1>=> [&ldquo;10000110&rdquo;, &ldquo;01100001&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"aa".unpack('b8B8')
+#=&gt; ["10000110", "01100001"]
+</code></pre>
 
 <h2>pack est l'inverse de unpack</h2>
 
 <p>La méthode <code>pack</code> est utilisée pour lire les données stockées. Voyons quelques
 exemples d'utilisation :</p>
 
-<p>``` ruby
-[1000001].pack(&lsquo;C&rsquo;)</p>
-
-<h1>=> &ldquo;A&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">[1000001].pack('C')
+#=&gt; "A"
+</code></pre>
 
 <p>Dans le code ci-dessus, le valeur binaire est interpretée comme un entier non
 signé sur 8 bits et le résultat est <code>'A'</code>.</p>
 
-<p>``` ruby
-[&lsquo;A&rsquo;].pack(&lsquo;H&rsquo;)</p>
-
-<h1>=> &ldquo;\xA0&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">['A'].pack('H')
+#=&gt; "\xA0"
+</code></pre>
 
 <p>Ici, l'entrée <code>'A'</code> n'est pas le <code>A</code> ASCII mais le <code>A</code> hexadécimale. C'est
 la version hexadécimale à cause de la directive <code>H</code>. Cette dernière indique à
@@ -672,21 +585,15 @@ qu'il s'agit d'une valeur hexadécimale.</p>
 par <code>a</code> dans notre exemple précédent et le résultat reste inchangé. Essayons
 pour voir :</p>
 
-<p>``` ruby
-[&lsquo;a&rsquo;].pack(&lsquo;H&rsquo;)</p>
-
-<h1>=> &ldquo;\xA0&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">['a'].pack('H')
+#=&gt; "\xA0"
+</code></pre>
 
 <p>Un autre exemple :</p>
 
-<p>``` ruby
-[&lsquo;a&rsquo;].pack(&lsquo;h&rsquo;)</p>
-
-<h1>=> &ldquo;\n&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">['a'].pack('h')
+#=&gt; "\n"
+</code></pre>
 
 <p>Dans le code ci-dessus, il y a une différence notable dans le résultat. Nous
 avons changé la directive de <code>H</code> à <code>h</code>. Comme <code>h</code> indique d'utiliser la notation
@@ -701,27 +608,23 @@ s'afficher <code>\n</code> qui représente un saut de ligne.</p>
 <p>J'ai cherché un peu dans le code source de Rails et trouvé les utilisations
 suivantes de la méthode <code>unpack</code> :</p>
 
-<p><code>ruby
-email_address_obfuscated.unpack('C*')
+<pre><code class="ruby">email_address_obfuscated.unpack('C*')
 'mailto:'.unpack('C*')
 email_address.unpack('C*')
 char.unpack('H2')
 column.class.string_to_binary(value).unpack("H*")
 data.unpack("m")
 s.unpack("U*")
-</code></p>
+</code></pre>
 
 <p>Nous avons déjà vu les directives <code>C*</code> et <code>H</code>, les directives <code>m</code> et <code>U</code> sont
 cependant nouvelles. La première sert à donner une représentation encodée en
 base64 de la valeur, la seconde retourne le caractère UTF-8 correspondant. Voici
 un exemple :</p>
 
-<p>``` ruby
-&ldquo;Hello&rdquo;.unpack(&lsquo;U*&rsquo;)</p>
-
-<h1>=> [72, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"Hello".unpack('U*')
+#=&gt; [72, 101, 108, 108, 111]
+</code></pre>
 
 <h2>Versions de test</h2>
 
@@ -773,9 +676,8 @@ minimum présent une fois.</p>
 
 <p>Prenons l'expression suivante :</p>
 
-<p><code>ruby
-/.+/
-</code></p>
+<pre><code class="ruby">/.+/
+</code></pre>
 
 <p>Celle-ci trouverait une correspondance pour tout caractère apparaissant au moins
 une fois. Elle garantie donc la présence d'un caractère dans la chaîne.</p>
@@ -798,21 +700,17 @@ partie.</p>
 <p>Pour l'exemple suivant, je vais changer de science fiction et emprunter une
 citation de <em>Star Trek: First Contact</em> :</p>
 
-<p><code>ruby
-string = "There's no time to talk about time we don't have the time"
+<pre><code class="ruby">string = "There's no time to talk about time we don't have the time"
 /.+time/
-</code></p>
+</code></pre>
 
 <p>Cette expression régulière capture tout caractère apparaissant au moins une
 fois, le tout suivi du mot &ldquo;time&rdquo;. Si je fais appel à la méthode <code>match</code> sur
 mon expression régulière en lui passant ma chaîne en paramètre :</p>
 
-<p>``` ruby
-/.+time/.match(string)</p>
-
-<h1>=> &ldquo;There&rsquo;s no time to talk about time we don&rsquo;t have the time&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">/.+time/.match(string)
+#=&gt; "There's no time to talk about time we don't have the time"
+</code></pre>
 
 <p>Toute la chaîne correspond.</p>
 
@@ -851,19 +749,15 @@ celui-ci. Il est fainéant, il fait le minimum demandé et rien de plus.</p>
 <p>Pour utiliser un quantificateur fainéant, il suffit de lui ajouter un point
 d'interrogation.</p>
 
-<p><code>ruby
-/.+?time/
-</code></p>
+<pre><code class="ruby">/.+?time/
+</code></pre>
 
 <p>Si j'appelle la méthode <code>match</code> sur ma chaîne en utilisant un quantificateur
 fainéant</p>
 
-<p>``` ruby
-/.+?time/.match(string)</p>
-
-<h1>=> &ldquo;There&rsquo;s no time&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">/.+?time/.match(string)
+#=&gt; "There's no time"
+</code></pre>
 
 <p>Je récupère seulement &ldquo;There&rsquo;s no time&rdquo;. La recherche a commencé au tout début
 de la chaîne et retourne la correspondance minimum. Les expressions régulière
@@ -883,19 +777,15 @@ faisant le moins possible (ils tentent une fois puis abandonnent).</p>
 
 <p>Pour rendre un quantificateur possessif, il suffit de lui ajouter un plus <code>+</code> :</p>
 
-<p><code>ruby
-/.++time/
-</code></p>
+<pre><code class="ruby">/.++time/
+</code></pre>
 
 <p>Lançons la méthode <code>match</code> sur notre chaîne en lui passant cette expression
 possessive :</p>
 
-<p>``` ruby
-/.++time/.match(string)</p>
-
-<h1>=> nil</h1>
-
-<p>```</p>
+<pre><code class="ruby">/.++time/.match(string)
+#=&gt; nil
+</code></pre>
 
 <p>Cet appel retourne <code>nil</code> car le test a échoué. Pourquoi cet échec ? Il semble
 pourtant que notre chaîne corresponde à l'expression. La raison est qu'aucun
@@ -989,21 +879,17 @@ lorsqu'elle est effectuée dans ce contexte.</p>
 <p>Soit une nouvelle chaîne de caractère, une autre citation d'Obiwan Kenobi dans
 Star Wars.</p>
 
-<p><code>ruby
-string = "Who's the more foolish?  The fool or the fool who follows him?"
-</code></p>
+<pre><code class="ruby">string = "Who's the more foolish?  The fool or the fool who follows him?"
+</code></pre>
 
 <p>Je veux connaître tous les emplacements du mot &ldquo;fool&rdquo; dans cette chaîne. Je vais
 donc utiliser l'expression régulière <code>/fool/</code>. Dans ce cas précis, je vais
 utiliser la méthode <code>scan</code> sur ma chaîne. Cette méthode retourne toutes les
 occurrences de mon expression dans la chaîne :</p>
 
-<p>``` ruby
-string.scan(/fool/)</p>
-
-<h1>=> [&ldquo;fool&rdquo;, &ldquo;fool&rdquo;, &ldquo;fool&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">string.scan(/fool/)
+#=&gt; ["fool", "fool", "fool"]
+</code></pre>
 
 <p>Comme on peut le voir, scan retourne une partie du mot &ldquo;foolish&rdquo; et les deux
 occurrences du mot &ldquo;fool&rdquo;.</p>
@@ -1015,18 +901,15 @@ régulière de trouver toutes les correspondances à mon modèle directement sui
 d'une correspondance à un autre modèle. En Ruby, un lookahead positif est
 exprimé grâce à l'opérateur <code>?=</code> :</p>
 
-<p><code>ruby
-/fool(?=ish)/
-</code></p>
+<pre><code class="ruby">/fool(?=ish)/
+</code></pre>
 
 <p>Voici mon expression modifiée. Comme vous pouvez le voir, j'ai mon modèle
 contenant le mot &ldquo;fool&rdquo; directement suivi du modèle lookahead &ldquo;ish&rdquo;.</p>
 
-<p>``` ruby
-string.scan(/fool(?=ish)/)</p>
-
-<blockquote><p>=> [&ldquo;fool&rdquo;]
-```</p></blockquote>
+<pre><code class="ruby">string.scan(/fool(?=ish)/)
+&gt;=&gt; ["fool"]
+</code></pre>
 
 <p>Cette fois-ci, la méthode <code>scan</code> retourne un seul résultat, la seule occurrence
 de &ldquo;fool&rdquo; suivie de &ldquo;ish&rdquo;.</p>
@@ -1034,12 +917,9 @@ de &ldquo;fool&rdquo; suivie de &ldquo;ish&rdquo;.</p>
 <p>De nouveau, utilisons la méthode <code>gsub</code> pour modifier notre chaîne. Remplaçons
 chaque occurrence de &ldquo;fool&rdquo; (suivie de &ldquo;ish&rdquo;) par le mot &ldquo;self" :</p>
 
-<p>``` ruby
-string.gsub(/fool(?=ish)/, &ldquo;self&rdquo;)</p>
-
-<h1>=> &ldquo;Who&rsquo;s the more selfish?  The fool or the fool who follows him?&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">string.gsub(/fool(?=ish)/, "self")
+#=&gt; "Who's the more selfish?  The fool or the fool who follows him?"
+</code></pre>
 
 <p>Nos excuses à Obiwan Kenobi, nous avons changé la ligne pour <em>&ldquo;Who&rsquo;s the more
 selfish?  The fool or the fool who follows him?&rdquo;</em>.</p>
@@ -1050,24 +930,19 @@ n'est-ce pas ? Dans le livre <em>The Well Grounded Rubyist</em>, David Black
 l'explique comme ceci :</p>
 
 <dl>
-  <dt>Zero-width</dt>
-  <dd>(taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
-    consomme pas de caractères. Cela veut dire que la correspondance est
-    cherchée mais n'est pas retournée. Seule la présence d'une correspondance
-    est retournée, vrai ou faux.</dd>
-
-  <dt>Positive</dt>
-  <dd>signifie que le modèle doit être présent, obligatoirement.</dd>
-
-  <dt>lookahead</dt>
-  <dd>veut dire que cette expression est recherchée après le modèle
-    principal.</dd>
-
-  <dt>assertion</dt>
-  <dd>indique que seule la présence d'une correspondance est retournée sous
-    la forme true/false (vrai/faux).</dd>
+<dt>Zero-width</dt>
+<dd>   (taille zéro) signifie que le modèle lookahead (&ldquo;ish&rdquo; dans notre cas) ne
+   consomme pas de caractères. Cela veut dire que la correspondance est
+   cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+   est retournée, vrai ou faux.</dd>
+<dt>Positive</dt>
+<dd>   signifie que le modèle doit être présent, obligatoirement.</dd>
+<dt>Lookahead</dt>
+<dd>   veut dire que cette expression est recherchée après le modèle principal.</dd>
+<dt>Assertion</dt>
+<dd>   indique que seule la présence d'une correspondance est retournée sous la
+   forme true/false (vrai/faux).</dd>
 </dl>
-
 
 <p>Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
 les occurrences du mot &ldquo;fool&rdquo; qui ne sont <strong>pas</strong> suivies des lettres &ldquo;ish&rdquo; ?
@@ -1081,12 +956,9 @@ l'opérateur <code>?!</code>.</p>
 lookahead négatif dans mon expression régulière. Je veux trouver toutes les
 occurrences de &ldquo;fool&rdquo; qui ne font pas partie du mot &ldquo;foolish" :</p>
 
-<p>``` ruby
-string.scan(/fool(?!ish)/)</p>
-
-<h1>=> [&ldquo;fool&rdquo;, &ldquo;fool&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">string.scan(/fool(?!ish)/)
+#=&gt; ["fool", "fool"]
+</code></pre>
 
 <p>Deux correspondances sont retournées, les deux fois où le mot &ldquo;fool&rdquo; apparait
 sans faire partie de &ldquo;foolish&rdquo;.</p>
@@ -1095,13 +967,11 @@ sans faire partie de &ldquo;foolish&rdquo;.</p>
 trouvons le mot &ldquo;fool&rdquo; (non suivi des lettres &ldquo;ish&rdquo;), nous allons le remplacer
 pas le mot &ldquo;self" :</p>
 
-<p>``` ruby
-string.gsub(/fool(?!ish)/, &ldquo;self&rdquo;)</p>
+<pre><code class="ruby">string.gsub(/fool(?!ish)/, "self")
+#=&gt; "Who's the more foolish?  The self or the self who follows him?"
+</code></pre>
 
-<h1>=> &ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</h1>
-
-<p>```
-Encore une fois j'ai changé une réplique classique. On peut maintenant lire
+<p>Encore une fois j'ai changé une réplique classique. On peut maintenant lire
 &ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</p>
 
 <p>Les lookaheads sont très pratiques lorsque l'on souhaite trouver une
@@ -1114,9 +984,8 @@ modèle.</p>
 
 <p>Utilisons une autre citation de Star Wars, une de Yoda cette fois-ci :</p>
 
-<p><code>ruby
-string = "For my ally is the force, and a powerful ally it is."
-</code></p>
+<pre><code class="ruby">string = "For my ally is the force, and a powerful ally it is."
+</code></pre>
 
 <p>The modèle principal que je souhaite chercher est le mot &ldquo;ally&rdquo;, je vais donc
 utiliser l'expression régulière <code>/ally/</code>. J'aimerais cependant trouver le mot
@@ -1125,9 +994,8 @@ parfait pour un <em>positive lookbehind</em> (recherche positive vers l'arrière
 lookbehinds positifs utilisent l'opérateur <code>?&lt;=</code>. Utilisons le dans notre
 expression régulière :</p>
 
-<p><code>ruby
-/(?&lt;=powerful )ally/
-</code></p>
+<pre><code class="ruby">/(?&lt;=powerful )ally/
+</code></pre>
 
 <p>Cette expression régulière relève le mot &ldquo;ally&rdquo; chaque fois qu'il est
 directement précédé du mot &ldquo;powerful&rdquo;. Comme vous pouvez le remarquer, le
@@ -1138,12 +1006,9 @@ lookbehind est positionné avant le modèle principal. Cela montre bien que le m
 mot &ldquo;ally&rdquo; est précédé par le mot &ldquo;powerful&rdquo;, je veux le remplacer par le mot
 &ldquo;friend" :</p>
 
-<p>``` ruby
-string.gsub(/(?&lt;=powerful )ally/, &ldquo;friend&rdquo;)</p>
-
-<h1>=> For my ally is the force, and a powerful friend it is.</h1>
-
-<p>```</p>
+<pre><code class="ruby">string.gsub(/(?&lt;=powerful )ally/, "friend")
+#=&gt; For my ally is the force, and a powerful friend it is.
+</code></pre>
 
 <p>Cela change quelque peu les mots de Yoda : &ldquo;For my ally is the force, and a
 powerful friend it is.&rdquo;</p>
@@ -1154,19 +1019,15 @@ mot &ldquo;powerful&rdquo;. Dans ce cas, je dois utiliser un <em>negative lookbe
 (recherche négative vers l'arrière). Pour cela on trouve l'opérateur <code>?&lt;!</code>.
 Utilisons-le dans notre expression régulière :</p>
 
-<p><code>ruby
-/(?&lt;!powerful )ally/
-</code></p>
+<pre><code class="ruby">/(?&lt;!powerful )ally/
+</code></pre>
 
 <p>Utilisons maintenant <code>gsub</code> sur notre chaîne pour remplacer chaque occurence du
 mot &ldquo;ally&rdquo;, non précédée du mot &ldquo;powerful&rdquo;, par le mot &ldquo;friend" :</p>
 
-<p>``` ruby
-string.gsub(/(?&lt;!powerful )ally/, &ldquo;friend&rdquo;)</p>
-
-<h1>=> &ldquo;For my friend is the force, and a powerful ally it is.&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">string.gsub(/(?&lt;!powerful )ally/, "friend")
+#=&gt; "For my friend is the force, and a powerful ally it is."
+</code></pre>
 
 <p>J'ai de nouveau changé les paroles de Yoda : &ldquo;For my ally is the force, and a
 powerful friend it is.&rdquo;.</p>
@@ -1269,9 +1130,8 @@ cette chaîne de caractères contient ce modèle ?&rdquo;.</p>
 
 <p>Voyons un premier exemple :</p>
 
-<p><code>ruby
-/force/ =~ "Use the force"
-</code></p>
+<pre><code class="ruby">/force/ =~ "Use the force"
+</code></pre>
 
 <p>À gauche, on trouve une expression régulière qui représente le mot <em>force</em>. À
 droite, une citation d'un de mes films préférés, Star Wars, &ldquo;Use the force&rdquo;.
@@ -1280,9 +1140,8 @@ dans la chaîne de caractères située à droite.</p>
 
 <p>Détail appréciable, je peux en inverser l'écriture si je le souhaite.</p>
 
-<p><code>ruby
-"Use the force" =~ /force/
-</code></p>
+<pre><code class="ruby">"Use the force" =~ /force/
+</code></pre>
 
 <p>Je peux mettre la chaîne à gauche et l'expression régulière à droite. Je fais le
 même travail, simplement formulé autrement, &ldquo;Est-ce que ma chaîne contient mon
@@ -1292,29 +1151,22 @@ expression régulière ?&rdquo;. Certains trouvent cette formulation plus lisibl
 correspondance commence. Ici, le modèle <code>/force/</code> est trouvé au huitième
 caractère de ma chaîne.</p>
 
-<p>``` ruby
-&ldquo;Use the force&rdquo; =~ /force/</p>
-
-<h1>=> 8</h1>
-
-<p>```</p>
+<pre><code class="ruby">"Use the force" =~ /force/
+#=&gt; 8
+</code></pre>
 
 <p>Je peux également tester si une chaîne <strong>ne contient pas</strong> un modèle en
 utilisant l'opérateur <code>!~</code>. Cela retourne vrai (<em>true</em>) ou faux (<em>false</em>).</p>
 
-<p><code>ruby
-/dark side/ !~ "Use the force"
-</code></p>
+<pre><code class="ruby">/dark side/ !~ "Use the force"
+</code></pre>
 
 <p>Si je lance ce code, je demande si l'expression <code>/dark side/</code> est absente de la
 chaîne <code>"Use the force"</code>. Dans le cas présent, vrai est retourné.</p>
 
-<p>``` ruby
-/dark side/ !~ &ldquo;Use the force&rdquo;</p>
-
-<h1>=> true</h1>
-
-<p>```</p>
+<pre><code class="ruby">/dark side/ !~ "Use the force"
+#=&gt; true
+</code></pre>
 
 <p>Les opérateurs sont parfaits pour la vérification simple, savoir si ma chaîne
 correspond à mon expression régulière ou non paer exemple. Ruby fournit
@@ -1328,38 +1180,30 @@ peux créer cet objet avec la méthode <code>match</code>.</p>
 
 <p>Soit la chaîne de caractères suivante :</p>
 
-<p><code>ruby
-string = "The force will be with you always"
-</code></p>
+<pre><code class="ruby">string = "The force will be with you always"
+</code></pre>
 
 <p>Je veux savoir si cette chaîne contient le mot <em>force</em>. Je peux utiliser
 l'expression régulière suivante :</p>
 
-<p><code>ruby
-/force/
-</code></p>
+<pre><code class="ruby">/force/
+</code></pre>
 
 <p>J'appelle la méthode <code>match</code> sur mon expression régulière et lui passe ma
 chaîne. Lorsque je lance ce code, il retourne une instance de la classe
 <code>MatchData</code> pour ma correspondance.</p>
 
-<p>``` ruby
-my_match = /force/.match(string)</p>
-
-<h1>=> #<MatchData "force"></h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match = /force/.match(string)
+#=&gt; #&lt;MatchData "force"&gt;
+</code></pre>
 
 <p>Depuis Ruby 1.9, la correspondance ne se fait plus obligatoirement au début de
 la chaîne. Je peux passer un second argument, un entier, qui indique que la
 correspondance doit commencer à partir de ce numéro de caractère.</p>
 
-<p>``` ruby
-my_match = /force/.match(string, 5)</p>
-
-<h1>=> nil</h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match = /force/.match(string, 5)
+#=&gt; nil
+</code></pre>
 
 <p>Ici, le code retourne <code>nil</code>. Pour trouver une correspondance au mot <em>force</em>, il
 faudrait commencer plus tôt dans la chaîne.</p>
@@ -1367,12 +1211,9 @@ faudrait commencer plus tôt dans la chaîne.</p>
 <p>Pour les exemples suivants, je me contenterai de passer simplement ma chaîne de
 caractères :</p>
 
-<p>``` ruby
-my_match = /force/.match(string)</p>
-
-<h1>=> #<MatchData "force"></h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match = /force/.match(string)
+#=&gt; #&lt;MatchData "force"&gt;
+</code></pre>
 
 <p>J'ai accès à des méthodes qui fournissent <strong>bien plus</strong> d'informations sur ma
 correspondance car c'est maintenant une instance de la classe <code>MatchData</code>.</p>
@@ -1380,41 +1221,31 @@ correspondance car c'est maintenant une instance de la classe <code>MatchData</c
 <p>Si j'appelle <code>to_s</code> sur ma correspondance, cela va retourner l'intégralité de
 son texte :</p>
 
-<p>``` ruby
-my_match.to_s</p>
-
-<h1>=> &ldquo;force&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match.to_s
+#=&gt; "force"
+</code></pre>
 
 <p>Si j'appelle <code>pre_match</code> dessus, cela retourne la partie de ma chaîne qui
 <strong>précède</strong> ma correspondance :</p>
 
-<p>``` ruby
-my_match.pre_match</p>
-
-<h1>=> &ldquo;The &rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match.pre_match
+#=&gt; "The "
+</code></pre>
 
 <p>Si j'appelle <code>post_match</code> dessus, cela retourne la partie de ma chaîne qui
 <strong>suit</strong> ma correspondance :</p>
 
-<p>``` ruby
-my_match.post_match</p>
-
-<h1>=> &ldquo; will be with you&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match.post_match
+#=&gt; " will be with you"
+</code></pre>
 
 <p>Toutes ces méthodes (et il y en a d'autres) sont bien utiles. <code>MatchData</code>
 montre cependant sa réelle utilité lorsque l'on parle de groupes de captures.
 Les groupes de captures sont des sous expressions au sein d'une expression
 régulière. Voici un exemple :</p>
 
-<p><code>ruby
-/(.*)force(.*)/
-</code></p>
+<pre><code class="ruby">/(.*)force(.*)/
+</code></pre>
 
 <p>Pour qu'une chaîne de caractères contienne cette expression régulière, elle doit
 avoir n'importe quel caractère zéro, une ou plusieurs fois (c'est la
@@ -1426,19 +1257,15 @@ parenthèses. C'est ce qu'on appelle des groupes. Lorsque que je lance ce modèl
 sur ma chaîne, ce qui correspond à ces groupes va être mémorisé. Je peux ensuite
 accéder à ces groupes et les utiliser dans d'autres parties de mon code.</p>
 
-<p><code>ruby
-my_match = /(.*)force(.*)/.match(string)
-</code></p>
+<pre><code class="ruby">my_match = /(.*)force(.*)/.match(string)
+</code></pre>
 
 <p>Si je souhaite voir tous ces groupes, mes groupes de captures, je peux appeler
 la méthode <code>captures</code> sur ma correspondance.</p>
 
-<p>``` ruby
-my_match.captures</p>
-
-<h1>=> [&ldquo;The &rdquo;, &ldquo; will be with you always&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match.captures
+#=&gt; ["The ", " will be with you always"]
+</code></pre>
 
 <p>Les objets <code>MatchData</code> sont très proches des tableaux. Je peux accéder à
 chaque capture en utilisant les crochets, de la même façon que pour accéder aux
@@ -1453,12 +1280,9 @@ will be with you always"</code>.</p>
 tableau classique. Si j'appelle <code>my_match[0]</code>, plutôt que de récupérer le
 premier groupe, j'obtiens la chaîne sur laquelle j'ai lancé le modèle.</p>
 
-<p>``` ruby
-my_match[0]</p>
-
-<h1>=> &ldquo;The force will be with you always&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">my_match[0]
+#=&gt; "The force will be with you always"
+</code></pre>
 
 <p>Il est important de garder en mémoire que malgré leur ressemblance avec les
 tableaux, les objets <code>MatchData</code> ne sont pas des tableaux.</p>
@@ -1466,26 +1290,20 @@ tableaux, les objets <code>MatchData</code> ne sont pas des tableaux.</p>
 <p>Si j'essaie d'appeler une méthode de tableau comme <code>each</code> sur mon objet
 <code>MatchData</code>, j'obtiens une erreur :</p>
 
-<p>``` ruby
-my_match.each do |m|
+<pre><code class="ruby">my_match.each do |m|
  puts m.upcase
-end</p>
-
-<h1>=> NoMethodError</h1>
-
-<p>```</p>
+end
+#=&gt; NoMethodError
+</code></pre>
 
 <p>Cependant, je peux facilement corriger cela en convertissant mon objet
 <code>MatchData</code> en tableau grâce à la méthode <code>to_a</code>.</p>
 
-<p>``` ruby
-my_match.to_a.each do |m|
+<pre><code class="ruby">my_match.to_a.each do |m|
  puts m.upcase
-end</p>
-
-<h1>=> THE FORCE WILL BE WITH YOU ALWAYS THE WILL BE WITH YOU ALWAYS</h1>
-
-<p>```</p>
+end
+#=&gt; THE FORCE WILL BE WITH YOU ALWAYS THE WILL BE WITH YOU ALWAYS
+</code></pre>
 
 <p><a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">Lire le deuxième article de cette série</a></p>
 

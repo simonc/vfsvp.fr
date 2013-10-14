@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: rails | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/rails/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-12T13:09:12+02:00</updated>
+  <updated>2013-10-14T11:25:53+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -39,37 +39,33 @@ Ruby.</p>
 <p>J'utilise :</p>
 
 <ul>
-<li>Rspec &mdash; DSL spécialisé dans les tests</li>
-<li>FactoryGirl &mdash; Constructeur de modèles</li>
-<li>Capybara &mdash; DOM Dominator</li>
-<li>Database Cleaner &ndash; Nettoyeur de bases de données</li>
-<li>Spring &ndash; Accélérateur de démarrage</li>
+<li>Rspec &ndash; DSL spécialisé dans les tests</li>
+<li>FactoryGirl &ndash; Constructeur de modèles</li>
+<li>Capybara &ndash; DOM Dominator</li>
+<li>Database Cleaner - Nettoyeur de bases de données</li>
+<li>Spring - Accélérateur de démarrage</li>
 </ul>
 
 
 <p>Et j'en suis très content. Écrivons une spec.</p>
 
-<p>``` ruby
-feature &lsquo;Navigating through workpapers&rsquo; do
+<pre><code class="ruby">feature 'Navigating through workpapers' do
   let(:user) { create(:user) }
-  let(:audit) { create(:audit, users: [user]) }</p>
+  let(:audit) { create(:audit, users: [user]) }
 
-<p>  scenario &ldquo;User sees workpapers within an audit&rdquo; do</p>
+  scenario "User sees workpapers within an audit" do
+    workpaper = create(:workpaper, audit: audit)
 
-<pre><code>workpaper = create(:workpaper, audit: audit)
+    visit '/'
+    fill_in 'email', with: user.email
+    fill_in 'password', with: 'password'
+    click_on 'Log In'
 
-visit '/'
-fill_in 'email', with: user.email
-fill_in 'password', with: 'password'
-click_on 'Log In'
-
-find('#audit-selector').select audit.name
-expect(page).to have_css?('.workpaper', text: workpaper.name)
-</code></pre>
-
-<p>  end
+    find('#audit-selector').select audit.name
+    expect(page).to have_css?('.workpaper', text: workpaper.name)
+  end
 end
-```</p>
+</code></pre>
 
 <p>Tout cela est plutôt pas mal mais une <em>feature</em> un peu plus complexe deviendrait
 vite illisible. La logique de connexion va immanquablement être dupliquée entre
@@ -88,72 +84,54 @@ change, vous saurez exactement où corriger cela dans vos tests.</p>
 
 <p>Voici un <em>page objet</em> &ldquo;page de connexion" :</p>
 
-<p>``` ruby
-class LoginPage
-  include Capybara::DSL</p>
+<pre><code class="ruby">class LoginPage
+  include Capybara::DSL
 
-<p>  def visit_page</p>
+  def visit_page
+    visit '/'
+    self
+  end
 
-<pre><code>visit '/'
-self
-</code></pre>
-
-<p>  end</p>
-
-<p>  def login(user)</p>
-
-<pre><code>fill_in 'email', with: user.email
-fill_in 'password', with: 'password'
-click_on 'Log In'
-</code></pre>
-
-<p>  end
+  def login(user)
+    fill_in 'email', with: user.email
+    fill_in 'password', with: 'password'
+    click_on 'Log In'
+  end
 end
-```</p>
+</code></pre>
 
 <p>Voici un autre <em>page object</em> &ldquo;index des documents" :</p>
 
-<p>``` ruby
-class WorkpaperIndexPage
-  include Capybara::DSL</p>
+<pre><code class="ruby">class WorkpaperIndexPage
+  include Capybara::DSL
 
-<p>  def select_audit(audit)</p>
+  def select_audit(audit)
+    find('#audit-selector').select audit.name
+  end
 
-<pre><code>find('#audit-selector').select audit.name
-</code></pre>
-
-<p>  end</p>
-
-<p>  def has_workpaper?(workpaper)</p>
-
-<pre><code>has_css?('.workpaper', text: workpaper.name)
-</code></pre>
-
-<p>  end
+  def has_workpaper?(workpaper)
+    has_css?('.workpaper', text: workpaper.name)
+  end
 end
-```</p>
+</code></pre>
 
 <p>Et voici maintenant un test utilisant ces <em>page objects</em> :</p>
 
-<p>``` ruby
-feature &lsquo;Navigating through workpapers&rsquo; do
+<pre><code class="ruby">feature 'Navigating through workpapers' do
   let(:user) { create(:user) }
   let(:audit) { create(:audit, users: [user]) }
   let(:login_page) { LoginPage.new }
-  let(:workpaper_page) { WorkpaperIndexPage.new }</p>
+  let(:workpaper_page) { WorkpaperIndexPage.new }
 
-<p>  scenario &ldquo;User sees workpapers within an audit&rdquo; do</p>
+  scenario "User sees workpapers within an audit" do
+    workpaper = create(:workpaper, audit: audit)
 
-<pre><code>workpaper = create(:workpaper, audit: audit)
-
-login_page.visit_page.login(user)
-workpaper_page.select(audit)
-expect(workpaper_page).to have_workpaper(workpaper)
-</code></pre>
-
-<p>  end
+    login_page.visit_page.login(user)
+    workpaper_page.select(audit)
+    expect(workpaper_page).to have_workpaper(workpaper)
+  end
 end
-```</p>
+</code></pre>
 
 <p>Considérons maintenant que quelqu'un modifie sans arrêt ce bouton de connexion.
 Vous avez simplement à modifier <code>LoginPage</code> et utiliser un ID ou une entrée I18n
@@ -174,9 +152,8 @@ sans <em>page object</em>.</p>
 <p>Un test fonctionnel qui échoue peut être difficile à diagnostiquer. Mettons que
 vous utilisez un <em>page object</em> comme ceci :</p>
 
-<p><code>ruby
-expect(workpaper_page).to have_one_workpaper(workpaper)
-</code></p>
+<pre><code class="ruby">expect(workpaper_page).to have_one_workpaper(workpaper)
+</code></pre>
 
 <pre><code>Failure/Error: expect(workpaper_page).to have_one_workpaper(workpaper)
   expected #has_one_workpaper?(workpaper) to return true, got false
@@ -236,9 +213,8 @@ dehors de Capybara. Pour cela, <a href="https://gist.github.com/mattwynne/122892
 
 <p>Le code suivant attend que le document soit <em>awesome</em> et échoue si ce n'est pas le cas après deux secondes.</p>
 
-<p><code>ruby
-eventually { expect(workpaper).to be_awesome }
-</code></p>
+<pre><code class="ruby">eventually { expect(workpaper).to be_awesome }
+</code></pre>
 
 <p>Quand pourriez-vous avoir besoin de ce type d'assertion en dehors de Capybara ?
 Lisez la suite…</p>
@@ -257,55 +233,47 @@ signifie que j'ai des factories permettant de générer des objets complexes.
 Voici, par exemple, comment faire un document avec un workflow ayant des étapes
 assignées à certains utilisateurs appelés <code>preparers</code> et <code>reviewers</code>.</p>
 
-<p>``` ruby
-FactoryGirl.define do
-  factory :workpaper do</p>
+<pre><code class="ruby">FactoryGirl.define do
+  factory :workpaper do
+    sequence(:name) {|n| "workpaper #{n}"}
 
-<pre><code>sequence(:name) {|n| "workpaper #{n}"}
+    factory :assigned_workpaper do
+      ignore do
+        preparer { create(:user) }
+        reviewer { create(:user) }
+      end
 
-factory :assigned_workpaper do
-  ignore do
-    preparer { create(:user) }
-    reviewer { create(:user) }
-  end
-
-  after(:create) do |workpaper, evaluator|
-    create(:assigned_workflow, workpaper: workpaper, preparer: evaluator.preparer, reviewer: evaluator.reviewer)
-  end
-end
-</code></pre>
-
-<p>  end</p>
-
-<p>  factory :workflow do</p>
-
-<pre><code>factory :assigned_workflow do
-  ignore do
-    preparer { create(:user) }
-    reviewer false
-  end
-
-  after(:create) do |workflow, evaluator|
-    create(:step, workflow: workflow, user: evaluator.preparer)
-
-    if evaluator.reviewer
-      create(:step, workflow: workflow, user: evaluator.reviewer)
+      after(:create) do |workpaper, evaluator|
+        create(:assigned_workflow, workpaper: workpaper, preparer: evaluator.preparer, reviewer: evaluator.reviewer)
+      end
     end
   end
+
+  factory :workflow do
+    factory :assigned_workflow do
+      ignore do
+        preparer { create(:user) }
+        reviewer false
+      end
+
+      after(:create) do |workflow, evaluator|
+        create(:step, workflow: workflow, user: evaluator.preparer)
+
+        if evaluator.reviewer
+          create(:step, workflow: workflow, user: evaluator.reviewer)
+        end
+      end
+    end
+  end
+
+  factory :step
 end
 </code></pre>
-
-<p>  end</p>
-
-<p>  factory :step
-end
-```</p>
 
 <p>Cela me permet de créer de façon déclarative des objets spécifiques à mes tests.</p>
 
-<p><code>ruby
-create(:assigned_workpaper, preparer: first_user, reviewer: second_user)
-</code></p>
+<pre><code class="ruby">create(:assigned_workpaper, preparer: first_user, reviewer: second_user)
+</code></pre>
 
 <p>Je crée toujours des instances de mes modèles via FactoryGirl dans mes tests
 fonctionnels. Je suis fan de FactoryGirl mais je pense qu'il est possible de
@@ -323,9 +291,8 @@ signifie pas forcement que tout a été sauvegardé en base de données.</p>
 avoir des helpers pour les inspecter. Ce test va s'assurer que le <em>preparer</em>
 d'un document a été sauvegardé en base de données :</p>
 
-<p><code>ruby
-eventually { preparer_for(workpaper).should be(preparer) }
-</code></p>
+<pre><code class="ruby">eventually { preparer_for(workpaper).should be(preparer) }
+</code></pre>
 
 <h2>6. Créez moins de tests, affinez ceux existant</h2>
 
@@ -346,14 +313,13 @@ idée en ce qui concerne les tests fonctionnels.</p>
 
 <p>Prenons le test suivant :</p>
 
-<p><code>ruby
-scenario "assigning a reviewer to a workpaper" do
+<pre><code class="ruby">scenario "assigning a reviewer to a workpaper" do
   user_visits_workpaper(user, workpaper)
   ui.begin_assigning_reviewer
   ui.assign_work_to(reviewer)
   eventually { expect(reviewer_for workpaper).to eq(other_tester) }
 end
-</code></p>
+</code></pre>
 
 <p>Lorsque l'on appelle <code>ui.begin_assigning_reviewer</code> une boite de dialogue
 s'ouvre pour permettre à l'utilisateur de choisir qui qui sera le <code>reviewer</code>.
@@ -363,15 +329,14 @@ Cette fonctionnalité marche. Très bien.</p>
 faire des relectures soient listés. Plutôt que de créer un nouveau test, je vais
 affiner celui que je viens d'écrire :</p>
 
-<p><code>ruby
-scenario "assigning a reviewer to a workpaper" do
+<pre><code class="ruby">scenario "assigning a reviewer to a workpaper" do
   user_visits_workpaper(user, workpaper)
   ui.begin_assigning_reviewer
   expect(ui).to have_excluded_user(non_reviewer)
   ui.assign_work_to(reviewer)
   eventually { expect(reviewer_for workpaper).to eq(other_tester) }
 end
-</code></p>
+</code></pre>
 
 <p>Je n'utiliserais bien sûr pas cette technique pour les tests unitaires mais elle
 est efficace pour les tests fonctionnels dont le but est de guider votre
@@ -407,12 +372,9 @@ mémoire tout en travaillant avec Ruby. Ce dernier fournit deux méthods <code>p
 
 <p>Voici un exemple :</p>
 
-<p>``` ruby
-&lsquo;A&rsquo;.unpack(&lsquo;b*&rsquo;)</p>
-
-<h1>=> [&ldquo;10000010&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">'A'.unpack('b*')
+#=&gt; ["10000010"]
+</code></pre>
 
 <!-- more -->
 
@@ -423,12 +385,9 @@ valeur de <code>'A'</code> est 65 et la représentation binaire de 65 est <code>
 
 <p>Un autre exemple :</p>
 
-<p>``` ruby
-&lsquo;A&rsquo;.unpack(&lsquo;B*&rsquo;)</p>
-
-<h1>=> [&ldquo;01000001&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">'A'.unpack('B*')
+#=&gt; ["01000001"]
+</code></pre>
 
 <p>Notez bien le changement de résultat entre les deux exemples. Quelle est la
 différence entre <code>b*</code> et <code>B*</code> ? Pour le comprendre nous devons d'abord parler
@@ -474,16 +433,12 @@ b | bit string (LSB first) | représentation binaire (bit de poids faible en
 
 <p>Voyons maintenant deux exemples.</p>
 
-<p>``` ruby
-&lsquo;C&rsquo;.unpack(&lsquo;b*&rsquo;)</p>
+<pre><code class="ruby">'C'.unpack('b*')
+#=&gt; ["11000010"]
 
-<h1>=> [&ldquo;11000010&rdquo;]</h1>
-
-<p>&lsquo;C&rsquo;.unpack(&lsquo;B*&rsquo;)</p>
-
-<h1>=> [&ldquo;01000011&rdquo;]</h1>
-
-<p>```</p>
+'C'.unpack('B*')
+#=&gt; ["01000011"]
+</code></pre>
 
 <p><code>b*</code> et <code>B*</code> voient tous les deux là même donnée. Ils représentent simplement
 cette donnée différemment.</p>
@@ -493,30 +448,21 @@ cette donnée différemment.</p>
 <p>Disons que je souhaite la représentation binaire de la chaîne <code>hello</code>. D'après
 ce que nous avons vu précédemment cela devrait être assez facile :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;B*&rsquo;)</p>
-
-<h1>=> [&ldquo;0110100001100101011011000110110001101111&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('B*')
+#=&gt; ["0110100001100101011011000110110001101111"]
+</code></pre>
 
 <p>Nous pouvons également obtenir le résultat suivant</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;).map {|e| e.to_s 2}</p>
-
-<h1>=> [&ldquo;1101000&rdquo;, &ldquo;1100101&rdquo;, &ldquo;1101100&rdquo;, &ldquo;1101100&rdquo;, &ldquo;1101111&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*').map {|e| e.to_s 2}
+#=&gt; ["1101000", "1100101", "1101100", "1101100", "1101111"]
+</code></pre>
 
 <p>Voyons un exemple similaire mais en découpant les étapes cette fois.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>La directive <code>C*</code> retourne les caractères sous la forme d'un entier non signé
 tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et celle de
@@ -525,36 +471,26 @@ tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et
 <p>En utilisant la technique vu précédemment, nous pouvons obtenir une
 représentation hexadécimale de notre chaîne :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;).map {|e| e.to_s 16}</p>
-
-<h1>=> [&ldquo;68&rdquo;, &ldquo;65&rdquo;, &ldquo;6c&rdquo;, &ldquo;6c&rdquo;, &ldquo;6f&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*').map {|e| e.to_s 16}
+#=&gt; ["68", "65", "6c", "6c", "6f"]
+</code></pre>
 
 <p>Il est toutefois possible d'obtenir directement cette valeur hexadécimale :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;H*&rsquo;)</p>
-
-<h1>=> [&ldquo;68656c6c6f&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('H*')
+#=&gt; ["68656c6c6f"]
+</code></pre>
 
 <h2>High nibble first vs Low nibble first</h2>
 
 <p>Observez la différence entre les deux cas suivants :</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;H*&rsquo;)</p>
+<pre><code class="ruby">"hello".unpack('H*')
+#=&gt; ["68656c6c6f"]
 
-<h1>=> [&ldquo;68656c6c6f&rdquo;]</h1>
-
-<p>&ldquo;hello&rdquo;.unpack(&lsquo;h*&rsquo;)</p>
-
-<h1>=> [&ldquo;8656c6c6f6&rdquo;]</h1>
-
-<p>```</p>
+"hello".unpack('h*')
+#=&gt; ["8656c6c6f6"]
+</code></pre>
 
 <p>La documentation Ruby indique</p>
 
@@ -583,79 +519,56 @@ de traiter autant de caractères que possible. Par exemple :</p>
 
 <p>A single C will get a single byte.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C&rsquo;)</p>
-
-<h1>=> [104]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C')
+#=&gt; [104]
+</code></pre>
 
 <p>Vous pouvez ajouter plus de <code>C</code> si vous le souhaitez.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;CC&rsquo;)</p>
+<pre><code class="ruby">"hello".unpack('CC')
+#=&gt; [104, 101]
 
-<h1>=> [104, 101]</h1>
+"hello".unpack('CCC')
+#=&gt; [104, 101, 108]
 
-<p>&ldquo;hello&rdquo;.unpack(&lsquo;CCC&rsquo;)</p>
-
-<h1>=> [104, 101, 108]</h1>
-
-<p>&ldquo;hello&rdquo;.unpack(&lsquo;CCCCC&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+"hello".unpack('CCCCC')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>Plutôt que de répéter ces directives, nous pouvons utiliser un nombre pour
 indiquer combien de fois la directive doit être répétée.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C5&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C5')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>Nous pouvons utiliser <code>*</code> pour capturer toutes les octets restants.</p>
 
-<p>``` ruby
-&ldquo;hello&rdquo;.unpack(&lsquo;C*&rsquo;)</p>
-
-<h1>=> [104, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"hello".unpack('C*')
+#=&gt; [104, 101, 108, 108, 111]
+</code></pre>
 
 <p>Voyons un exemple dans lequel nous mélangeons les notations <em>MSB</em> et <em>LSB</em> :</p>
 
-<p>``` ruby
-&ldquo;aa&rdquo;.unpack(&lsquo;b8B8&rsquo;)</p>
-
-<h1>=> [&ldquo;10000110&rdquo;, &ldquo;01100001&rdquo;]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"aa".unpack('b8B8')
+#=&gt; ["10000110", "01100001"]
+</code></pre>
 
 <h2>pack est l'inverse de unpack</h2>
 
 <p>La méthode <code>pack</code> est utilisée pour lire les données stockées. Voyons quelques
 exemples d'utilisation :</p>
 
-<p>``` ruby
-[1000001].pack(&lsquo;C&rsquo;)</p>
-
-<h1>=> &ldquo;A&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">[1000001].pack('C')
+#=&gt; "A"
+</code></pre>
 
 <p>Dans le code ci-dessus, le valeur binaire est interpretée comme un entier non
 signé sur 8 bits et le résultat est <code>'A'</code>.</p>
 
-<p>``` ruby
-[&lsquo;A&rsquo;].pack(&lsquo;H&rsquo;)</p>
-
-<h1>=> &ldquo;\xA0&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">['A'].pack('H')
+#=&gt; "\xA0"
+</code></pre>
 
 <p>Ici, l'entrée <code>'A'</code> n'est pas le <code>A</code> ASCII mais le <code>A</code> hexadécimale. C'est
 la version hexadécimale à cause de la directive <code>H</code>. Cette dernière indique à
@@ -672,21 +585,15 @@ qu'il s'agit d'une valeur hexadécimale.</p>
 par <code>a</code> dans notre exemple précédent et le résultat reste inchangé. Essayons
 pour voir :</p>
 
-<p>``` ruby
-[&lsquo;a&rsquo;].pack(&lsquo;H&rsquo;)</p>
-
-<h1>=> &ldquo;\xA0&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">['a'].pack('H')
+#=&gt; "\xA0"
+</code></pre>
 
 <p>Un autre exemple :</p>
 
-<p>``` ruby
-[&lsquo;a&rsquo;].pack(&lsquo;h&rsquo;)</p>
-
-<h1>=> &ldquo;\n&rdquo;</h1>
-
-<p>```</p>
+<pre><code class="ruby">['a'].pack('h')
+#=&gt; "\n"
+</code></pre>
 
 <p>Dans le code ci-dessus, il y a une différence notable dans le résultat. Nous
 avons changé la directive de <code>H</code> à <code>h</code>. Comme <code>h</code> indique d'utiliser la notation
@@ -701,27 +608,23 @@ s'afficher <code>\n</code> qui représente un saut de ligne.</p>
 <p>J'ai cherché un peu dans le code source de Rails et trouvé les utilisations
 suivantes de la méthode <code>unpack</code> :</p>
 
-<p><code>ruby
-email_address_obfuscated.unpack('C*')
+<pre><code class="ruby">email_address_obfuscated.unpack('C*')
 'mailto:'.unpack('C*')
 email_address.unpack('C*')
 char.unpack('H2')
 column.class.string_to_binary(value).unpack("H*")
 data.unpack("m")
 s.unpack("U*")
-</code></p>
+</code></pre>
 
 <p>Nous avons déjà vu les directives <code>C*</code> et <code>H</code>, les directives <code>m</code> et <code>U</code> sont
 cependant nouvelles. La première sert à donner une représentation encodée en
 base64 de la valeur, la seconde retourne le caractère UTF-8 correspondant. Voici
 un exemple :</p>
 
-<p>``` ruby
-&ldquo;Hello&rdquo;.unpack(&lsquo;U*&rsquo;)</p>
-
-<h1>=> [72, 101, 108, 108, 111]</h1>
-
-<p>```</p>
+<pre><code class="ruby">"Hello".unpack('U*')
+#=&gt; [72, 101, 108, 108, 111]
+</code></pre>
 
 <h2>Versions de test</h2>
 
