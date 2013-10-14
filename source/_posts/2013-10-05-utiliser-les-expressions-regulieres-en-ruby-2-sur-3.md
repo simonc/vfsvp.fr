@@ -82,24 +82,21 @@ assertion_ (recherche positive vers l'avant de taille zéro). Facile à prononce
 n'est-ce pas ? Dans le livre _The Well Grounded Rubyist_, David Black
 l'explique comme ceci :
 
-<dl>
-  <dt>Zero-width</dt>
-  <dd>(taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
-    consomme pas de caractères. Cela veut dire que la correspondance est
-    cherchée mais n'est pas retournée. Seule la présence d'une correspondance
-    est retournée, vrai ou faux.</dd>
+Zero-width
+:    (taille zéro) signifie que le modèle lookahead ("ish" dans notre cas) ne
+     consomme pas de caractères. Cela veut dire que la correspondance est
+     cherchée mais n'est pas retournée. Seule la présence d'une correspondance
+     est retournée, vrai ou faux.
 
-  <dt>Positive</dt>
-  <dd>signifie que le modèle doit être présent, obligatoirement.</dd>
+Positive
+:    signifie que le modèle doit être présent, obligatoirement.
 
-  <dt>lookahead</dt>
-  <dd>veut dire que cette expression est recherchée après le modèle
-    principal.</dd>
+Lookahead
+:    veut dire que cette expression est recherchée après le modèle principal.
 
-  <dt>assertion</dt>
-  <dd>indique que seule la présence d'une correspondance est retournée sous
-    la forme true/false (vrai/faux).</dd>
-</dl>
+Assertion
+:    indique que seule la présence d'une correspondance est retournée sous la
+     forme true/false (vrai/faux).
 
 Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
 les occurrences du mot "fool" qui ne sont **pas** suivies des lettres "ish" ?
