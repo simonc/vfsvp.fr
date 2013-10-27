@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-14T11:25:53+02:00</updated>
+  <updated>2013-10-27T18:26:11+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -12,6 +12,244 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Elixir pour les rubyists (partie 1)]]></title>
+    <link href="http://vfsvp.fr/article/elixir-pour-les-rubyists-1"/>
+    <updated>2013-10-27T18:30:00+01:00</updated>
+    <id>http://vfsvp.fr/article/elixir-pour-les-rubyists-1</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.natescottwest.com/blog/2013/09/26/elixir-for-rubyists/">Elixir for Rubyists part 1 par Nate West</a></p>
+
+<p>Elixir est mon nouveau langage préféré. Cet article est le premier d&#8217;une série
+de longueur indéterminée sur Elixir. En tant que rubyist, la syntaxe d&#8217;Elixir va
+vous sembler familière. Je vais donc vous montrer beaucoup de code pour
+vous expliquer comment il marche. Elixir est fonctionnel et amusant
+(FUNctional).</p>
+
+<p>Elixir est un langage fonctionnel qui tourne sur la VM Erlang mais ressemble
+beaucoup à Ruby.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="m">2</span> <span class="o">+</span> <span class="m">2</span>
+</span><span class='line'><span class="c1"># =&gt; 4</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Hello!&quot;</span>
+</span><span class='line'><span class="c1"># =&gt; Hello!</span>
+</span><span class='line'><span class="c1">#    :ok</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">String</span><span class="o">.</span><span class="n">downcase</span><span class="p">(</span><span class="s2">&quot;JE NE CRIE PAS&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; &quot;je ne crie pas&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">defmodule</span> <span class="no">Numbers</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  def</span> <span class="n">add_to</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">    if</span> <span class="n">is_number</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">      </span><span class="n">num</span> <span class="o">+</span> <span class="m">2</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="k">raise</span><span class="p">(</span><span class="no">ArgumenError</span><span class="p">,</span> <span class="ss">message:</span> <span class="s2">&quot;L&#39;argument doit etre un nombre&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Numbers</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="m">4</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; 6</span>
+</span><span class='line'><span class="no">Numbers</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="s2">&quot;Nate&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; ** (ArgumenError) L&#39;argument doit etre un nombre</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Elixir utilise la détection par motif (<em>pattern matching</em>) pour effectuer des
+comparaisons et assigner des valeurs aux variables.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="m">2</span>
+</span><span class='line'><span class="c1"># =&gt; 2</span>
+</span><span class='line'>
+</span><span class='line'><span class="m">2</span> <span class="o">=</span> <span class="n">a</span>
+</span><span class='line'><span class="c1"># =&gt; 2</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">{</span> <span class="n">success</span><span class="p">,</span> <span class="n">string</span> <span class="p">}</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:ok</span><span class="p">,</span> <span class="s2">&quot;Hey Joe, tu sais quoi ?&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="c1"># =&gt; {:ok, &quot;Hey Joe, tu sais quoi ?&quot;}</span>
+</span><span class='line'><span class="n">success</span>
+</span><span class='line'><span class="c1"># =&gt; :ok</span>
+</span><span class='line'><span class="n">string</span>
+</span><span class='line'><span class="c1"># =&gt; &quot;Hey Joe, tu sais quoi ?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Elixir est fonctionnel, les variables sont donc immuables. Cependant,
+contrairement à Erlang, ces dernières ne sont pas limitées à une seule
+assignation. Si vous voulez détecter le motif de la valeur d&#8217;une variable, vous
+devez utiliser un circonflexe <code>^</code>. Sans le circonflexe vous pouvez assigner une
+nouvelle valeur à la variable.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="m">2</span>
+</span><span class='line'><span class="c1"># =&gt; 2</span>
+</span><span class='line'><span class="o">^</span><span class="n">a</span> <span class="o">=</span> <span class="m">3</span>
+</span><span class='line'><span class="c1"># =&gt; ** (MatchError) aucune correspondance avec : 3</span>
+</span><span class='line'><span class="c1">#    :erl_eval.expr/3</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="m">3</span>
+</span><span class='line'><span class="c1"># =&gt; 3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Comme tout langage fonctionnel, Elixir traite les fonctions comme des citoyens
+de premier ordre. Vous pouvez assigner une fonction à une variable pour une
+évaluation différée. Notez l&#8217;interpolation de chaîne dans l&#8217;exemple suivant,
+une autre ressemblance à Ruby.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">greeter</span> <span class="o">=</span> <span class="k">fn</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="s2">&quot;Hello </span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">end</span>
+</span><span class='line'><span class="c1"># =&gt; #Function&lt;6.80484245 in :erl_eval.expr/5&gt;</span>
+</span><span class='line'><span class="n">greeter</span><span class="o">.</span><span class="p">(</span><span class="s2">&quot;Nate&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; Hello Nate</span>
+</span><span class='line'><span class="c1">#    :ok</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vous pouvez écrire des fonctions qui retournent des fonctions.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="k">defmodule</span> <span class="no">FunctionExamples</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  def</span> <span class="n">build_greeter</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">    case</span> <span class="n">kind</span> <span class="k">do</span>
+</span><span class='line'><span class="k">      </span><span class="ss">:hello</span> <span class="o">-&gt;</span> <span class="k">fn</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Coucou, </span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span> <span class="k">end</span>
+</span><span class='line'>      <span class="ss">:goodbye</span> <span class="o">-&gt;</span> <span class="k">fn</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;A plus, </span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span> <span class="k">end</span>
+</span><span class='line'>      <span class="n">_</span> <span class="o">-&gt;</span> <span class="k">fn</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Je ne sais pas quoi te dire, </span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span> <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">say_hello</span> <span class="o">=</span> <span class="no">FunctionExamples</span><span class="o">.</span><span class="n">build_greeter</span><span class="p">(</span><span class="ss">:hello</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; #Function&lt;0.63189797 in FunctionExamples.build_greeter/1&gt;</span>
+</span><span class='line'><span class="n">say_hello</span><span class="o">.</span><span class="p">(</span><span class="s2">&quot;Nate&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; Coucou, Nate!</span>
+</span><span class='line'><span class="c1">#    :ok</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">wat</span> <span class="o">=</span> <span class="no">FunctionExamples</span><span class="o">.</span><span class="n">build_greeter</span><span class="p">(</span><span class="ss">:something_else</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; #Function&lt;2.63189797 in FunctionExamples.build_greeter/1&gt;</span>
+</span><span class='line'><span class="n">wat</span><span class="o">.</span><span class="p">(</span><span class="s2">&quot;Nate&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; &quot;Je ne sais pas quoi te dire, Nate.&quot;</span>
+</span><span class='line'><span class="c1">#    :ok</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Comme dans d&#8217;autres langages fonctionnels, plutôt que de reposer sur des
+boucles, Elixir utilise énormément la récursivité. Cela dit, le module <code>Enum</code>
+fournit quelques fonctions bien connues des rubyists, comme <code>each</code> par exemple.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="no">Enum</span><span class="o">.</span><span class="n">each</span><span class="p">([</span><span class="s2">&quot;Joe&quot;</span><span class="p">,</span> <span class="s2">&quot;Matz&quot;</span><span class="p">,</span> <span class="s2">&quot;Jose&quot;</span><span class="p">],</span> <span class="k">fn</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">IO</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">end</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; Joe</span>
+</span><span class='line'><span class="c1"># =&gt; Matz</span>
+</span><span class='line'><span class="c1"># =&gt; Jose</span>
+</span><span class='line'><span class="c1"># =&gt; :ok</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">defmodule</span> <span class="no">RecursionExamples</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  def</span> <span class="n">recurse</span><span class="p">([])</span> <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="ss">:ok</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">recurse</span><span class="p">([</span><span class="n">head</span><span class="o">|</span><span class="n">tail</span><span class="p">])</span> <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="n">head</span>
+</span><span class='line'>    <span class="n">recurse</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">RecursionExamples</span><span class="o">.</span><span class="n">recurse</span><span class="p">([</span><span class="s2">&quot;Joe&quot;</span><span class="p">,</span> <span class="s2">&quot;Matz&quot;</span><span class="p">,</span> <span class="s2">&quot;Jose&quot;</span><span class="p">])</span>
+</span><span class='line'><span class="c1"># =&gt; Joe</span>
+</span><span class='line'><span class="c1"># =&gt; Matz</span>
+</span><span class='line'><span class="c1"># =&gt; Jose</span>
+</span><span class='line'><span class="c1"># =&gt; :ok</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>C&#8217;est tout pour cette première partie. À bientôt pour la deuxième.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[6 façons de réduire la souffrance due aux tests fonctionnels avec Rails]]></title>

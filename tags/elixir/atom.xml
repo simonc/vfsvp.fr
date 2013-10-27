@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: elixir | VF svp]]></title>
+  <link href="http://vfsvp.fr/tags/elixir/atom.xml" rel="self"/>
+  <link href="http://vfsvp.fr/"/>
+  <updated>2013-10-27T18:26:11+01:00</updated>
+  <id>http://vfsvp.fr/</id>
+  <author>
+    <name><![CDATA[Simon Courtois (simonc)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Elixir pour les rubyists (partie 1)]]></title>
+    <link href="http://vfsvp.fr/article/elixir-pour-les-rubyists-1"/>
+    <updated>2013-10-27T18:30:00+01:00</updated>
+    <id>http://vfsvp.fr/article/elixir-pour-les-rubyists-1</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.natescottwest.com/blog/2013/09/26/elixir-for-rubyists/">Elixir for Rubyists part 1 par Nate West</a></p>
+
+<p>Elixir est mon nouveau langage préféré. Cet article est le premier d'une série
+de longueur indéterminée sur Elixir. En tant que rubyist, la syntaxe d'Elixir va
+vous sembler familière. Je vais donc vous montrer beaucoup de code pour
+vous expliquer comment il marche. Elixir est fonctionnel et amusant
+(FUNctional).</p>
+
+<p>Elixir est un langage fonctionnel qui tourne sur la VM Erlang mais ressemble
+beaucoup à Ruby.</p>
+
+<pre><code class="elixir">2 + 2
+# =&gt; 4
+
+IO.puts "Hello!"
+# =&gt; Hello!
+#    :ok
+
+String.downcase("JE NE CRIE PAS")
+# =&gt; "je ne crie pas"
+
+defmodule Numbers do
+  def add_to(num) do
+    if is_number(num) do
+      num + 2
+    else
+      raise(ArgumenError, message: "L'argument doit etre un nombre")
+    end
+  end
+end
+
+Numbers.add_to(4)
+# =&gt; 6
+Numbers.add_to("Nate")
+# =&gt; ** (ArgumenError) L'argument doit etre un nombre
+</code></pre>
+
+<p>Elixir utilise la détection par motif (<em>pattern matching</em>) pour effectuer des
+comparaisons et assigner des valeurs aux variables.</p>
+
+<pre><code class="elixir">a = 2
+# =&gt; 2
+
+2 = a
+# =&gt; 2
+
+{ success, string } = { :ok, "Hey Joe, tu sais quoi ?" }
+# =&gt; {:ok, "Hey Joe, tu sais quoi ?"}
+success
+# =&gt; :ok
+string
+# =&gt; "Hey Joe, tu sais quoi ?"
+</code></pre>
+
+<p>Elixir est fonctionnel, les variables sont donc immuables. Cependant,
+contrairement à Erlang, ces dernières ne sont pas limitées à une seule
+assignation. Si vous voulez détecter le motif de la valeur d'une variable, vous
+devez utiliser un circonflexe <code>^</code>. Sans le circonflexe vous pouvez assigner une
+nouvelle valeur à la variable.</p>
+
+<pre><code class="elixir">a = 2
+# =&gt; 2
+^a = 3
+# =&gt; ** (MatchError) aucune correspondance avec : 3
+#    :erl_eval.expr/3
+a = 3
+# =&gt; 3
+</code></pre>
+
+<p>Comme tout langage fonctionnel, Elixir traite les fonctions comme des citoyens
+de premier ordre. Vous pouvez assigner une fonction à une variable pour une
+évaluation différée. Notez l'interpolation de chaîne dans l'exemple suivant,
+une autre ressemblance à Ruby.</p>
+
+<pre><code class="elixir">greeter = fn (name) -&gt; IO.puts "Hello #{name}" end
+# =&gt; #Function&lt;6.80484245 in :erl_eval.expr/5&gt;
+greeter.("Nate")
+# =&gt; Hello Nate
+#    :ok
+</code></pre>
+
+<p>Vous pouvez écrire des fonctions qui retournent des fonctions.</p>
+
+<pre><code class="elixir">defmodule FunctionExamples do
+  def build_greeter(kind) do
+    case kind do
+      :hello -&gt; fn (name) -&gt; "Coucou, #{name}!" end
+      :goodbye -&gt; fn (name) -&gt; "A plus, #{name}!" end
+      _ -&gt; fn (name) -&gt; "Je ne sais pas quoi te dire, #{name}." end
+    end
+  end
+end
+
+say_hello = FunctionExamples.build_greeter(:hello)
+# =&gt; #Function&lt;0.63189797 in FunctionExamples.build_greeter/1&gt;
+say_hello.("Nate")
+# =&gt; Coucou, Nate!
+#    :ok
+
+wat = FunctionExamples.build_greeter(:something_else)
+# =&gt; #Function&lt;2.63189797 in FunctionExamples.build_greeter/1&gt;
+wat.("Nate")
+# =&gt; "Je ne sais pas quoi te dire, Nate."
+#    :ok
+</code></pre>
+
+<p>Comme dans d'autres langages fonctionnels, plutôt que de reposer sur des
+boucles, Elixir utilise énormément la récursivité. Cela dit, le module <code>Enum</code>
+fournit quelques fonctions bien connues des rubyists, comme <code>each</code> par exemple.</p>
+
+<pre><code class="elixir">Enum.each(["Joe", "Matz", "Jose"], fn (name) -&gt; IO.puts(name) end)
+# =&gt; Joe
+# =&gt; Matz
+# =&gt; Jose
+# =&gt; :ok
+
+defmodule RecursionExamples do
+  def recurse([]) do
+    :ok
+  end
+  def recurse([head|tail]) do
+    IO.puts head
+    recurse(tail)
+  end
+end
+
+RecursionExamples.recurse(["Joe", "Matz", "Jose"])
+# =&gt; Joe
+# =&gt; Matz
+# =&gt; Jose
+# =&gt; :ok
+</code></pre>
+
+<p>C'est tout pour cette première partie. À bientôt pour la deuxième.</p>
+]]></content>
+  </entry>
+  
+</feed>

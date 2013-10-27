@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-14T11:25:53+02:00</updated>
+  <updated>2013-10-27T18:26:11+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -12,6 +12,148 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Elixir pour les rubyists (partie 1)]]></title>
+    <link href="http://vfsvp.fr/article/elixir-pour-les-rubyists-1"/>
+    <updated>2013-10-27T18:30:00+01:00</updated>
+    <id>http://vfsvp.fr/article/elixir-pour-les-rubyists-1</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.natescottwest.com/blog/2013/09/26/elixir-for-rubyists/">Elixir for Rubyists part 1 par Nate West</a></p>
+
+<p>Elixir est mon nouveau langage préféré. Cet article est le premier d'une série
+de longueur indéterminée sur Elixir. En tant que rubyist, la syntaxe d'Elixir va
+vous sembler familière. Je vais donc vous montrer beaucoup de code pour
+vous expliquer comment il marche. Elixir est fonctionnel et amusant
+(FUNctional).</p>
+
+<p>Elixir est un langage fonctionnel qui tourne sur la VM Erlang mais ressemble
+beaucoup à Ruby.</p>
+
+<pre><code class="elixir">2 + 2
+# =&gt; 4
+
+IO.puts "Hello!"
+# =&gt; Hello!
+#    :ok
+
+String.downcase("JE NE CRIE PAS")
+# =&gt; "je ne crie pas"
+
+defmodule Numbers do
+  def add_to(num) do
+    if is_number(num) do
+      num + 2
+    else
+      raise(ArgumenError, message: "L'argument doit etre un nombre")
+    end
+  end
+end
+
+Numbers.add_to(4)
+# =&gt; 6
+Numbers.add_to("Nate")
+# =&gt; ** (ArgumenError) L'argument doit etre un nombre
+</code></pre>
+
+<p>Elixir utilise la détection par motif (<em>pattern matching</em>) pour effectuer des
+comparaisons et assigner des valeurs aux variables.</p>
+
+<pre><code class="elixir">a = 2
+# =&gt; 2
+
+2 = a
+# =&gt; 2
+
+{ success, string } = { :ok, "Hey Joe, tu sais quoi ?" }
+# =&gt; {:ok, "Hey Joe, tu sais quoi ?"}
+success
+# =&gt; :ok
+string
+# =&gt; "Hey Joe, tu sais quoi ?"
+</code></pre>
+
+<p>Elixir est fonctionnel, les variables sont donc immuables. Cependant,
+contrairement à Erlang, ces dernières ne sont pas limitées à une seule
+assignation. Si vous voulez détecter le motif de la valeur d'une variable, vous
+devez utiliser un circonflexe <code>^</code>. Sans le circonflexe vous pouvez assigner une
+nouvelle valeur à la variable.</p>
+
+<pre><code class="elixir">a = 2
+# =&gt; 2
+^a = 3
+# =&gt; ** (MatchError) aucune correspondance avec : 3
+#    :erl_eval.expr/3
+a = 3
+# =&gt; 3
+</code></pre>
+
+<p>Comme tout langage fonctionnel, Elixir traite les fonctions comme des citoyens
+de premier ordre. Vous pouvez assigner une fonction à une variable pour une
+évaluation différée. Notez l'interpolation de chaîne dans l'exemple suivant,
+une autre ressemblance à Ruby.</p>
+
+<pre><code class="elixir">greeter = fn (name) -&gt; IO.puts "Hello #{name}" end
+# =&gt; #Function&lt;6.80484245 in :erl_eval.expr/5&gt;
+greeter.("Nate")
+# =&gt; Hello Nate
+#    :ok
+</code></pre>
+
+<p>Vous pouvez écrire des fonctions qui retournent des fonctions.</p>
+
+<pre><code class="elixir">defmodule FunctionExamples do
+  def build_greeter(kind) do
+    case kind do
+      :hello -&gt; fn (name) -&gt; "Coucou, #{name}!" end
+      :goodbye -&gt; fn (name) -&gt; "A plus, #{name}!" end
+      _ -&gt; fn (name) -&gt; "Je ne sais pas quoi te dire, #{name}." end
+    end
+  end
+end
+
+say_hello = FunctionExamples.build_greeter(:hello)
+# =&gt; #Function&lt;0.63189797 in FunctionExamples.build_greeter/1&gt;
+say_hello.("Nate")
+# =&gt; Coucou, Nate!
+#    :ok
+
+wat = FunctionExamples.build_greeter(:something_else)
+# =&gt; #Function&lt;2.63189797 in FunctionExamples.build_greeter/1&gt;
+wat.("Nate")
+# =&gt; "Je ne sais pas quoi te dire, Nate."
+#    :ok
+</code></pre>
+
+<p>Comme dans d'autres langages fonctionnels, plutôt que de reposer sur des
+boucles, Elixir utilise énormément la récursivité. Cela dit, le module <code>Enum</code>
+fournit quelques fonctions bien connues des rubyists, comme <code>each</code> par exemple.</p>
+
+<pre><code class="elixir">Enum.each(["Joe", "Matz", "Jose"], fn (name) -&gt; IO.puts(name) end)
+# =&gt; Joe
+# =&gt; Matz
+# =&gt; Jose
+# =&gt; :ok
+
+defmodule RecursionExamples do
+  def recurse([]) do
+    :ok
+  end
+  def recurse([head|tail]) do
+    IO.puts head
+    recurse(tail)
+  end
+end
+
+RecursionExamples.recurse(["Joe", "Matz", "Jose"])
+# =&gt; Joe
+# =&gt; Matz
+# =&gt; Jose
+# =&gt; :ok
+</code></pre>
+
+<p>C'est tout pour cette première partie. À bientôt pour la deuxième.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[6 façons de réduire la souffrance due aux tests fonctionnels avec Rails]]></title>
@@ -1038,274 +1180,6 @@ correspond ou non, vos expressions régulières deviennent puissantes, flexibles
 et capables de trouver bien plus de choses.</p>
 
 <p><a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
-
-<h2>L'auteur chez Blue Box</h2>
-
-<p>Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
-Logiciel. Elle siège également au conseil de Certification de Programmation
-Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
-Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
-et travaillé dans le domaine du théâtre, une excellente préparation à
-l'environnement dynamique de la création d'applications logicielles. Dans ces
-deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
-libre, elle pratique l'art martial appelé Naginata.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (1/3)]]></title>
-    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3"/>
-    <updated>2013-10-05T12:00:00+02:00</updated>
-    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3</id>
-    <content type="html"><![CDATA[<p>Source: <a href="http://www.bluebox.net/about/blog/2013/02/using-regular-expressions-in-ruby-part-1-of-3/">Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box</a></p>
-
-<p>Voici la première partie d'une série sur les Expressions Régulières en Ruby.
-Vous pouvez lire la
-<a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a> et la
-<a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
-
-<h2>Introduction</h2>
-
-<p>Pour être honnête, la première fois que j'ai vu une expression régulière,
-j'étais intimidée. Cela semblait si cryptique et mystérieux. Je peinais à voir
-comment la comprendre et a fortiori en écrire une. Encore récemment, je
-n'utilisais les expressions régulières qu'en cas d'absolue nécessité (une
-validation d'email par ici, un remplacement basique par là). Cela m'a empêché
-d'approfondir ma connaissance de leur utilisation en Ruby. Ruby travaille avec
-les expressions régulière dans une harmonie, une symphonie de code. Pour
-exploiter pleinement Ruby, je devais surpasser mon intimidation, ma peur des
-expressions régulières.</p>
-
-<p>J'ai dépassé cette peur. Comme toute chose dans la vie, les expressions
-régulières semblent insurmontables jusqu'à ce qu'on les découpe. Je veux vous
-aider à dépasser votre peur des expressions régulières. Pour cela, je vais les
-découper, étape par étape, et vous guider au travers du concept d'expressions
-régulières en Ruby et ce jusqu'aux techniques avancées. J'espère que vous verrez
-la beauté, surpasserez votre intimidation et les adopterez dans votre code.</p>
-
-<!-- more -->
-
-
-<h2>Les Expressions Régulières</h2>
-
-<p>Une expression régulière est simplement un modèle. Un modèle auquel une chaîne
-de caractères correspond ou non. Le livre <em>Programming Ruby 1.9</em> de Dave Thomas
-(plus connu sous le nom <em>Pickaxe Book</em> [livre pic-à-glace]) regroupe en trois
-catégories ce que l'on peut faire avec une expression régulière : tester,
-extraire et modifier. Vous pouvez tester une chaîne de caractères pour voir si
-elle correspond au modèle. Vous pouvez également modifier une chaîne de
-caractères en remplaçant les parties correspondant au modèle par un autre texte.
-Tester, extraire, modifier. Si simple et à la fois si puissant.</p>
-
-<h2>Les Expressions Régulières en Ruby</h2>
-
-<p>Ruby vous permet de pousser les expressions régulières plus loin. En Ruby, tout
-est objet. Cela inclus les expressions régulières. Vous pouvez envoyer des
-messages aux objets, vous pouvez donc envoyer des messages aux expressions
-régulières. Vous pouvez également les assigner à des variables, les passer à une
-méthode et bien plus.</p>
-
-<p>Depuis la version 1.9, Ruby utilise la bibliothèque d'expressions régulières
-Oniguruma. Cette dernière fournit toutes les fonctionnalités standards des
-expressions régulières ainsi qu'un certain nombre d'extensions. Elle supporte
-parfaitement les caractères complexes comme les caractères japonais par exemple.
-Une fonctionnalité que j'apprécie particulièrement est la possibilité d'utiliser
-<code>\h</code> et <code>\H</code> comme raccourcis pour les chiffres hexadécimaux.</p>
-
-<p>J'ai découvert récemment que Ruby 2.0 utilisait une bibliothèque différente,
-Onigmo. Onigmo est un <em>fork</em> d'Oniguruma et ajoute encore plus de
-fonctionnalités exploitables par Ruby. Il sera intéressant de voir jusqu'où cela
-peut aller.</p>
-
-<p>Malgré les modifications apportées par Onigmo, les fondamentaux de l'utilisation
-des expressions régulières ne changent pas. Vous testez vos chaînes de
-caractères avec une expression régulière. Vous composez un modèle auquel la
-chaîne doit correspondre.</p>
-
-<h2>Test basique</h2>
-
-<p>Dans la plupart des cas en Ruby, j'utilise l'opérateur <code>=~</code>. C'est l'opérateur
-de test basique. Lorsque j'utilise cet opérateur, je demande à Ruby &ldquo;Est-ce que
-cette chaîne de caractères contient ce modèle ?&rdquo;.</p>
-
-<p>Voyons un premier exemple :</p>
-
-<pre><code class="ruby">/force/ =~ "Use the force"
-</code></pre>
-
-<p>À gauche, on trouve une expression régulière qui représente le mot <em>force</em>. À
-droite, une citation d'un de mes films préférés, Star Wars, &ldquo;Use the force&rdquo;.
-Lorsque je lance ce code, je demande à Ruby si mon modèle, à gauche, est présent
-dans la chaîne de caractères située à droite.</p>
-
-<p>Détail appréciable, je peux en inverser l'écriture si je le souhaite.</p>
-
-<pre><code class="ruby">"Use the force" =~ /force/
-</code></pre>
-
-<p>Je peux mettre la chaîne à gauche et l'expression régulière à droite. Je fais le
-même travail, simplement formulé autrement, &ldquo;Est-ce que ma chaîne contient mon
-expression régulière ?&rdquo;. Certains trouvent cette formulation plus lisible.</p>
-
-<p>Lorsque je lance ce code, il retourne le numéro du caractère auquel la
-correspondance commence. Ici, le modèle <code>/force/</code> est trouvé au huitième
-caractère de ma chaîne.</p>
-
-<pre><code class="ruby">"Use the force" =~ /force/
-#=&gt; 8
-</code></pre>
-
-<p>Je peux également tester si une chaîne <strong>ne contient pas</strong> un modèle en
-utilisant l'opérateur <code>!~</code>. Cela retourne vrai (<em>true</em>) ou faux (<em>false</em>).</p>
-
-<pre><code class="ruby">/dark side/ !~ "Use the force"
-</code></pre>
-
-<p>Si je lance ce code, je demande si l'expression <code>/dark side/</code> est absente de la
-chaîne <code>"Use the force"</code>. Dans le cas présent, vrai est retourné.</p>
-
-<pre><code class="ruby">/dark side/ !~ "Use the force"
-#=&gt; true
-</code></pre>
-
-<p>Les opérateurs sont parfaits pour la vérification simple, savoir si ma chaîne
-correspond à mon expression régulière ou non paer exemple. Ruby fournit
-cependant bien plus d'informations sur la correspondance. Tout ce que j'ai à
-faire, c'est demander.</p>
-
-<h2>MatchData</h2>
-
-<p>Le secret c'est de transformer ma correspondance en un objet <code>MatchData</code>. Je
-peux créer cet objet avec la méthode <code>match</code>.</p>
-
-<p>Soit la chaîne de caractères suivante :</p>
-
-<pre><code class="ruby">string = "The force will be with you always"
-</code></pre>
-
-<p>Je veux savoir si cette chaîne contient le mot <em>force</em>. Je peux utiliser
-l'expression régulière suivante :</p>
-
-<pre><code class="ruby">/force/
-</code></pre>
-
-<p>J'appelle la méthode <code>match</code> sur mon expression régulière et lui passe ma
-chaîne. Lorsque je lance ce code, il retourne une instance de la classe
-<code>MatchData</code> pour ma correspondance.</p>
-
-<pre><code class="ruby">my_match = /force/.match(string)
-#=&gt; #&lt;MatchData "force"&gt;
-</code></pre>
-
-<p>Depuis Ruby 1.9, la correspondance ne se fait plus obligatoirement au début de
-la chaîne. Je peux passer un second argument, un entier, qui indique que la
-correspondance doit commencer à partir de ce numéro de caractère.</p>
-
-<pre><code class="ruby">my_match = /force/.match(string, 5)
-#=&gt; nil
-</code></pre>
-
-<p>Ici, le code retourne <code>nil</code>. Pour trouver une correspondance au mot <em>force</em>, il
-faudrait commencer plus tôt dans la chaîne.</p>
-
-<p>Pour les exemples suivants, je me contenterai de passer simplement ma chaîne de
-caractères :</p>
-
-<pre><code class="ruby">my_match = /force/.match(string)
-#=&gt; #&lt;MatchData "force"&gt;
-</code></pre>
-
-<p>J'ai accès à des méthodes qui fournissent <strong>bien plus</strong> d'informations sur ma
-correspondance car c'est maintenant une instance de la classe <code>MatchData</code>.</p>
-
-<p>Si j'appelle <code>to_s</code> sur ma correspondance, cela va retourner l'intégralité de
-son texte :</p>
-
-<pre><code class="ruby">my_match.to_s
-#=&gt; "force"
-</code></pre>
-
-<p>Si j'appelle <code>pre_match</code> dessus, cela retourne la partie de ma chaîne qui
-<strong>précède</strong> ma correspondance :</p>
-
-<pre><code class="ruby">my_match.pre_match
-#=&gt; "The "
-</code></pre>
-
-<p>Si j'appelle <code>post_match</code> dessus, cela retourne la partie de ma chaîne qui
-<strong>suit</strong> ma correspondance :</p>
-
-<pre><code class="ruby">my_match.post_match
-#=&gt; " will be with you"
-</code></pre>
-
-<p>Toutes ces méthodes (et il y en a d'autres) sont bien utiles. <code>MatchData</code>
-montre cependant sa réelle utilité lorsque l'on parle de groupes de captures.
-Les groupes de captures sont des sous expressions au sein d'une expression
-régulière. Voici un exemple :</p>
-
-<pre><code class="ruby">/(.*)force(.*)/
-</code></pre>
-
-<p>Pour qu'une chaîne de caractères contienne cette expression régulière, elle doit
-avoir n'importe quel caractère zéro, une ou plusieurs fois (c'est la
-signification de <code>.*</code>), suivi du mot <em>force</em>, suivi par n'importe quel caractère
-zéro, une ou plusieurs fois.</p>
-
-<p>Notez bien que la première et la dernière partie de l'expression sont en entre
-parenthèses. C'est ce qu'on appelle des groupes. Lorsque que je lance ce modèle
-sur ma chaîne, ce qui correspond à ces groupes va être mémorisé. Je peux ensuite
-accéder à ces groupes et les utiliser dans d'autres parties de mon code.</p>
-
-<pre><code class="ruby">my_match = /(.*)force(.*)/.match(string)
-</code></pre>
-
-<p>Si je souhaite voir tous ces groupes, mes groupes de captures, je peux appeler
-la méthode <code>captures</code> sur ma correspondance.</p>
-
-<pre><code class="ruby">my_match.captures
-#=&gt; ["The ", " will be with you always"]
-</code></pre>
-
-<p>Les objets <code>MatchData</code> sont très proches des tableaux. Je peux accéder à
-chaque capture en utilisant les crochets, de la même façon que pour accéder aux
-éléments d'un tableau.</p>
-
-<p>Si j'appelle <code>my_match[1]</code>, j'obtiens le premier groupe de capture, <code>"The "</code>.</p>
-
-<p>De la même manière, <code>my_match[2]</code> retourne mon second groupe de captures, <code>"
-will be with you always"</code>.</p>
-
-<p>Notez bien que je ne commence pas avec <code>my_match[0]</code> comme je le ferais pour un
-tableau classique. Si j'appelle <code>my_match[0]</code>, plutôt que de récupérer le
-premier groupe, j'obtiens la chaîne sur laquelle j'ai lancé le modèle.</p>
-
-<pre><code class="ruby">my_match[0]
-#=&gt; "The force will be with you always"
-</code></pre>
-
-<p>Il est important de garder en mémoire que malgré leur ressemblance avec les
-tableaux, les objets <code>MatchData</code> ne sont pas des tableaux.</p>
-
-<p>Si j'essaie d'appeler une méthode de tableau comme <code>each</code> sur mon objet
-<code>MatchData</code>, j'obtiens une erreur :</p>
-
-<pre><code class="ruby">my_match.each do |m|
- puts m.upcase
-end
-#=&gt; NoMethodError
-</code></pre>
-
-<p>Cependant, je peux facilement corriger cela en convertissant mon objet
-<code>MatchData</code> en tableau grâce à la méthode <code>to_a</code>.</p>
-
-<pre><code class="ruby">my_match.to_a.each do |m|
- puts m.upcase
-end
-#=&gt; THE FORCE WILL BE WITH YOU ALWAYS THE WILL BE WITH YOU ALWAYS
-</code></pre>
-
-<p><a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">Lire le deuxième article de cette série</a></p>
 
 <h2>L'auteur chez Blue Box</h2>
 
