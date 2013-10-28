@@ -1,0 +1,602 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Git est une structure de données purement fonctionnelle - VF svp</title>
+  <meta name="author" content="Simon Courtois (simonc)">
+
+  
+  <meta name="description" content="Source: Git is a purely functional data structure de Philip Nilsson sur le blog de Jayway Bien que les systèmes de gestion de versions décentralisés &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">VF svp</a></h1>
+  
+    <h2>En français dans le texte</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vfsvp.fr" />
+    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Git est une structure de données purement fonctionnelle</h1>
+    
+    
+      <p class="meta">
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+      </p>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-28T23:00:00+01:00" pubdate data-updated="true">28/10/2013</time>
+        
+        
+         | <a href="#disqus_thread">Commentaires</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Source: <a href="http://www.jayway.com/2013/03/03/git-is-a-purely-functional-data-structure/">Git is a purely functional data structure de Philip Nilsson sur le blog de Jayway</a></p>
+
+<p>Bien que les systèmes de gestion de versions décentralisés, comme Git, aient le
+vent en poupe en ce moment, ils semblent toujours avoir la réputation d&#8217;être
+plus complexes que leurs homologues centralisés, comme SVN. Je pense que l&#8217;une
+des raisons est que l&#8217;on a tendance à expliquer Git par comparaison : lorsque tu
+fait X avec SVN, tu fais Y avec Git.</p>
+
+<p>Selon moi nous devrions plutôt présenter Git comme ce qu&#8217;il est : une structure
+de données purement fonctionnelle. Devenir expert Git implique d&#8217;apprendre à
+maitriser cette structure de données.</p>
+
+<p>Si la notion de structure de données purement fonctionnelle vous est étrangère,
+cela ne va pas vous être d&#8217;une grande aide. Il se trouve qu&#8217;un minimum de
+connaissances sur le sujet suffit pour comprendre, nous allons donc passer
+rapidement sur ce sujet avant de revenir à Git.</p>
+
+<!-- more -->
+
+
+<h2>Notions préliminaires</h2>
+
+<p>Une structure de données fonctionnelle est essentiellement une structure de
+données immuable : ses valeurs ne changent jamais. Cependant, contrairement à la
+<code>ReadOnlyCollection</code> de C# qui n&#8217;a pas d&#8217;opérations (insertion par exemple), les
+structures de données fonctionnelles supportent les opération comme l&#8217;insertion
+ou la suppression. Ces opérations sont effectuées en créant une nouvelle
+structure mise à jour.</p>
+
+<p>Par exemple, une liste classique ressemble à <code>[3,2,1]</code>. Si cette liste est
+modifiable et que nous voulons insérer la valeur <code>4</code> en tête (<em>head</em>) de liste,
+cette dernière ressemble maintenant à <code>[4,3,2,1]</code>. Elle a été directement
+modifiée et l&#8217;ancienne valeur, <code>[3,2,1]</code> est perdue. Si quelqu&#8217;un d&#8217;autre
+utilisait cette liste, il voit maintenant <code>[4,3,2,1]</code>. Si cette personne était
+en pleine itération sur la liste, elle a maintenant une jolie exception.</p>
+
+<p>Dans le modèle fonctionnel, ce genre de cas n&#8217;arrive pas. Lorsque l&#8217;on insert
+<code>4</code> dans la liste, une nouvelle valeur <code>[4,3,2,1]</code> est créée, sans modifier la
+liste originale. Les deux valeurs <code>[4,3,2,1]</code> et <code>[3,2,1]</code> existent et si
+quelqu&#8217;un utilisait l&#8217;ancienne liste <code>[3,2,1]</code>, il a toujours accès à celle-ci.</p>
+
+<p>Vous vous dites peut être que c&#8217;est une façon inefficace de fonctionner. Si nous
+avons accès aux deux listes <code>[4,3,2,1]</code> et <code>[3,2,1]</code>, nous devons stocker ces
+sept éléments en mémoire, non ? Même si nous n&#8217;avons pas besoin d&#8217;accéder à la
+valeur <code>[3,2,1]</code>. En réalité, l&#8217;efficacité des structures de données
+fonctionnelles dépend des opérations effectuées dessus et de comment leur
+représentation interne est utilisée (tout comme les structures classiques mais
+avec d&#8217;autres avantages, coûts et compromis).</p>
+
+<p>Pour une liste (simplement chaînée), si tout ce que nous voulons est insérer de
+nouveaux éléments en tête, nous pouvons de faire efficacement en stockant les
+éléments comme ceci :</p>
+
+<pre><code>  +---+    +---+    +---+    +---+
+  | 4 +---&gt;+ 3 +---&gt;+ 2 +---&gt;+ 1 |
+  +---+    +---+    +---+    +---+
+    |        |
+new list  original
+</code></pre>
+
+<p>Nous ajoutons <code>4</code> dans une nouvelle cellule contenant un lien vers le reste de
+la liste. Cette valeur original est représentée par la référence existante,
+en commençant à la cellule de valeur <code>3</code>. Si quelqu&#8217;un d&#8217;autre a une référence
+sur cette cellule, il ne verra jamais que la liste a été mise à jour (ce qui ne
+serait pas le cas pour une liste doublement chaînée). Nous pouvons donc affirmer
+avoir un accès indépendant aux deux listes, <code>[4,2,3,1]</code> et <code>[3,2,1]</code>, quand bien
+même elles partagent des éléments en mémoire. Sans opération de modification
+directe, aucune différence n&#8217;est perceptible.</p>
+
+<p>Nous pourrions aller encore plus loin : Si quelqu&#8217;un souhaite insérer la valeur
+<code>9</code> en tête de la liste <code>[3,2,1]</code>, il peut le faire indépendamment de notre
+utilisation de celle-ci, en utilisant les mêmes éléments.</p>
+
+<pre><code>              +---+      +---+    +---+    +---+
+new list 1 -&gt; | 4 +---+-&gt;+ 3 +---&gt;+ 2 +---&gt;+ 1 |
+              +---+  /   +---+    +---+    +---+
+                    /      |
+              +---+/    original
+new list 2 -&gt; | 9 +
+              +---+
+</code></pre>
+
+<p>Nous pourrions bien sûr stocker de cette façon une liste modifiable mais cela
+pourrait être dangereux. Si, par exemple, nous mettions à jour la cellule <code>3</code>
+dans la liste <code>[4,3,2,1]</code>, elle serait également mise à jour dans la liste
+<code>[9,3,2,1]</code> ce qui pourrait ne pas être apprécié.</p>
+
+<p>Mais… comment faire si je souhaite vraiment changer <code>3</code> en lui donnant la valeur
+<code>5</code>, par exemple ? Comme nous ne pouvons pas effectuer de modification directe,
+nous devons copier quelques cellules dans la liste mise à jour. Le résultat de
+l&#8217;opération ressemble donc à ceci :</p>
+
+<pre><code>                +---+    +---+
+updated list -&gt; | 4 +---&gt;+ 5 +----+
+                +---+    +---+     \
+                                    \
+                +---+    +---+    +-+-+    +---+
+  new list 1 -&gt; | 4 +---&gt;+ 3 +---&gt;+ 2 +---&gt;+ 1 |
+                +---+  / +---+    +---+    +---+
+                      /    |
+                +---+/  original
+  new list 2 -&gt; | 9 +
+                +---+
+</code></pre>
+
+<p>En allant vers l&#8217;arrière à partir de chaque pointeur, nous pouvons voir que ceci
+représente à la fois les listes <code>[4,5,2,1]</code>, <code>[4,3,2,1]</code>, <code>[9,3,2,1]</code> et
+<code>[3,2,1]</code>. Si nous voulons stocker toutes ces valeurs en même temps, cette
+représentation est bien plus efficace que plusieurs listes modifiables.</p>
+
+<p>Les structures de données purement fonctionnelles sont très utiles en
+programmation multi-thread puisque une modification effectuée dans un thread
+n&#8217;impactera pas les autres.</p>
+
+<h2>Comprendre Git</h2>
+
+<p>Voyons maintenant quel est le rapport entre tout ceci et Git. Avec un système de
+gestion de versions, ce que l&#8217;on cherche à accomplir c&#8217;est :</p>
+
+<ul>
+<li>mettre à jour notre code avec de nouvelles versions tout en gardant les
+anciennes disponibles ;</li>
+<li>Travailler à plusieurs sur un même code sans que les mises à jour
+n&#8217;interfèrent entre elles de façon imprévisible.</li>
+</ul>
+
+
+<p>Une structure de données fonctionnelle permet de</p>
+
+<ul>
+<li>Mettre à jour la structure tout en gardant un accès aux anciennes valeurs ;</li>
+<li>Mettre à jour la structure à un endroit sans interférer avec quelqu&#8217;un d&#8217;autre
+mettant également la structure à jour.</li>
+</ul>
+
+
+<p>Si vous vous dites que les structures de données fonctionnelles sont une bonne
+représentation pour un système de gestion de versions, vous êtes dans le vrai.
+J&#8217;irais même plus loin en disant que Git simplement une structure de données
+purement fonctionnelle avec un client en ligne de commande permettant
+d&#8217;effectuer des opérations dessus.</p>
+
+<p>Pour compléter l&#8217;analogie, nous devons remplacer ce qui était précédemment une
+suite de chiffres par des commits. Les commits Git sont des copies indépendantes
+de l&#8217;état complet du code à un point donné dans le temps. Ce que jusque là nous
+appelions liste est ce que l&#8217;on appelle historique en Git.</p>
+
+<p>Soit un dépôt contenant, dans la branche <code>master</code> et dans l&#8217;ordre, les commits
+A, B et C. Nous avons demandé trois fois à Git de stocker l&#8217;intégralité de
+l&#8217;état de notre code.</p>
+
+<p>Nous pouvons représenter cela sous la forme <code>[C,B,A]</code>. En réalité, chaque commit
+a des meta-données, comme un message de commit, mais allons ignorer ce fait pour
+une question de simplicité. Voici la version graphe :</p>
+
+<pre><code>+---+    +---+    +---+
++ C +---&gt;+ B +---&gt;+ A |
++---+    +---+    +---+
+  |
+master
+</code></pre>
+
+<h2>Faire un commit</h2>
+
+<p>Si nous créons un nouveau commit, cela revient à ajouter en tête de
+l&#8217;historique. Git utilise même le nom <code>HEAD</code> pour référencer le commit actif.</p>
+
+<pre><code>+---+    +---+    +---+    +---+
++ D +---&gt;+ C +---&gt;+ B +---&gt;+ A |
++---+    +---+    +---+    +---+
+  |        |
+master   master^
+</code></pre>
+
+<p>Lorsque Git créer un commit, il déplace le pointeur de la branche courante pour
+nous et fait pointer <code>master</code> sur l&#8217;historique <code>[D,C,B,A]</code>. Nous pouvons
+toujours faire référence à <code>[C,B,A]</code> en utilisant <code>master^</code>, le parent de
+<code>master</code>. Si quelqu&#8217;un travaille avec cette historique, il ne verra pas nos
+modifications.</p>
+
+<h2>Corriger un commit</h2>
+
+<p>Si vous avez déjà utilisé Git, vous savez probablement que l&#8217;on peut modifier
+son dernier commit grâce à <code>commit --amend</code>. Mais pouvez-vous réellement
+modifier un commit ? En réalité, non. Git crée simplement un nouveau commit et
+fait pointer votre branche dessus. L&#8217;ancien commit peut être retrouvé grâce à
+<code>git reflog</code> et vous pouvez y faire référence via son <em>hash</em> (j&#8217;ai ici utilisé
+la valeur arbitraire <code>ef4d34</code>). L&#8217;état du dépôt est donc le suivant :</p>
+
+<pre><code>          +---+    +---+    +---+    +---+
+ef4d34 -&gt; | D +--+&gt;+ C +---&gt;+ B +---&gt;+ A |
+          +---+ /  +---+    +---+    +---+
+               /     |
+          +---+    master^
+master -&gt; | E |
+          +---+
+</code></pre>
+
+<h2>Les branches</h2>
+
+<p>Comme vous avez pu le voir juste avant, lorsque vous utilisez <code>commit --amend</code>,
+vous créez en fait une nouvelle branche (il y a une fourche dans le graphe). La
+seule différence lors de la création d&#8217;une branche est qu&#8217;un nouveau nom est
+créé pour se référer aux commits. Nous pouvons même créer une branche à partir
+du commit <code>ef4d34</code> grâce à la commande <code>git checkout -b branch ef4d34</code>.</p>
+
+<pre><code>          +---+    +---+    +---+    +---+
+branch -&gt; | D +--+&gt;+ C +---&gt;+ B +---&gt;+ A |
+          +---+ /  +---+    +---+    +---+
+               /     |
+          +---+  master^
+master -&gt; | E |
+          +---+
+</code></pre>
+
+<p>En général, lorsque l&#8217;on crée une branche dans Git, celle-ci pointe sur le
+<code>HEAD</code> courant mais dés lors que l&#8217;on voit Git comme une structure de données
+fonctionnelle, rien n&#8217;empêche de créer une branche à partir de n&#8217;importe quel
+commit existant.</p>
+
+<h2>Utiliser rebase</h2>
+
+<p>Dans les exemples sur les structures de données, lorsque nous modifions une
+cellule à un certain point de l&#8217;historique, nous devions copier toutes les
+cellules se trouvant à la suite de celle modifiée (la cellule <code>4</code> dans notre
+exemple mais il aurait pu y en avoir plus). Dans Git, c&#8217;est ce que l&#8217;on appelle
+rejouer les commits et la commande permettant de le faire est nommée <code>rebase</code>.
+Pour mettre à jour un ancien commit, nous ajoutons l&#8217;option <code>-i</code> pour passer en
+mode <em>interactif</em>.</p>
+
+<p>Si nous souhaitons modifier le commit <code>C</code> et changer son message, nous faisons
+un checkout sur le commit <code>B</code>
+Say we want to update the commit C with a new commit message. We do
+this by checking out the commit D, and using git rebase -i C.</p>
+
+<p>NOTE: Erreur dans le texte original B/D</p>
+
+<pre><code>git checkout B
+git rebase -i C
+</code></pre>
+
+<p>Cette commande ouvre le même éditeur que celui utilisé par Git pour les messages
+de commit avec un contenu similaire à cette liste de commandes :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pick cd3ff32 &lt;message de commit de C&gt;
+</span><span class='line'>pick a65a671 &lt;message de commit de D&gt;
+</span><span class='line'>
+</span><span class='line'># some helpful comments from git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si nous changeons la commande du commit <code>C</code> pour <code>edit</code>, Git nous permet de
+modifier ce commit avant de rejouer les commits suivants.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>edit cd3ff32 &lt;message de commit de C&gt;
+</span><span class='line'>pick a65a671 &lt;message de commit de D&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lorsque nous sauvegardons le fichier et fermons l&#8217;éditeur, Git commence une
+opération de <em>rebase</em>. Il s&#8217;arrête pour nous permettre de modifier le commit
+<code>C</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Stoppé à cd3ff32... &lt;message de commit de C&gt;
+</span><span class='line'>Vous pouvez modifier votre commit avec
+</span><span class='line'>
+</span><span class='line'>        git commit --amend
+</span><span class='line'>
+</span><span class='line'>Une fois satisfait de vos changements, lancez
+</span><span class='line'>
+</span><span class='line'>        git rebase --continue</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le message est assez clair, nous pouvons modifier le commit comme bon nous
+semble. Une fois cela fait nous appelons <code>commit --amend</code> pour créer le commit
+mis à jour puis reprenons la liste des commandes de <em>rebase</em> grâce à <code>rebase
+--continue</code>. Les autres commits seront rejoués l&#8217;un après l&#8217;autre puisque nous
+avons choisi la commande <code>pick</code>. En cas de conflit, Git s&#8217;arrête et vous laisse
+corriger avant de continuer. Notre dépôt ressemble maintenant à ceci :</p>
+
+<pre><code>          +---+    +---+
+rebased -&gt;| D'+---&gt;+ C'+
+          +---+    +---+\
+                         \
+          +---+    +---+  \ +---+    +---+
+branch -&gt; | D +--+&gt;+ C +---&gt;+ B +---&gt;+ A |
+          +---+ /  +---+    +---+    +---+
+               /     |
+          +---+  master^
+master -&gt; | E |
+          +---+
+</code></pre>
+
+<p>Ce graphe ne doit pas vous être inconnu. J&#8217;espère que vous comprenez maintenant
+pourquoi la commande <code>rebase</code> crée de nouveaux commits. Git est une structure de
+données fonctionnelle et ne peut donc pas modifier un commit existant.</p>
+
+<p>Puisque <code>rebase</code> crée une nouvelle chaîne de commits, il semble normal de
+pouvoir modifier ce que cette dernière contient et c&#8217;est le cas : <code>rebase -i</code>
+nous permet de réordoner, fusionner ou supprimer des commits. Nous pouvons
+également en créer de nouveaux à tout moment (pour couper un commit en deux par
+exemple) ou commencer à un autre point de l&#8217;historique grâce à l&#8217;option
+<code>--onto</code>. Le processus classique de reporter des changements locaux &ldquo;au dessus&rdquo;
+de mise à jour d&#8217;une branche distante est simplement un cas d&#8217;application plus
+spécifique de la puissance de <code>rebase</code>.</p>
+
+<h2>Fusionner</h2>
+
+<p>Nous n&#8217;avons pas parler de la fusion de commits (merging). Git nous permet de
+fusionner deux branches en une.</p>
+
+<pre><code>        +---+
+      --+ X |
++---+/  +---+
+| M |
++---+\  +---+
+      --+ Y |
+        +---+
+</code></pre>
+
+<p>Fusionner ajoute un peu de complexité à notre modèle. Notre historique n&#8217;est
+plus vraiment un arbre, c&#8217;est un graphe acyclique. En réalité, cela ne change
+pas grand chose mais il est amusant de noter que <code>rebase</code>, qui a la réputation
+d&#8217;être plus complexe, introduit moins de complications conceptuelles que
+<code>merge</code>.</p>
+
+<p>Rebase peut se voir comme l&#8217;application de nouveaux commits dans une nouvelle
+direction. Merge est une opération fondamentalement différente. Une structure de
+données dans laquelle il est possible de combiner deux cellules en une a un
+nom : c&#8217;est ce qu&#8217;on appelle une structure de données persistante confluante.
+Une autre appellation des structures de données fonctionnelles est
+structures de données persistantes. J&#8217;ai préféré éviter ce terme pour ne pas
+entrainer de confusion avec la notion de stockage sur media persistants comme
+un disque dur par exemple.</p>
+
+<h2>Conclusion</h2>
+
+<p>Git peut être assez justement perçu comme une simple structure de données
+fonctionnelle. Plutôt que de présenter Git comme un outil gestion de versions, nous pouvons voir la gestion de versions comme une résultante de l&#8217;utilisation
+de cette structure de données. Je pense qu&#8217;expliquer Git de cette façon exprime
+mieux la simplicité et la puissance de Git que de comparer son fonctionnement
+avec celui des systèmes centralisés.</p>
+
+<p>Lorsque l&#8217;on voit cela sous cet angle, je trouve que finalement Git est bien
+plus simple que SVN par exemple. La seule raison pour laquelle Git peut être
+perçu comme plus complexe est que cette simplicité nous permet d&#8217;implémenter des
+workflows plus intéressants.</p>
+
+<p>Si vous avez toujours trouvé Git intimidant, gardez en mémoire sa structure
+simple et le fait que dans toute structure de données fonctionnelle, rien n&#8217;est
+jamais réellement perdu et peut être retrouvé (regardez <code>reflog</code>).</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-28T23:00:00+01:00" pubdate data-updated="true">28/10/2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/tags/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/article/elixir-pour-les-rubyists-1" title="Previous Post: Elixir pour les rubyists (partie 1)">&laquo; Elixir pour les rubyists (partie 1)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Commentaires</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Simon Courtois (simonc) -
+  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+<script type="text/javascript">
+    var disqus_shortname = 'vfsvp';
+    
+      var disqus_identifier = 'http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle';
+      var disqus_url = 'http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle';
+      var disqus_script = 'embed.js';
+    
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+<script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: git | VF svp]]></title>
+  <link href="http://vfsvp.fr/tags/git/atom.xml" rel="self"/>
+  <link href="http://vfsvp.fr/"/>
+  <updated>2013-10-28T22:58:52+01:00</updated>
+  <id>http://vfsvp.fr/</id>
+  <author>
+    <name><![CDATA[Simon Courtois (simonc)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git est une structure de données purement fonctionnelle]]></title>
+    <link href="http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle"/>
+    <updated>2013-10-28T23:00:00+01:00</updated>
+    <id>http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.jayway.com/2013/03/03/git-is-a-purely-functional-data-structure/">Git is a purely functional data structure de Philip Nilsson sur le blog de Jayway</a></p>
+
+<p>Bien que les systèmes de gestion de versions décentralisés, comme Git, aient le
+vent en poupe en ce moment, ils semblent toujours avoir la réputation d'être
+plus complexes que leurs homologues centralisés, comme SVN. Je pense que l'une
+des raisons est que l'on a tendance à expliquer Git par comparaison : lorsque tu
+fait X avec SVN, tu fais Y avec Git.</p>
+
+<p>Selon moi nous devrions plutôt présenter Git comme ce qu'il est : une structure
+de données purement fonctionnelle. Devenir expert Git implique d'apprendre à
+maitriser cette structure de données.</p>
+
+<p>Si la notion de structure de données purement fonctionnelle vous est étrangère,
+cela ne va pas vous être d'une grande aide. Il se trouve qu'un minimum de
+connaissances sur le sujet suffit pour comprendre, nous allons donc passer
+rapidement sur ce sujet avant de revenir à Git.</p>
+
+<!-- more -->
+
+
+<h2>Notions préliminaires</h2>
+
+<p>Une structure de données fonctionnelle est essentiellement une structure de
+données immuable : ses valeurs ne changent jamais. Cependant, contrairement à la
+<code>ReadOnlyCollection</code> de C# qui n'a pas d'opérations (insertion par exemple), les
+structures de données fonctionnelles supportent les opération comme l'insertion
+ou la suppression. Ces opérations sont effectuées en créant une nouvelle
+structure mise à jour.</p>
+
+<p>Par exemple, une liste classique ressemble à <code>[3,2,1]</code>. Si cette liste est
+modifiable et que nous voulons insérer la valeur <code>4</code> en tête (<em>head</em>) de liste,
+cette dernière ressemble maintenant à <code>[4,3,2,1]</code>. Elle a été directement
+modifiée et l'ancienne valeur, <code>[3,2,1]</code> est perdue. Si quelqu'un d'autre
+utilisait cette liste, il voit maintenant <code>[4,3,2,1]</code>. Si cette personne était
+en pleine itération sur la liste, elle a maintenant une jolie exception.</p>
+
+<p>Dans le modèle fonctionnel, ce genre de cas n'arrive pas. Lorsque l'on insert
+<code>4</code> dans la liste, une nouvelle valeur <code>[4,3,2,1]</code> est créée, sans modifier la
+liste originale. Les deux valeurs <code>[4,3,2,1]</code> et <code>[3,2,1]</code> existent et si
+quelqu'un utilisait l'ancienne liste <code>[3,2,1]</code>, il a toujours accès à celle-ci.</p>
+
+<p>Vous vous dites peut être que c'est une façon inefficace de fonctionner. Si nous
+avons accès aux deux listes <code>[4,3,2,1]</code> et <code>[3,2,1]</code>, nous devons stocker ces
+sept éléments en mémoire, non ? Même si nous n'avons pas besoin d'accéder à la
+valeur <code>[3,2,1]</code>. En réalité, l'efficacité des structures de données
+fonctionnelles dépend des opérations effectuées dessus et de comment leur
+représentation interne est utilisée (tout comme les structures classiques mais
+avec d'autres avantages, coûts et compromis).</p>
+
+<p>Pour une liste (simplement chaînée), si tout ce que nous voulons est insérer de
+nouveaux éléments en tête, nous pouvons de faire efficacement en stockant les
+éléments comme ceci :</p>
+
+<pre><code>  +---+    +---+    +---+    +---+
+  | 4 +---&gt;+ 3 +---&gt;+ 2 +---&gt;+ 1 |
+  +---+    +---+    +---+    +---+
+    |        |
+new list  original
+</code></pre>
+
+<p>Nous ajoutons <code>4</code> dans une nouvelle cellule contenant un lien vers le reste de
+la liste. Cette valeur original est représentée par la référence existante,
+en commençant à la cellule de valeur <code>3</code>. Si quelqu'un d'autre a une référence
+sur cette cellule, il ne verra jamais que la liste a été mise à jour (ce qui ne
+serait pas le cas pour une liste doublement chaînée). Nous pouvons donc affirmer
+avoir un accès indépendant aux deux listes, <code>[4,2,3,1]</code> et <code>[3,2,1]</code>, quand bien
+même elles partagent des éléments en mémoire. Sans opération de modification
+directe, aucune différence n'est perceptible.</p>
+
+<p>Nous pourrions aller encore plus loin : Si quelqu'un souhaite insérer la valeur
+<code>9</code> en tête de la liste <code>[3,2,1]</code>, il peut le faire indépendamment de notre
+utilisation de celle-ci, en utilisant les mêmes éléments.</p>
+
+<pre><code>              +---+      +---+    +---+    +---+
+new list 1 -&gt; | 4 +---+-&gt;+ 3 +---&gt;+ 2 +---&gt;+ 1 |
+              +---+  /   +---+    +---+    +---+
+                    /      |
+              +---+/    original
+new list 2 -&gt; | 9 +
+              +---+
+</code></pre>
+
+<p>Nous pourrions bien sûr stocker de cette façon une liste modifiable mais cela
+pourrait être dangereux. Si, par exemple, nous mettions à jour la cellule <code>3</code>
+dans la liste <code>[4,3,2,1]</code>, elle serait également mise à jour dans la liste
+<code>[9,3,2,1]</code> ce qui pourrait ne pas être apprécié.</p>
+
+<p>Mais… comment faire si je souhaite vraiment changer <code>3</code> en lui donnant la valeur
+<code>5</code>, par exemple ? Comme nous ne pouvons pas effectuer de modification directe,
+nous devons copier quelques cellules dans la liste mise à jour. Le résultat de
+l'opération ressemble donc à ceci :</p>
+
+<pre><code>                +---+    +---+
+updated list -&gt; | 4 +---&gt;+ 5 +----+
+                +---+    +---+     \
+                                    \
+                +---+    +---+    +-+-+    +---+
+  new list 1 -&gt; | 4 +---&gt;+ 3 +---&gt;+ 2 +---&gt;+ 1 |
+                +---+  / +---+    +---+    +---+
+                      /    |
+                +---+/  original
+  new list 2 -&gt; | 9 +
+                +---+
+</code></pre>
+
+<p>En allant vers l'arrière à partir de chaque pointeur, nous pouvons voir que ceci
+représente à la fois les listes <code>[4,5,2,1]</code>, <code>[4,3,2,1]</code>, <code>[9,3,2,1]</code> et
+<code>[3,2,1]</code>. Si nous voulons stocker toutes ces valeurs en même temps, cette
+représentation est bien plus efficace que plusieurs listes modifiables.</p>
+
+<p>Les structures de données purement fonctionnelles sont très utiles en
+programmation multi-thread puisque une modification effectuée dans un thread
+n'impactera pas les autres.</p>
+
+<h2>Comprendre Git</h2>
+
+<p>Voyons maintenant quel est le rapport entre tout ceci et Git. Avec un système de
+gestion de versions, ce que l'on cherche à accomplir c'est :</p>
+
+<ul>
+<li>mettre à jour notre code avec de nouvelles versions tout en gardant les
+anciennes disponibles ;</li>
+<li>Travailler à plusieurs sur un même code sans que les mises à jour
+n'interfèrent entre elles de façon imprévisible.</li>
+</ul>
+
+
+<p>Une structure de données fonctionnelle permet de</p>
+
+<ul>
+<li>Mettre à jour la structure tout en gardant un accès aux anciennes valeurs ;</li>
+<li>Mettre à jour la structure à un endroit sans interférer avec quelqu'un d'autre
+mettant également la structure à jour.</li>
+</ul>
+
+
+<p>Si vous vous dites que les structures de données fonctionnelles sont une bonne
+représentation pour un système de gestion de versions, vous êtes dans le vrai.
+J'irais même plus loin en disant que Git simplement une structure de données
+purement fonctionnelle avec un client en ligne de commande permettant
+d'effectuer des opérations dessus.</p>
+
+<p>Pour compléter l'analogie, nous devons remplacer ce qui était précédemment une
+suite de chiffres par des commits. Les commits Git sont des copies indépendantes
+de l'état complet du code à un point donné dans le temps. Ce que jusque là nous
+appelions liste est ce que l'on appelle historique en Git.</p>
+
+<p>Soit un dépôt contenant, dans la branche <code>master</code> et dans l'ordre, les commits
+A, B et C. Nous avons demandé trois fois à Git de stocker l'intégralité de
+l'état de notre code.</p>
+
+<p>Nous pouvons représenter cela sous la forme <code>[C,B,A]</code>. En réalité, chaque commit
+a des meta-données, comme un message de commit, mais allons ignorer ce fait pour
+une question de simplicité. Voici la version graphe :</p>
+
+<pre><code>+---+    +---+    +---+
++ C +---&gt;+ B +---&gt;+ A |
++---+    +---+    +---+
+  |
+master
+</code></pre>
+
+<h2>Faire un commit</h2>
+
+<p>Si nous créons un nouveau commit, cela revient à ajouter en tête de
+l'historique. Git utilise même le nom <code>HEAD</code> pour référencer le commit actif.</p>
+
+<pre><code>+---+    +---+    +---+    +---+
++ D +---&gt;+ C +---&gt;+ B +---&gt;+ A |
++---+    +---+    +---+    +---+
+  |        |
+master   master^
+</code></pre>
+
+<p>Lorsque Git créer un commit, il déplace le pointeur de la branche courante pour
+nous et fait pointer <code>master</code> sur l'historique <code>[D,C,B,A]</code>. Nous pouvons
+toujours faire référence à <code>[C,B,A]</code> en utilisant <code>master^</code>, le parent de
+<code>master</code>. Si quelqu'un travaille avec cette historique, il ne verra pas nos
+modifications.</p>
+
+<h2>Corriger un commit</h2>
+
+<p>Si vous avez déjà utilisé Git, vous savez probablement que l'on peut modifier
+son dernier commit grâce à <code>commit --amend</code>. Mais pouvez-vous réellement
+modifier un commit ? En réalité, non. Git crée simplement un nouveau commit et
+fait pointer votre branche dessus. L'ancien commit peut être retrouvé grâce à
+<code>git reflog</code> et vous pouvez y faire référence via son <em>hash</em> (j'ai ici utilisé
+la valeur arbitraire <code>ef4d34</code>). L'état du dépôt est donc le suivant :</p>
+
+<pre><code>          +---+    +---+    +---+    +---+
+ef4d34 -&gt; | D +--+&gt;+ C +---&gt;+ B +---&gt;+ A |
+          +---+ /  +---+    +---+    +---+
+               /     |
+          +---+    master^
+master -&gt; | E |
+          +---+
+</code></pre>
+
+<h2>Les branches</h2>
+
+<p>Comme vous avez pu le voir juste avant, lorsque vous utilisez <code>commit --amend</code>,
+vous créez en fait une nouvelle branche (il y a une fourche dans le graphe). La
+seule différence lors de la création d'une branche est qu'un nouveau nom est
+créé pour se référer aux commits. Nous pouvons même créer une branche à partir
+du commit <code>ef4d34</code> grâce à la commande <code>git checkout -b branch ef4d34</code>.</p>
+
+<pre><code>          +---+    +---+    +---+    +---+
+branch -&gt; | D +--+&gt;+ C +---&gt;+ B +---&gt;+ A |
+          +---+ /  +---+    +---+    +---+
+               /     |
+          +---+  master^
+master -&gt; | E |
+          +---+
+</code></pre>
+
+<p>En général, lorsque l'on crée une branche dans Git, celle-ci pointe sur le
+<code>HEAD</code> courant mais dés lors que l'on voit Git comme une structure de données
+fonctionnelle, rien n'empêche de créer une branche à partir de n'importe quel
+commit existant.</p>
+
+<h2>Utiliser rebase</h2>
+
+<p>Dans les exemples sur les structures de données, lorsque nous modifions une
+cellule à un certain point de l'historique, nous devions copier toutes les
+cellules se trouvant à la suite de celle modifiée (la cellule <code>4</code> dans notre
+exemple mais il aurait pu y en avoir plus). Dans Git, c'est ce que l'on appelle
+rejouer les commits et la commande permettant de le faire est nommée <code>rebase</code>.
+Pour mettre à jour un ancien commit, nous ajoutons l'option <code>-i</code> pour passer en
+mode <em>interactif</em>.</p>
+
+<p>Si nous souhaitons modifier le commit <code>C</code> et changer son message, nous faisons
+un checkout sur le commit <code>B</code>
+Say we want to update the commit C with a new commit message. We do
+this by checking out the commit D, and using git rebase -i C.</p>
+
+<p>NOTE: Erreur dans le texte original B/D</p>
+
+<pre><code>git checkout B
+git rebase -i C
+</code></pre>
+
+<p>Cette commande ouvre le même éditeur que celui utilisé par Git pour les messages
+de commit avec un contenu similaire à cette liste de commandes :</p>
+
+<pre><code>pick cd3ff32 &lt;message de commit de C&gt;
+pick a65a671 &lt;message de commit de D&gt;
+
+# some helpful comments from git
+</code></pre>
+
+<p>Si nous changeons la commande du commit <code>C</code> pour <code>edit</code>, Git nous permet de
+modifier ce commit avant de rejouer les commits suivants.</p>
+
+<pre><code>edit cd3ff32 &lt;message de commit de C&gt;
+pick a65a671 &lt;message de commit de D&gt;
+</code></pre>
+
+<p>Lorsque nous sauvegardons le fichier et fermons l'éditeur, Git commence une
+opération de <em>rebase</em>. Il s'arrête pour nous permettre de modifier le commit
+<code>C</code>.</p>
+
+<pre><code>Stoppé à cd3ff32... &lt;message de commit de C&gt;
+Vous pouvez modifier votre commit avec
+
+        git commit --amend
+
+Une fois satisfait de vos changements, lancez
+
+        git rebase --continue
+</code></pre>
+
+<p>Le message est assez clair, nous pouvons modifier le commit comme bon nous
+semble. Une fois cela fait nous appelons <code>commit --amend</code> pour créer le commit
+mis à jour puis reprenons la liste des commandes de <em>rebase</em> grâce à <code>rebase
+--continue</code>. Les autres commits seront rejoués l'un après l'autre puisque nous
+avons choisi la commande <code>pick</code>. En cas de conflit, Git s'arrête et vous laisse
+corriger avant de continuer. Notre dépôt ressemble maintenant à ceci :</p>
+
+<pre><code>          +---+    +---+
+rebased -&gt;| D'+---&gt;+ C'+
+          +---+    +---+\
+                         \
+          +---+    +---+  \ +---+    +---+
+branch -&gt; | D +--+&gt;+ C +---&gt;+ B +---&gt;+ A |
+          +---+ /  +---+    +---+    +---+
+               /     |
+          +---+  master^
+master -&gt; | E |
+          +---+
+</code></pre>
+
+<p>Ce graphe ne doit pas vous être inconnu. J'espère que vous comprenez maintenant
+pourquoi la commande <code>rebase</code> crée de nouveaux commits. Git est une structure de
+données fonctionnelle et ne peut donc pas modifier un commit existant.</p>
+
+<p>Puisque <code>rebase</code> crée une nouvelle chaîne de commits, il semble normal de
+pouvoir modifier ce que cette dernière contient et c'est le cas : <code>rebase -i</code>
+nous permet de réordoner, fusionner ou supprimer des commits. Nous pouvons
+également en créer de nouveaux à tout moment (pour couper un commit en deux par
+exemple) ou commencer à un autre point de l'historique grâce à l'option
+<code>--onto</code>. Le processus classique de reporter des changements locaux &ldquo;au dessus&rdquo;
+de mise à jour d'une branche distante est simplement un cas d'application plus
+spécifique de la puissance de <code>rebase</code>.</p>
+
+<h2>Fusionner</h2>
+
+<p>Nous n'avons pas parler de la fusion de commits (merging). Git nous permet de
+fusionner deux branches en une.</p>
+
+<pre><code>        +---+
+      --+ X |
++---+/  +---+
+| M |
++---+\  +---+
+      --+ Y |
+        +---+
+</code></pre>
+
+<p>Fusionner ajoute un peu de complexité à notre modèle. Notre historique n'est
+plus vraiment un arbre, c'est un graphe acyclique. En réalité, cela ne change
+pas grand chose mais il est amusant de noter que <code>rebase</code>, qui a la réputation
+d'être plus complexe, introduit moins de complications conceptuelles que
+<code>merge</code>.</p>
+
+<p>Rebase peut se voir comme l'application de nouveaux commits dans une nouvelle
+direction. Merge est une opération fondamentalement différente. Une structure de
+données dans laquelle il est possible de combiner deux cellules en une a un
+nom : c'est ce qu'on appelle une structure de données persistante confluante.
+Une autre appellation des structures de données fonctionnelles est
+structures de données persistantes. J'ai préféré éviter ce terme pour ne pas
+entrainer de confusion avec la notion de stockage sur media persistants comme
+un disque dur par exemple.</p>
+
+<h2>Conclusion</h2>
+
+<p>Git peut être assez justement perçu comme une simple structure de données
+fonctionnelle. Plutôt que de présenter Git comme un outil gestion de versions, nous pouvons voir la gestion de versions comme une résultante de l'utilisation
+de cette structure de données. Je pense qu'expliquer Git de cette façon exprime
+mieux la simplicité et la puissance de Git que de comparer son fonctionnement
+avec celui des systèmes centralisés.</p>
+
+<p>Lorsque l'on voit cela sous cet angle, je trouve que finalement Git est bien
+plus simple que SVN par exemple. La seule raison pour laquelle Git peut être
+perçu comme plus complexe est que cette simplicité nous permet d'implémenter des
+workflows plus intéressants.</p>
+
+<p>Si vous avez toujours trouvé Git intimidant, gardez en mémoire sa structure
+simple et le fait que dans toute structure de données fonctionnelle, rien n'est
+jamais réellement perdu et peut être retrouvé (regardez <code>reflog</code>).</p>
+]]></content>
+  </entry>
+  
+</feed>
