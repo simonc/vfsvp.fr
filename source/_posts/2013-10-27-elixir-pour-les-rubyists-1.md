@@ -20,6 +20,8 @@ vous expliquer comment il marche. Elixir est fonctionnel et amusant
 Elixir est un langage fonctionnel qui tourne sur la VM Erlang mais ressemble
 beaucoup à Ruby.
 
+<!-- more -->
+
 ``` elixir
 2 + 2
 # => 4

@@ -27,6 +27,8 @@ originale". Jessica Kerr ([@jessitron](https://twitter.com/jessitron)) appelle
 cela "données en entrée, données en sortie" (_data in, data out_). Sous forme
 de code :
 
+<!-- more -->
+
 ``` elixir
 name = "Nate"
 # => "Nate"
