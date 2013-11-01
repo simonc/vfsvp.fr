@@ -9,7 +9,7 @@ categories:
 - ruby
 ---
 
-Source: [Elixir for Rubyists part 2 par Nate West](http://www.natescottwest.com/blog/2013/09/26/elixir-for-rubyists-part-2/)
+Source: [Elixir for Rubyists part 2 par Nate West](http://www.natescottwest.com/blog/2013/10/09/elixir-for-rubyists-part-2/)
 
 Voici une tentative de réponse aux questions de la [partie 1](/article/elixir-pour-les-rubyists-1).
 
