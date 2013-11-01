@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-10-28T22:58:52+01:00</updated>
+  <updated>2013-11-01T13:34:48+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -12,6 +12,162 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Elixir pour les rubyists (partie 2)]]></title>
+    <link href="http://vfsvp.fr/article/elixir-pour-les-rubyists-2"/>
+    <updated>2013-10-29T21:00:00+01:00</updated>
+    <id>http://vfsvp.fr/article/elixir-pour-les-rubyists-2</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://www.natescottwest.com/blog/2013/09/26/elixir-for-rubyists-part-2/">Elixir for Rubyists part 2 par Nate West</a></p>
+
+<p>Voici une tentative de réponse aux questions de la <a href="/article/elixir-pour-les-rubyists-1">partie 1</a>.</p>
+
+<h2>Immuable ??</h2>
+
+<p>Les variables d'Elixir sont immuables. Elles ne sont pas à assignation unique.
+Je vous entends déjà dire &ldquo;Mais Nate ! Si on réassigne une variable, n'est-ce
+pas une mutation ?&rdquo;. Non !</p>
+
+<h2>Elixir assure la transparence référentielle des variables</h2>
+
+<p>Transparence référentielle est une façon académique de dire &ldquo;quand je fais
+quelque chose qui modifie une valeur, je peux toujours revenir à la valeur
+originale&rdquo;. Jessica Kerr (<a href="https://twitter.com/jessitron">@jessitron</a>) appelle
+cela &ldquo;données en entrée, données en sortie&rdquo; (<em>data in, data out</em>). Sous forme
+de code :</p>
+
+<pre><code class="elixir">name = "Nate"
+# =&gt; "Nate"
+String.upcase(name)
+# =&gt; "NATE"
+name
+# =&gt; "Nate"
+</code></pre>
+
+<p><code>String.upcase</code> est référentiellement transparent. Il retourne une nouvelle
+valeur transformée mais ne modifie pas la valeur originale. On peut comparer
+cela avec <code>String#upcase!</code> en Ruby.</p>
+
+<pre><code class="ruby">name = "Nate"
+# =&gt; "Nate"
+name.upcase!
+# =&gt; "NATE"
+name
+# =&gt; "NATE"
+</code></pre>
+
+<p><code>String#upcase!</code> <em>n'est pas</em> référentiellement transparent. Non seulement il
+retourne une valeur transformée mais modifie également la valeur originale.</p>
+
+<p>Avec Elixir, dans le contexte d'une fonction vous ne pourrez pas modifier la
+valeur d'une variable.</p>
+
+<pre><code class="elixir">name = "Nate"
+# =&gt; "Nate"
+capitalize = fn(string) -&gt; string = String.upcase(string) end
+# =&gt; #Function&lt;6.80484245 in :erl_eval.expr/5&gt;
+capitalize.(name)
+# =&gt; "NATE"
+name
+# =&gt; "Nate"
+</code></pre>
+
+<h2>En quoi la transparence référentielle est importante ?</h2>
+
+<p>Pour faire court, un code référentiellement transparent est simple à tester,
+facile à comprendre et à rendre <em>threadsafe</em>. Si on a ceci en Ruby :</p>
+
+<pre><code class="elixir">greeting = "Hello"
+do_something_to_string(greeting)
+print(greeting)
+</code></pre>
+
+<p>On s'attend à ce que <code>greeting</code> ait la valeur &ldquo;Hello&rdquo; lorsque l'on appelle
+<code>print</code> mais <code>do_something_to_string</code> a pu modifier la valeur de <code>greeting</code>.
+D'autant plus si <code>greeting</code> est transmis un peu partout dans l'application et
+passe par toutes sortes de <code>do_somethings</code>. Au moment d'afficher <code>greeting</code>, il
+pourrait tout aussi bien contenir &ldquo;Game over !&rdquo;.</p>
+
+<p>Pour en savoir plus :</p>
+
+<ul>
+<li><a href="http://confreaks.com/videos/2382-rmw2013-functional-principles-for-oo-development">Jessica Kerr’s Functional Principles (en)</a></li>
+<li><a href="http://rubyrogues.com/115-rr-functional-and-object-oriented-programming-with-jessica-kerr/">Ruby Rogues Podcast: Functional and OO Programming (en)</a></li>
+<li>Si vous pensez à d'autres ressources, dites le moi, je les ajouterai.</li>
+</ul>
+
+
+<h2>Un piège&hellip;</h2>
+
+<p>Il est possible d'assigner une nouvelle valeur à une variable en se basant sur
+sa valeur actuelle. Notez bien qu'ici <code>=</code> n'est pas un opérateur d'assignation.
+C'est un opérateur de test de correspondance. Lorsque l'on utilise sur une
+variable, on peut choisir de tester la valeur de la variable ou nous pouvons
+l'autoriser à prendre une nouvelle valeur.</p>
+
+<pre><code class="elixir">1 = 2 # la valeur 1 ne correspond pas à la valeur 2
+# =&gt; ** (MatchError) aucune correspondance avec : 3
+#    :erl_eval.expr/3
+
+:a = 2 # la valeur :a, un atôme (un peu comme un symbole en Ruby),
+       # ne correspond pas à la valeur 2
+# =&gt; ** (MatchError) aucune correspondance avec : 3
+#    :erl_eval.expr/3
+
+num = 2 # num est une variable. Nous pouvons lui assigner 2 pour établir
+        # une correspondance.
+# =&gt; 2
+
+^num = 3 # la valeur de num (2) ne correspond pas à la valeur 3
+# =&gt; ** (MatchError) aucune correspondance avec : 3
+#    :erl_eval.expr/3
+
+num = 3 # ici on ne cherche pas de correspondance, on peut donc assigner la
+        # valeur 3 à num
+# =&gt; 3
+</code></pre>
+
+<p>Tel que je le comprends, cela fait parti d'Elixir pour des questions pratique
+et est particulièrement utile pour écrire des macros. Les puristes de la
+programmation fonctionnelle vont détester ça. Si c'est votre cas, vous pouvez
+lire <a href="https://groups.google.com/forum/#!searchin/elixir-lang-core/single$20assignment/elixir-lang-core/FrK7MQGuqWc/2aimbHDAAHMJ">cette discussion</a>
+au sujet de la réassignation de variables dans Elixir et jeter un oeil au
+commentaire de Joe Armstrong.</p>
+
+<p>Encore une fois, cela ne change pas l'état de l'objet. Il n'y a pas d'objet dans
+Elixir. <code>num</code> est un simple conteneur de données auquel vous pouvez donner une
+nouvelle valeur. Lorsque vous le faites, l'ancienne valeur va être retirée du
+contexte d'exécution afin de laisser la place libre pour stocker une nouvelle
+valeur.</p>
+
+<h2>Essayez donc de le briser</h2>
+
+<p>Vous aurez tout de même beaucoup de mal à écrire une fonction qui brise la
+transparence référentielle. Si vous réassignez une variable dans une fonction,
+vous ne changez sa valeur que pour le contexte de cette fonction.</p>
+
+<pre><code class="elixir">defmodule Assignment do
+  def change_me(string) do
+    string = 2
+  end
+end
+
+# lorsque vous compilez ce module, vous aurez un warning indiquant
+# qu'une variable de type string n'est pas utilisée!
+
+greeting = "Hi"
+# =&gt; "Hi"
+Assignment.change_me(greeting)
+# =&gt; 2
+greeting
+# =&gt; "Hi"
+</code></pre>
+
+<h2>C'est tout pour aujourd'hui</h2>
+
+<p>Voici la fin de la partie 2. À bientôt pour la partie 3.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Elixir pour les rubyists (partie 1)]]></title>
@@ -151,7 +307,7 @@ RecursionExamples.recurse(["Joe", "Matz", "Jose"])
 # =&gt; :ok
 </code></pre>
 
-<p>C'est tout pour cette première partie. À bientôt pour la deuxième.</p>
+<p>C'est tout pour cette première partie. À bientôt pour <a href="/article/elixir-pour-les-rubyists-2">la deuxième</a>.</p>
 ]]></content>
   </entry>
   
@@ -982,204 +1138,6 @@ lancez Rubular et essayez quelques <em>lookaheads</em> et <em>lookbehinds</em>. 
 quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
 intégration des expressions régulières dans Ruby, je pense que vous en serez
 surpris ce que vous trouverez.</p>
-
-<h2>L'auteur chez Blue Box</h2>
-
-<p>Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
-Logiciel. Elle siège également au conseil de Certification de Programmation
-Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
-Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
-et travaillé dans le domaine du théâtre, une excellente préparation à
-l'environnement dynamique de la création d'applications logicielles. Dans ces
-deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
-libre, elle pratique l'art martial appelé Naginata.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (2/3)]]></title>
-    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3"/>
-    <updated>2013-10-05T12:00:00+02:00</updated>
-    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3</id>
-    <content type="html"><![CDATA[<p>Source: <a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-2-of-3/">Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box</a></p>
-
-<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
-Vous pouvez lire la
-<a href="/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
-<a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">troisième partie ici</a>.</p>
-
-<h2>Les LookArounds</h2>
-
-<p>Les lookarounds me permettent d'aller plus loin que la simple comparaison avec
-un modèle. En effet, ils offrent la possibilité de donner un contexte à cette
-comparaison. Une expression contenant un lookaround ne retourne un résultat que
-lorsqu'elle est effectuée dans ce contexte.</p>
-
-<!-- more -->
-
-
-<p>Soit une nouvelle chaîne de caractère, une autre citation d'Obiwan Kenobi dans
-Star Wars.</p>
-
-<pre><code class="ruby">string = "Who's the more foolish?  The fool or the fool who follows him?"
-</code></pre>
-
-<p>Je veux connaître tous les emplacements du mot &ldquo;fool&rdquo; dans cette chaîne. Je vais
-donc utiliser l'expression régulière <code>/fool/</code>. Dans ce cas précis, je vais
-utiliser la méthode <code>scan</code> sur ma chaîne. Cette méthode retourne toutes les
-occurrences de mon expression dans la chaîne :</p>
-
-<pre><code class="ruby">string.scan(/fool/)
-#=&gt; ["fool", "fool", "fool"]
-</code></pre>
-
-<p>Comme on peut le voir, scan retourne une partie du mot &ldquo;foolish&rdquo; et les deux
-occurrences du mot &ldquo;fool&rdquo;.</p>
-
-<p>Comment fait-on si l'on souhaite que notre modèle <code>/fool/</code> retourne un résultat
-seulement s'il fait partie du mot &ldquo;foolish&rdquo; ? Pour ce cas j'utiliserais un
-<em>lookahead positif</em> (recherche vers l'avant). Cela indique à mon expression
-régulière de trouver toutes les correspondances à mon modèle directement suivies
-d'une correspondance à un autre modèle. En Ruby, un lookahead positif est
-exprimé grâce à l'opérateur <code>?=</code> :</p>
-
-<pre><code class="ruby">/fool(?=ish)/
-</code></pre>
-
-<p>Voici mon expression modifiée. Comme vous pouvez le voir, j'ai mon modèle
-contenant le mot &ldquo;fool&rdquo; directement suivi du modèle lookahead &ldquo;ish&rdquo;.</p>
-
-<pre><code class="ruby">string.scan(/fool(?=ish)/)
-&gt;=&gt; ["fool"]
-</code></pre>
-
-<p>Cette fois-ci, la méthode <code>scan</code> retourne un seul résultat, la seule occurrence
-de &ldquo;fool&rdquo; suivie de &ldquo;ish&rdquo;.</p>
-
-<p>De nouveau, utilisons la méthode <code>gsub</code> pour modifier notre chaîne. Remplaçons
-chaque occurrence de &ldquo;fool&rdquo; (suivie de &ldquo;ish&rdquo;) par le mot &ldquo;self" :</p>
-
-<pre><code class="ruby">string.gsub(/fool(?=ish)/, "self")
-#=&gt; "Who's the more selfish?  The fool or the fool who follows him?"
-</code></pre>
-
-<p>Nos excuses à Obiwan Kenobi, nous avons changé la ligne pour <em>&ldquo;Who&rsquo;s the more
-selfish?  The fool or the fool who follows him?&rdquo;</em>.</p>
-
-<p>Techniquement, c'est ce que l'on appelle une <em>zero-width, positive lookahead
-assertion</em> (recherche positive vers l'avant de taille zéro). Facile à prononcer
-n'est-ce pas ? Dans le livre <em>The Well Grounded Rubyist</em>, David Black
-l'explique comme ceci :</p>
-
-<dl>
-<dt>Zero-width</dt>
-<dd>   (taille zéro) signifie que le modèle lookahead (&ldquo;ish&rdquo; dans notre cas) ne
-   consomme pas de caractères. Cela veut dire que la correspondance est
-   cherchée mais n'est pas retournée. Seule la présence d'une correspondance
-   est retournée, vrai ou faux.</dd>
-<dt>Positive</dt>
-<dd>   signifie que le modèle doit être présent, obligatoirement.</dd>
-<dt>Lookahead</dt>
-<dd>   veut dire que cette expression est recherchée après le modèle principal.</dd>
-<dt>Assertion</dt>
-<dd>   indique que seule la présence d'une correspondance est retournée sous la
-   forme true/false (vrai/faux).</dd>
-</dl>
-
-<p>Quelles sont mes autres possibilité ? Si par exemple je souhaite trouver toutes
-les occurrences du mot &ldquo;fool&rdquo; qui ne sont <strong>pas</strong> suivies des lettres &ldquo;ish&rdquo; ?
-Dans ce cas, je dois utiliser un lookahead négatif. Techniquement, c'est ce que
-l'on appelle une <em>zero-width, negative lookahead assertion</em> (recherche négative
-vers l'avant de taille zéro). Négative signifie qu'aucune correspondance à ce
-modèle ne doit être trouvée. Pour effectuer un lookahead négatif, uilisez
-l'opérateur <code>?!</code>.</p>
-
-<p>Je vais de nouveau appeler <code>scan</code> sur ma chaîne en utilisant cette fois un
-lookahead négatif dans mon expression régulière. Je veux trouver toutes les
-occurrences de &ldquo;fool&rdquo; qui ne font pas partie du mot &ldquo;foolish" :</p>
-
-<pre><code class="ruby">string.scan(/fool(?!ish)/)
-#=&gt; ["fool", "fool"]
-</code></pre>
-
-<p>Deux correspondances sont retournées, les deux fois où le mot &ldquo;fool&rdquo; apparait
-sans faire partie de &ldquo;foolish&rdquo;.</p>
-
-<p>Utilisons maintenant la méthode <code>gsub</code>. À chaque fois que nous
-trouvons le mot &ldquo;fool&rdquo; (non suivi des lettres &ldquo;ish&rdquo;), nous allons le remplacer
-pas le mot &ldquo;self" :</p>
-
-<pre><code class="ruby">string.gsub(/fool(?!ish)/, "self")
-#=&gt; "Who's the more foolish?  The self or the self who follows him?"
-</code></pre>
-
-<p>Encore une fois j'ai changé une réplique classique. On peut maintenant lire
-&ldquo;Who&rsquo;s the more foolish?  The self or the self who follows him?&rdquo;</p>
-
-<p>Les lookaheads sont très pratiques lorsque l'on souhaite trouver une
-correspondance en prenant en compte ce qui la suit. Allons de nouveau un peu
-plus loin. Comment dois-je m'y prendre si je souhaite trouver une correspondance
-à partir de ce qui la précède ? Pour faire cela, je dois utiliser une <em>positive
-lookbehind assertion</em> (recherche positive vers l'arrière). Cela signifie que je
-veux trouver toutes les correspondances à mon modèle précédées d'un autre
-modèle.</p>
-
-<p>Utilisons une autre citation de Star Wars, une de Yoda cette fois-ci :</p>
-
-<pre><code class="ruby">string = "For my ally is the force, and a powerful ally it is."
-</code></pre>
-
-<p>The modèle principal que je souhaite chercher est le mot &ldquo;ally&rdquo;, je vais donc
-utiliser l'expression régulière <code>/ally/</code>. J'aimerais cependant trouver le mot
-&ldquo;ally&rdquo; uniquement s'il est directement précédé du mot &ldquo;powerful&rdquo;. C'est le cas
-parfait pour un <em>positive lookbehind</em> (recherche positive vers l'arrière). Les
-lookbehinds positifs utilisent l'opérateur <code>?&lt;=</code>. Utilisons le dans notre
-expression régulière :</p>
-
-<pre><code class="ruby">/(?&lt;=powerful )ally/
-</code></pre>
-
-<p>Cette expression régulière relève le mot &ldquo;ally&rdquo; chaque fois qu'il est
-directement précédé du mot &ldquo;powerful&rdquo;. Comme vous pouvez le remarquer, le
-lookbehind est positionné avant le modèle principal. Cela montre bien que le mot
-&ldquo;powerful&rdquo; doit est devant le mot &ldquo;ally&rdquo;.</p>
-
-<p>Je vais maintenant utiliser la méthode <code>gsub</code> sur ma chaîne. Chaque fois que le
-mot &ldquo;ally&rdquo; est précédé par le mot &ldquo;powerful&rdquo;, je veux le remplacer par le mot
-&ldquo;friend" :</p>
-
-<pre><code class="ruby">string.gsub(/(?&lt;=powerful )ally/, "friend")
-#=&gt; For my ally is the force, and a powerful friend it is.
-</code></pre>
-
-<p>Cela change quelque peu les mots de Yoda : &ldquo;For my ally is the force, and a
-powerful friend it is.&rdquo;</p>
-
-<p>Comment dois-je m'y prendre si je souhaite faire le contraire ? Si par exemple
-je veux toutes les occurrences du mot &ldquo;ally&rdquo; qui ne sont <strong>pas</strong> précédées du
-mot &ldquo;powerful&rdquo;. Dans ce cas, je dois utiliser un <em>negative lookbehind</em>
-(recherche négative vers l'arrière). Pour cela on trouve l'opérateur <code>?&lt;!</code>.
-Utilisons-le dans notre expression régulière :</p>
-
-<pre><code class="ruby">/(?&lt;!powerful )ally/
-</code></pre>
-
-<p>Utilisons maintenant <code>gsub</code> sur notre chaîne pour remplacer chaque occurence du
-mot &ldquo;ally&rdquo;, non précédée du mot &ldquo;powerful&rdquo;, par le mot &ldquo;friend" :</p>
-
-<pre><code class="ruby">string.gsub(/(?&lt;!powerful )ally/, "friend")
-#=&gt; "For my friend is the force, and a powerful ally it is."
-</code></pre>
-
-<p>J'ai de nouveau changé les paroles de Yoda : &ldquo;For my ally is the force, and a
-powerful friend it is.&rdquo;.</p>
-
-<p>Les lookarounds donnent une puissance incroyable à vos expressions régulières en
-leur apportant un contexte. Plutôt que d'utiliser un modèle strict qui
-correspond ou non, vos expressions régulières deviennent puissantes, flexibles
-et capables de trouver bien plus de choses.</p>
-
-<p><a href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3">Lire le troisième article de cette série</a></p>
 
 <h2>L'auteur chez Blue Box</h2>
 
