@@ -148,4 +148,4 @@ RecursionExamples.recurse(["Joe", "Matz", "Jose"])
 # => :ok
 ```
 
-C'est tout pour cette première partie. À bientôt pour la deuxième.
+C'est tout pour cette première partie. À bientôt pour [la deuxième](/article/elixir-pour-les-rubyists-2).
