@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: elixir | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/elixir/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-11-01T13:34:48+01:00</updated>
+  <updated>2013-11-01T13:36:33+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -35,6 +35,9 @@ quelque chose qui modifie une valeur, je peux toujours revenir à la valeur
 originale&rdquo;. Jessica Kerr (<a href="https://twitter.com/jessitron">@jessitron</a>) appelle
 cela &ldquo;données en entrée, données en sortie&rdquo; (<em>data in, data out</em>). Sous forme
 de code :</p>
+
+<!-- more -->
+
 
 <pre><code class="elixir">name = "Nate"
 # =&gt; "Nate"
@@ -184,6 +187,9 @@ vous expliquer comment il marche. Elixir est fonctionnel et amusant
 
 <p>Elixir est un langage fonctionnel qui tourne sur la VM Erlang mais ressemble
 beaucoup à Ruby.</p>
+
+<!-- more -->
+
 
 <pre><code class="elixir">2 + 2
 # =&gt; 4
