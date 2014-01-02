@@ -1,0 +1,1184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: angular | VF svp]]></title>
+  <link href="http://vfsvp.fr/tags/angular/atom.xml" rel="self"/>
+  <link href="http://vfsvp.fr/"/>
+  <updated>2014-01-02T14:21:07+01:00</updated>
+  <id>http://vfsvp.fr/</id>
+  <author>
+    <name><![CDATA[Simon Courtois (simonc)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Apprendre Angular en un jour, le guide ultime]]></title>
+    <link href="http://vfsvp.fr/article/apprendre-angular-en-un-jour-le-guide-ultime"/>
+    <updated>2013-11-02T00:00:00+01:00</updated>
+    <id>http://vfsvp.fr/article/apprendre-angular-en-un-jour-le-guide-ultime</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://toddmotto.com/ultimate-guide-to-learning-angular-js-in-one-day/">Ultimate guide to learning AngularJS in one day par Todd Motto</a></p>
+
+<h2>Qu'est-ce qu'AngularJS ?</h2>
+
+<p>Angular est un framework MVC/MVVM côté client, développé en JavaScript, ce qui
+est obligatoire pour faire une application moderne à page unique (ou même un
+site internet). C'est un grand bond vers le futur de HTML et vers ce que HTML5
+apporte. C'est également un grand bol d'air frais dans le monde des applications
+web modernes. Cet article est une vue de bout en bout, issue de mon expérience,
+et contient des conseils et astuces glanés au travers de mon utilisation
+d'Angular.</p>
+
+<h2>Terminologie</h2>
+
+<p>Angular a une courbe d'apprentissage assez courte qui consiste principalement à
+appréhender la terminologie et la &ldquo;pensée MVC&rdquo;. MVC signifie
+Modèle-Vue-Contrôleur. Survolons un peu les différents composants et voyons un
+peu la terminologie en jetant un oeil sur les APIs essentielles d'Angular.</p>
+
+<h3>MVC</h3>
+
+<p>Vous avez probablement déjà entendu parler de MVC. Utilisé dans de nombreux
+langages de programmation pour apporter une structure/architecture à une
+application. En voici les composants :</p>
+
+<dl>
+<dt>Modèle</dt>
+<dd>   structure donnée représentant une entité de l'application, généralement
+transmise en JSON. Pour bien démarrer avec Angular, quelques notions de JSON
+son nécésssaires, cela vous permettra de faire communiquer votre serveur et vos
+vues. Un groupe d'<em>id</em> d'utilisateurs pourrait par exemple ressembler à ceci :</dd>
+</dl>
+
+<pre><code class="json">{
+  "users" : [{
+    "name": "Joe Bloggs",
+    "id": "82047392"
+  },{
+    "name": "John Doe",
+    "id": "65198013"
+  }]
+}
+</code></pre>
+
+<p>Vous pouvez accéder à cette information de deux façons. En passant par une XHR
+(XMLHttp Request), vous connaissez sûrement <code>$.ajax</code> en jQuery, Angular
+l'encapsule dans <code>$http</code>. L'autre méthode est de l'écrire dans le code de la
+page pour qu'elle soit chargée pendant l'interprétation (depuis datastore ou
+la base de données). Une fois que vous avez accès à l'information, vous pouvez
+mettre à jour votre modèle et le renvoyer.</p>
+
+<dl>
+<dt>Vue</dt>
+<dd>   La vue est simple, c'est votre HTML et/ou la sortie générée. Lorsque vous
+utilisez un framework MVC, vous utilisez les données issues du Modèle pour
+mettre votre Vue à jour et afficher les bonnes informations dans votre HTML.</dd>
+<dt>Contrôleur</dt>
+<dd>   Comme son nom l'indique, cette couche contrôle des choses. Mais quelles
+choses ? Des données. Les contrôleurs permettent à votre serveur de communiquer
+avec la Vue, c'est le messager, vous pouvez donc mettre vos données à jour à la
+volée via ces canaux de communication entre le serveur et le client.</dd>
+</dl>
+
+<h3>Mettre en place un projet AngularJS (l'essentiel)</h3>
+
+<p>Tout d'abord, nous devons mettre en place le minimum vital d'un projet Angular.
+Nous devons mettre en place certaines choses avant de commencer. Cela revient,
+en général, à ajouter une déclaration <code>ng-app</code>, écrire un contrôleur pour parler
+à la vue puis l'inclusion d'Angular et un attachement au DOM. Voici
+l'essentiel :</p>
+
+<p>Un peu de HTML avec les déclarations <code>ng-*</code> :</p>
+
+<p>``` html</p>
+
+<div ng-app="myApp">
+  <div ng-controller="MainCtrl">
+    <!-- logique du contrôleur -->
+  </div>
+</div>
+
+
+<pre><code>
+Un module Angular et un contrôleur :
+</code></pre>
+
+<p>var myApp = angular.module(&lsquo;myApp&rsquo;, []);</p>
+
+<p>myApp.controller(&lsquo;MainCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {
+  // Magie du contrôleur
+}]);
+```</p>
+
+<p>Avant de nous lancer, nous devons créer un module Angular dans lequel nous
+allons placer toute notre logique. Il existe plusieurs manières de déclarer des
+modules et vous pouvez chaîner toute votre logique (je n'aime pas cette
+méthode) :</p>
+
+<pre><code class="javascript">angular.module('myApp', [])
+.controller('MainCtrl', ['$scope', function ($scope) {...}])
+.controller('NavCtrl', ['$scope', function ($scope) {...}])
+.controller('UserCtrl', ['$scope', function ($scope) {...}]);
+</code></pre>
+
+<p>La mise en place un module global s'est révélée être la meilleure pratique sur
+les projets Angular sur lesquels j'ai travaillé. L'absence de point-virgules ou
+les fermetures accidentelles de chaîne se sont montrées contre productives et
+on souvent généré des erreurs de compilation. Préférez cette approche :</p>
+
+<pre><code class="javascript">var myApp = angular.module('myApp', []);
+myApp.controller('MainCtrl', ['$scope', function ($scope) {...}]);
+myApp.controller('NavCtrl', ['$scope', function ($scope) {...}]);
+myApp.controller('UserCtrl', ['$scope', function ($scope) {...}]);
+</code></pre>
+
+<p>Chaque nouveau fichier que je crée utilise le namespace <code>myApp</code> ce qui le
+restreint à l'application. Oui, je crée un nouveau fichier pour chaque
+Contrôleur, Directive, Factory ou tout autre élément (vous me remercierez plus
+tard). Joignez les dans un fichier à la volée en utilisant Grunt ou un outil
+similaire.</p>
+
+<h3>Contrôleurs</h3>
+
+<p>Maintenant que vous avez une idée de ce qu'est le MVC et que tout est en place,
+jetons un oeil à la façon dont Angular implémente les contrôleurs.</p>
+
+<p>Reprenons l'exemple vu plus haut et regardons pas à pas comment pousser des
+données dans le DOM depuis un contrôleur. Angular utilise un système de template
+qui ressemble à ceci pour parler à votre HTML : <code>{{ handlebars }}</code>. Idéalement, votre HTML ne contient aucun texte ou valeur en dur, cela
+permet de tirer un maximum d'Angular. Voici un exemple dans lequel nous poussons
+une chaîne de caractères dans le DOM :</p>
+
+<p>
+``` html</p>
+
+<div ng-app="myApp">
+  <div ng-controller="MainCtrl">
+    {{ text }}
+  </div>
+</div>
+
+
+<pre><code>
+</code></pre>
+
+<p>var myApp = angular.module(&lsquo;myApp&rsquo;, []);</p>
+
+<p>myApp.controller(&lsquo;MainCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {</p>
+
+<pre><code>$scope.text = 'Hello, Angular fanatic.';
+</code></pre>
+
+<p>}]);
+```</p>
+
+<p>Voici le Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/mN7QB/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Le concept clé ici est <code>$scope</code> que vous passez à toutes vos fonctions au sein
+d'un contrôleur. <code>$scope</code> fait référence à l'élément courant (ou zone courante)
+dans le DOM (ce qui est différent de <code>this</code>). Il encapsule intelligemment les
+données et la logique pour que celles-ci soit limitées à l'élément. Cela apporte
+un notion de publique/privé à JavaScript, ce qui est fantastique.</p>
+
+<p>Le concept de <code>$scope</code> peut faire peur de prime abord mais c'est votre canal de
+communication avec le DOM depuis le serveur (ou depuis les données statiques si
+vous en avez). La démo donne une petite idée de comment &ldquo;pousser&rdquo; des données
+dans le DOM.</p>
+
+<p>Regardons maintenant une structure de données plus représentative que nous avons
+hypothétique récupérée depuis le serveur pour afficher les détails de
+l'utilisateur. À partir de maintenant, j'utiliserai des données statiques, je
+vous montrerai plus tard comment récupérer dynamiquement des données JSON.</p>
+
+<p>Commençons par un peu de JavaScript :</p>
+
+<pre><code class="javascript">var myApp = angular.module('myApp', []);
+
+myApp.controller('UserCtrl', ['$scope', function ($scope) {
+
+    // Créons un namespace pour les détails de l'utilisateur
+    // Également utile pour une aide visuelle dans le DOM
+    $scope.user = {};
+    $scope.user.details = {
+      "username": "Todd Motto",
+      "id": "89101112"
+    };
+
+}]);
+</code></pre>
+
+<p>Poussons ces données vers le DOM pour les afficher :</p>
+
+<p>
+``` html</p>
+
+<div ng-app="myApp">
+  <div ng-controller="UserCtrl">
+    <p class="username">Welcome, {{ user.details.username }}</p>
+    <p class="id">User ID: {{ user.details.id }}</p>
+  </div>
+</div>
+
+
+<p>```
+</p>
+
+<p>Résultat:</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/425KU/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Il est important de noter que les contrôleurs ont pour but de gérer les données
+et de contenir des fonctions (ou événements) qui parlent au serveur pour
+envoyer/recevoir des données JSON. Aucune manipulation du DOM ne doit y prendre
+place, pas de jQuery ici donc. La manipulation du DOM se fait par les directives
+que nous allons voir ensuite.</p>
+
+<p>Astuce : dans la documentation d'Angular (au moment de la rédaction de cet
+article) leur exemples créent un contrôleur comme ceci :</p>
+
+<pre><code class="javascript">var myApp = angular.module('myApp', []);
+
+function MainCtrl ($scope) {
+  //...
+};
+</code></pre>
+
+<p>&hellip; N'en faites rien. Cela expose toutes vos fonctions au contexte global et ne
+les cantonne pas à votre application. Cela signifie également que vous ne pouvez
+pas <em>minifier</em> votre code ou le tester facilement. Ne remplissez pas le
+namespace global et gardez vos contrôleurs dans votre application.</p>
+
+<h3>Directives</h3>
+
+<p>Une directive (<a href="http://toddmotto.com/creating-an-angularjs-directive-from-one-of-your-existing-plugins-scripts">lisez mon article sur les directives issues de scripts/plugins
+existants [en]</a>),
+dans sa forme la plus simple, est un petit morceau de template HTML, utilisé de
+préférence à plusieurs endroits de l'application. C'est un moyen facile
+d'injecter sans effort du DOM dans votre application ou d'effectuer des
+interactions particulières avec le DOM. Les directives ne sont pas simples pour
+autant et la courbe d'apprentissage pour les maitriser est assez importante. Ce
+qui suit devrait tout de même vous donner un bon point de départ.</p>
+
+<p>À quoi servent donc les directives ? Beaucoup de choses dont la création de
+composants DOM (onglets ou éléments de navigation) - tout dépend de l'usage que
+votre application fait de l'interface utilisateur. Si vous avez, par exemple,
+joué un peu avec <code>ng-show</code> ou <code>ng-hide</code>, ce sont des directives (qui n'injectent
+pas de DOM).</p>
+
+<p>Pour cet exercice, je vais faire simple et créer un type de bouton personnalisé
+(appelé <code>customButton</code>) qui injecte quelques balises que je déteste devoir
+écrire partout. Il y a plusieurs façons de définir une directive dans le DOM.
+Voici quelques exemples :</p>
+
+<p>``` html</p>
+
+<!-- 1: déclaration en tant qu'attribut -->
+
+
+<p><a custom-button>Click me</a></p>
+
+<!-- 2: en tant que nouvel élément -->
+
+
+<p><custom-button>Click me</custom-button></p>
+
+<!-- 3: en tant que classe (pour être compatible avec les vieux IE) -->
+
+
+<p><a class="custom-button">Click me</a></p>
+
+<!-- 4: en tant que commentaire (peu adapté à cette démo) -->
+
+
+<!-- directive: custom-button -->
+
+
+<pre><code>
+Je préfère les utiliser sous forme d'attribut. Les éléments personnalisés
+feront partie de futures version de HTML5 sous le nom de _Web Components_ mais
+Angular les considère comme assez instables, en particulier pour les vieux
+navigateurs.
+
+Vous savez maintenant comment utiliser une directive, créons maintenant notre
+bouton. Encore une fois, j'utilise le namespace `myApp`. Voici une directive
+dans sa forme la plus simple :
+</code></pre>
+
+<p>myApp.directive(&lsquo;customButton&rsquo;, function () {
+  return {
+    link: function (scope, element, attrs) {
+      // manipulation du DOM et événements
+    }
+  };
+});
+```</p>
+
+<p>Je définie ma directive avec la méthode <code>.directive()</code> en lui passant le nom de
+la directive <code>'customButton'</code>. Lorsque vous capitalisez une lettre dans le nom
+d'une directive, il faut utiliser un tiret lorsque vous vous en servez (comme
+dans l'exemple vu plus haut).</p>
+
+<p>Une directive retourne une référence vers elle-même via un Object et accepte un
+certain nombre de paramètres. Selon moi, les plus importants à connaitre sont
+<code>restrict</code>, <code>replace</code>, <code>transclude</code>, <code>template</code>, <code>templateUrl</code> et, bien sûr, la
+propriété <code>link</code>. Ajoutons les :</p>
+
+<pre><code class="javascript">myApp.directive('customButton', function () {
+  return {
+    restrict: 'A',
+    replace: true,
+    transclude: true,
+    template: '&lt;a href="" class="myawesomebutton" ng-transclude&gt;' +
+                '&lt;i class="icon-ok-sign"&gt;&lt;/i&gt;' +
+              '&lt;/a&gt;',
+    link: function (scope, element, attrs) {
+      // DOM manipulation/events here!
+    }
+  };
+});
+</code></pre>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/VC4H2/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Utilisez <em>Inspecter l'Élément</em> pour vérifier que les balises ont bien été
+injectées. Je sais, il n'y a pas d'icône parce que je n'ai pas inclus <em>Font
+Awesome</em>, mais vous voyez le principe. En ce qui concerne les propriétés d'une
+directive :</p>
+
+<dl>
+<dt>restrict</dt>
+<dd>   Indique la méthode d'accès à l'élément. Si votre projet doit être
+compatible avec d'anciennes versions d'IE, préférez une déclaration de type
+attribut ou classe. Indiquer <code>'A'</code> signifie <em>attribut</em>, <code>'E'</code> signifie
+<em>élément</em>, <code>'C'</code> signifie <em>classe</em> et <code>'M'</code> signifie <em>commentaire</em>. La valeur
+par défaut est <code>'EA'</code>. Oui, il est tout à fait possible d'utiliser plusieurs
+méthodes d'accès en même temps.</dd>
+<dt>replace</dt>
+<dd>   Indique si le balisage appelant la directive doit être remplacé ou non.
+Dans l'exemple précédent, vous pouvez voir que le DOM initial est remplacé par
+le template de la directive.</dd>
+<dt>transclude</dt>
+<dd>   Indique si le DOM original doit être copié dans la directive. Dans notre
+exemple, le texte &lsquo;Click me&rsquo; apparait dans la directive lorsque celle-ci est
+affichée.</dd>
+<dt>template</dt>
+<dd>   Un template, comme ci-dessus, permet de déclarer le balisage à injecter. Il
+est préférable d'utiliser cette propriété pour de petits bouts de HTML
+uniquement. Les templates injectés sont compilés par Angular, vous pouvez donc
+utiliser des balises handlebars et les <em>bindings</em> dans ceux-ci.</dd>
+<dt>templateUrl</dt>
+<dd>   Similaire à <code>template</code>, permet de garder les templates dans leurs propres
+fichiers ou au sein de balises <code>&lt;script&gt;</code>. Cette propriété permet d'indiquer
+l'URL du template à utiliser. Pour des morceaux de HTML un peu plus complexes,
+il est préférable de les placer chacun dans un fichier spécifique, dans un
+dossier <em>templates</em> :</dd>
+</dl>
+
+<pre><code class="javascript">myApp.directive('customButton', function () {
+  return {
+    templateUrl: 'templates/customButton.html'
+    // directive stuff...
+  };
+});
+</code></pre>
+
+<p>Et dans votre fichier (nom insensible à la casse) :</p>
+
+<p>``` html</p>
+
+<!-- dans customButton.html -->
+
+
+<p><a href="" class="myawesomebutton" ng-transclude>
+  <i class="icon-ok-sign"></i>
+</a>
+```</p>
+
+<p>L'intérêt de cette technique est que le fichier HTML va être mis en cache par le
+navigateur. Une alternative, qui n'est pas mise en cache, est de déclarer le
+template dans une balise <code>&lt;script&gt;</code> :</p>
+
+<p>``` html</p>
+
+<script type="text/ng-template" id="customButton.html">
+<a href="" class="myawesomebutton" ng-transclude>
+  <i class="icon-ok-sign"></i>
+</a>
+</script>
+
+
+<pre><code>
+Cela indique à Angular que c'est un `ng-template` et lui donne un ID. Angular va
+chercher le _ng-template_ ou le fichier _*.hml_. Je préfère utiliser des
+fichiers _*.html_, ils sont plus faciles à gérer, augmentent les performances et
+garde le DOM propre. Si vous avez une centaine de directives, ce sera plus
+simple pour les parcourir.
+
+### Services
+
+Les services sont souvent une notion un peu floue. D'après mes lectures et ma
+propre expérience, les services sont plus un design pattern de style qu'un réel
+apport de fonctionnalité. J'ai lu le code source d'Angular et à priori ils sont
+très proches des factories. Ils passent par le même compilateur et semble avoir
+de nombreuses fonctionnalités en commun. Il semble que les services soient
+préférables pour _singleton_ et les factories pour les fonctions plus complexes
+comme les _Object Literals_ ou d'autres cas plus compliqués.
+
+Voici un exemple de service qui multiplie deux nombres :
+</code></pre>
+
+<p>myApp.service(&lsquo;Math&rsquo;, function () {
+  this.multiply = function (x, y) {
+    return x * y;
+  };
+});
+```</p>
+
+<p>Il s'utilise ensuite comme ceci dans un contrôleur :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl', ['$scope', function ($scope) {
+    var a = 12;
+    var b = 24;
+
+    // outputs 288
+    var result = Math.multiply(a, b);
+}]);
+</code></pre>
+
+<p>Je sais, une multiplication ne nécessite pas un service en soi mais vous voyez
+où je veux en venir.</p>
+
+<p>Lorsque l'on crée un service (ou une factory) il faut utiliser l'injection de
+dépendance pour indiquer à Angular de le prendre en charge. Sans cela, on aura
+une erreur de compilation et notre contrôleur plantera. Vous avez sans doute
+remarqué la partie <code>function ($scope)</code> du contrôleur, c'est une simple
+injection de dépendance, c'est ici que le code doit être placé. Vous aurez
+remarqué également le <code>['$scope']</code> placé avant, j'y reviendrai plus tard. Voici
+comment utiliser une injection de dépendance pour dire à Angular que vous voulez
+utiliser un service :</p>
+
+<pre><code class="javascript">// Passez Math
+myApp.controller('MainCtrl', ['$scope', 'Math', function ($scope, Math) {
+    var a = 12;
+    var b = 24;
+
+    // outputs 288
+    var result = Math.multiply(a, b);
+}]);
+</code></pre>
+
+<h3>Factories</h3>
+
+<p>Passer des services aux factories devrait être assez simple, on pourrait créer
+un <em>Object Literal</em> dans une factory ou simplement fournir des méthodes plus
+avancées :</p>
+
+<pre><code class="javascript">myApp.factory('Server', function () {
+  return {
+    get: function(url) {
+      return $http.get(url);
+    },
+    post: function(url) {
+      return $http.post(url);
+    },
+  };
+});
+</code></pre>
+
+<p>Je crée ici un wrapper personnalisé pour l'objet XHR de Angular. Après injection
+de dépendance dans le contrôleur, l'utilisation est aisée :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl', ['$scope', 'Server', function ($scope, Server) {
+    var jsonGet = 'http://myserver/getURL';
+    var jsonPost = 'http://myserver/postURL';
+    Server.get(jsonGet);
+    Server.post(jsonPost);
+}]);
+</code></pre>
+
+<p>Si vous vouliez surveiller des changements côté serveur, vous pourriez mettre
+en place <code>Server.poll(jsonPoll)</code> ou, si vous utilisez par exemple un socket,
+vous pourriez mettre en place <code>Server.socket(jsonSocket)</code>. Ce mécanisme permet
+de modulariser le code et de créer des outils réutilisables tout en gardant le
+code des contrôleur à son minimum.</p>
+
+<h3>Filtres</h3>
+
+<p>Les filtres sont utiles avec les tableaux de données mais également en dehors
+des boucles. Si vous parcourez une collection de données et que vous souhaitez
+les filtrer, vous êtes au bon endroit. Les filtres peuvent également s'utiliser
+pour filtrer la saisie d'un utilisateur dans un champ <code>&lt;input&gt;</code> par exemple. Les
+filtres s'utilisent de deux façons : dans un contrôleur ou sous forme de
+méthode. Voici la version en méthode, qui peut s'utiliser partout :</p>
+
+<pre><code class="javascript">myApp.filter('reverse', function () {
+  return function (input, uppercase) {
+    var out = '';
+    for (var i = 0; i &lt; input.length; i++) {
+      out = input.charAt(i) + out;
+    }
+    if (uppercase) {
+      out = out.toUpperCase();
+    }
+    return out;
+  }
+});
+
+// Contrôleur inclus pour fournir des données
+myApp.controller('MainCtrl', ['$scope', function ($scope) {
+    $scope.greeting = 'Todd Motto';
+}]);
+</code></pre>
+
+<p>DOM usage:</p>
+
+<p>
+``` html</p>
+
+<div ng-app="myApp">
+  <div ng-controller="MainCtrl">
+    <p>Sans filtre: {{ greeting }}</p>
+    <p>Reverse: {{ greeting | reverse }}</p>
+  </div>
+</div>
+
+
+<p>```
+</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/pmh4s/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Et voici comment l'utiliser dans un <code>ng-repeat</code> :</p>
+
+<p>
+``` html</p>
+
+<ul>
+  <li ng-repeat="number in myNumbers |filter:oddNumbers">{{ number }}</li>
+</ul>
+
+
+<pre><code>
+
+Voici également un cas d'utilisation réel de filtres dans un contrôleur :
+</code></pre>
+
+<p>myApp.controller(&lsquo;MainCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {</p>
+
+<p>  $scope.numbers = [10, 25, 35, 45, 60, 80, 100];</p>
+
+<p>  $scope.lowerBound = 42;</p>
+
+<p>  // Does the Filters
+  $scope.greaterThanNum = function (item) {
+      return item > $scope.lowerBound;
+  };</p>
+
+<p>}]);
+```</p>
+
+<p>Et son utilisation dans <code>ng-repeat</code> :</p>
+
+<p>
+<code>html
+&lt;li ng-repeat="number in numbers | filter:greaterThanNum"&gt;
+  {{ number }}
+&lt;/li&gt;
+</code>
+</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/cZbCf/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Voilà notre tour des briques majeures d'Angular terminé. C'est la partie
+immergée de l'iceberg mais c'est amplement suffisant pour vous permettre de
+créer votre première application Angular.</p>
+
+<h2>Binding de données à deux sens</h2>
+
+<p>La première fois que j'ai entendu parler de <em>binding</em> de données à deux sens, je
+n'étais pas sûr de bien comprendre. La meilleure façon de le décrire est sous la
+forme d'un cercle de données synchronisées : si le modèle est mis à jour, la vue
+est mise à jour automatiquement ; si la vue est mise à jour, le modèle est
+automatiquement mis à jour. Cela veut dire que sans rien faire, la donnée est
+synchronisée. Si je <em>bind</em> un <code>ng-model</code> à un <code>&lt;input&gt;</code> et commence à taper dans
+ce dernier, cela crée un modèle (ou met à jour un modèle existant) en même
+temps.</p>
+
+<p>Je crée ici le <code>&lt;input&gt;</code> et lui <em>bind</em> un modèle <code>myModel</code>, je peux ensuite
+utiliser les accolades pour afficher la donnée de mon modèle (ainsi que ses
+mises à jour) dans la vue :</p>
+
+<p>
+``` html</p>
+
+<div ng-app="myApp">
+  <div ng-controller="MainCtrl">
+    <input type="text" ng-model="myModel" placeholder="Start typing..." />
+    <p>My model data: {{ myModel }}</p>
+  </div>
+</div>
+
+
+<pre><code>
+</code></pre>
+
+<p>myApp.controller(&lsquo;MainCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {
+  // On capture la donnée du modèle
+  // et/ou on l'initialise avec une chaîne de caractères vide
+  $scope.myModel = &lsquo;&rsquo;;
+}]);
+```</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/qrr3q/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2>Appels XHR/Ajax/$http et binding JSON</h2>
+
+<p>Vous savez maintenant comment envoyer des données à <code>$scope</code> et comment
+fonctionne le <em>binding</em> de données dans les modèles. Il est donc maintenant
+temps de simuler quelques XHR vers le serveur. Ce n'est pas essentiel pour un
+site web classique, à moins d'avoir des besoins Ajax spécifiques, c'est donc
+plus orienté vers la récupération de données pour une application web.</p>
+
+<p>En développement local, vous utilisez probablement Java, ASP .NET, PHP ou une
+autre techno pour faire tourner l'application. Que vous contactiez une bonne de
+données locale ou que vous utilisiez ce serveur comme une API pour communiquer
+avec une autre ressource, la mise en place est globalement la même.</p>
+
+<p>C'est ici que &lsquo;dollar http&rsquo; entre en scène. C'est dorénavant votre meilleur ami.
+La méthode <code>$http</code> d'Angular est un <em>wrapper</em> bien pratique pour accéder aux
+données du serveur et est d'une utilisation très simple. Voici un petit exemple
+pour une requête <em>GET</em> qui, comme vous l'aurez deviné, récupère des données
+depuis le serveur. Sa syntaxe est très proche de celle de jQuery, la transition
+est donc aisée :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl', ['$scope', function ($scope) {
+  $http({
+    method: 'GET',
+    url: '//localhost:9000/someUrl'
+  });
+}]);
+</code></pre>
+
+<p>Angular vous retourne ce qu'on appelle une <em>promise</em> ce qui est une façon très
+efficace et lisible de gérer les <em>callbacks</em>. Les <em>promises</em> sont rattachées à
+la fonction qui les as créées via la notation <code>.myPromise()</code>. Tout
+naturellement, nous avons la main sur <code>success</code> et <code>error</code> :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl', ['$scope', function ($scope) {
+  $http({
+    method: 'GET',
+    url: '//localhost:9000/someUrl'
+  })
+  .success(function (data, status, headers, config) {
+    // données récupérées avec succès
+  })
+  .error(function (data, status, headers, config) {
+    // erreur de récupération :(
+  });
+}]);
+</code></pre>
+
+<p>Tout à fait lisible. C'est ici que nous fusionnons la vue et le serveur en
+y attachant un modèle ou en mettant le modèle à jour dans le DOM. Disons que
+tout est déjà mis en place et affichons un nom d'utilisateur dans le DOM à
+partir d'un appel Ajax.</p>
+
+<p>En théorie, nous devrions concevoir notre JSON en premier, ce qui affecte la
+façon dont on l'attache à nos données. Faisons simple, voici ce que le serveur
+nous fournit :</p>
+
+<pre><code class="json">{
+  "user": {
+    "name": "Todd Motto",
+    "id": "80138731"
+  }
+}
+</code></pre>
+
+<p>Nous allons recevoir un <em>Object</em> (que nous appellerons <em>data</em>, on peut voir que
+<em>data</em> est passé à notre handler) et devons interagir avec la propriété
+<code>data.user</code>. Dans <code>data.user</code>, nous trouvons <code>name</code> et <code>id</code>. Obtenir leur valeur
+est assez simple, il nous suffit par exemple de faire appel à <code>data.user.name</code>
+ce qui nous donne &lsquo;Todd Motto&rsquo;.</p>
+
+<p>Le code JavaScript :</p>
+
+<pre><code class="javascript">myApp.controller('UserCtrl', ['$scope', function ($scope) {
+
+  // Crée un Object user
+  $scope.user = {};
+
+  // Initialise le modèle avec une chaîne vide
+  $scope.user.username = '';
+
+  // Nous voulons effectuer la requête
+  // et obtenir le nom de l'utilisateur
+  $http({
+    method: 'GET',
+    url: '//localhost:9000/someUrlForGettingUsername'
+  })
+  .success(function (data, status, headers, config) {
+    // Ici nous assignons cet utilisateur à
+    // notre modèle existant !
+    $scope.user.username = data.user.name;
+  })
+  .error(function (data, status, headers, config) {
+    // Une erreur est survenue
+  });
+}]);
+</code></pre>
+
+<p>Il nous suffit maintenant de faire ceci dans le DOM :</p>
+
+<p>
+``` html</p>
+
+<div ng-controller="UserCtrl">
+  <p>{{ user.username }}</p>
+</div>
+
+
+<pre><code>
+
+Ceci va afficher le nom de l'utilisateur. Nous allons faire un pas de plus et
+comprendre le _data-binding_ déclaratif et c'est là que ça devient vraiment
+intéressant.
+
+## Data-binding déclaratif
+
+La philosophie d'Angular est de créer du HTML dynamique, riche en
+fonctionnalités et d'effectuer, de façon transparente, beaucoup de choses dont
+on n'oserait à peine rêver côté web client. Et c'est exactement ce qu'ils ont
+fait.
+
+Imaginons que nous venons de faire une requête Ajax pour récupérer une liste
+d'emails avec leur sujet ainsi que leur date d'envoi et souhaitons les afficher
+dans le DOM. C'est là qu'Angular montre toute sa force. Nous allons tout
+d'abord devoir écrire un contrôleur d'emails :
+</code></pre>
+
+<p>myApp.controller(&lsquo;EmailsCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {</p>
+
+<p>  // Crée un Object emails
+  $scope.emails = {};</p>
+
+<p>  // Nous écrivons ici en dur les données normalement
+  // reçues du serveur
+  $scope.emails.messages = [{
+        &ldquo;from&rdquo;: &ldquo;Steve Jobs&rdquo;,
+        &ldquo;subject&rdquo;: &ldquo;I think I&rsquo;m holding my phone wrong :/&rdquo;,
+        &ldquo;sent&rdquo;: &ldquo;2013-10-01T08:05:59Z&rdquo;
+    },{
+        &ldquo;from&rdquo;: &ldquo;Ellie Goulding&rdquo;,
+        &ldquo;subject&rdquo;: &ldquo;I&rsquo;ve got Starry Eyes, lulz&rdquo;,
+        &ldquo;sent&rdquo;: &ldquo;2013-09-21T19:45:00Z&rdquo;
+    },{
+        &ldquo;from&rdquo;: &ldquo;Michael Stipe&rdquo;,
+        &ldquo;subject&rdquo;: &ldquo;Everybody hurts, sometimes.&rdquo;,
+        &ldquo;sent&rdquo;: &ldquo;2013-09-12T11:38:30Z&rdquo;
+    },{
+        &ldquo;from&rdquo;: &ldquo;Jeremy Clarkson&rdquo;,
+        &ldquo;subject&rdquo;: &ldquo;Think I&rsquo;ve found the best car&hellip; In the world&rdquo;,
+        &ldquo;sent&rdquo;: &ldquo;2013-09-03T13:15:11Z&rdquo;
+    }];</p>
+
+<p>}]);
+<code>``
+Nous devons maintenant faire le lien avec notre HTML. C'est là que nous allons
+utiliser le _binding_ déclaratif pour indiquer ce que va faire l'application -
+créer notre premier morceau de HTML dynamique. Nous allons utiliser la
+directive</code>ng-repeat` d'Angular qui va parcourir les données et générer un
+résultat sans que nous ayant à faire de <em>callbacks</em> ou de changements d'état,
+c'est gratuit :</p>
+
+<p>
+``` html</p>
+
+<ul>
+  <li ng-repeat="message in emails.messages">
+    <p>From: {{ message.from }}</p>
+    <p>Subject: {{ message.subject }}</p>
+    <p>{{ message.sent | date:'MMM d, y h:mm:ss a'" }}</p>
+  </li>
+</ul>
+
+
+<p>```
+</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/TAVQc/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>J'ai également ajouté un <em>filtre</em> pour vous montrer comment afficher
+correctement une date UTC.</p>
+
+<p>Documentez vous sur les directives <code>ng-*</code> d'Angular, cela vous permettra
+d'exploiter pleinement le <em>binding</em> de directives, cela vous montre comment
+faire le lien entre les données du serveur, la couche modèle et la vue et
+comment afficher les données.</p>
+
+<h2>Les fonctions de <em>scope</em></h2>
+
+<p>Après le <em>binding</em> de directives, les fonctions de <em>scope</em> sont la suite logique
+dans la création d'une application. Voici une fonction assez simple nous
+permettant de supprimer un email dans notre collection :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl', ['$scope', function ($scope) {
+
+  $scope.deleteEmail = function (index) {
+    $scope.emails.messages.splice(index, 1)
+  };
+
+}]);
+</code></pre>
+
+<p>Astuce: Il est important de penser en termes de suppression au niveau du modèle.
+Vous ne touchez à rien de ce qui concerne le DOM, Angular est un framework MVC
+et se charge de tout grâce à son binding de données à deux sens et à son
+fonctionnement sans callbacks, il vous suffit d'organiser votre code de façon
+à ce qu'il réponde à vos données !</p>
+
+<p>L'attachement des fonctions au scope se fait également par le biais des
+directives <code>ng-*</code>, dans le cas suivant, il s'agit de <code>ng-click</code> :</p>
+
+<pre><code class="html">&lt;a ng-click="deleteEmail($index)"&gt;Delete email&lt;/a&gt;
+</code></pre>
+
+<p>Ceci est très différent d'un événement <em>click</em> inline et ce pour plusieurs
+raisons dont je vous parlerai bientôt. Comme vous pouvez le voir, je passe
+<code>$index</code> en paramètre. Angular sait quel élément vous êtes en train de
+supprimer :</p>
+
+<p>Résulat (supprimez quelques emails !) :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/BgZmt/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2>Méthodes de DOM déclaratives</h2>
+
+<p>Nous allons maintenant voir les méthodes de DOM. Elles sont commes les
+directives et permettent d'ajouter au DOM des fonctionnalités pour lesquelles
+vous auriez, en temps normal, beaucoup de code à écrire. Un très bon exemple
+serait une navigation déroulante. En utilisant <code>ng-show</code> et <code>ng-click</code> nous
+pouvons mettre cela en place très simplement :</p>
+
+<p>``` html
+<a href="" ng-click="toggle = !toggle">Afficher menu</a></p>
+
+<ul ng-show="toggle">
+  <li>Lien 1</li>
+  <li>Lien 2</li>
+  <li>Lien 3</li>
+</ul>
+
+
+<p>```</p>
+
+<p>C'est ici que MVVM entre en jeu. Comme vous pouvez le voir, il n'y a pas de
+contrôleur à écrire. Nous reviendrons bientôt sur MVVM.</p>
+
+<p>Résultat (vous pouvez dérouler le menu) :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/ZUyW5/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2>Les expressions</h2>
+
+<p>C'est une des choses que je préfère dans Angular, ce pour quoi on utilise
+habituellement JavaScript en écrivant beaucoup de code répétitif.</p>
+
+<p>Avez-vous déjà fait ceci ?</p>
+
+<pre><code class="javascript">elem.onclick = function (data) {
+  if (data.length === 0) {
+    otherElem.innerHTML = 'No data';
+  } else {
+    otherElem.innerHTML = 'My data';
+  }
+};
+</code></pre>
+
+<p>Ce pourrait par exemple être le callback d'une requête <em>GET</em> dans lequel vous
+modifiez le DOM en fonction de l'état des données. Angular vous permet de faire
+la même chose sans écrire une ligne de JavaScript !</p>
+
+<p>
+``` html</p>
+
+<p>{{ data.length > 0 && 'My data' || 'No data' }}</p>
+
+
+<p>```
+</p>
+
+<p>Ce morceau de DOM va être automatiquement mis à jour, sans besoin de callback,
+au fur et à mesure que votre application récupère les données. Il vous indiquera
+si des données sont présentes ou non. Il y a une de très nombreux cas d'usage et
+Angular le gère automatiquement grâce au binding de données à deux sens.</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/XCwcr/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2>Routage et vues dynamiques</h2>
+
+<p>La philosophie des applications côté client (et des applications web en
+général) est assez simple : Vous avez un header, un footer, une sidebar et le
+contenu au milieu injecte du contenu par magie en fonction de l'URL.</p>
+
+<p>Angular facilite beaucoup la mise en place d'un tel mécanisme, ce qu'on
+appellerait les vues dynamiques. Les vues sont injectées dynamiquement au
+travers de <code>$routeProvider</code>, en fonction de l'URL.</p>
+
+<pre><code class="javascript">myApp.config(['$routeProvider', function ($routeProvider) {
+
+  /**
+   * $routeProvider
+   */
+  $routeProvider
+  .when('/', {
+    templateUrl: 'views/main.html'
+  })
+  .otherwise({
+    redirectTo: '/'
+  });
+
+}]);
+</code></pre>
+
+<p>Lorsque vous êtes sur l'URL <code>/</code> (la page d'accueil du site), le template utilisé
+est <code>main.html</code>. Vous devez appeler votre vue initiale <code>main.html</code> puisque vous
+avez déjà un fichier <code>index.html</code> contenant votre site en page unique. Il est
+très simple d'ajouter des vuews supplémentaire en fonction de l'URL :</p>
+
+<pre><code class="javascript">myApp.config(['$routeProvider', function ($routeProvider) {
+
+  /**
+   * $routeProvider
+   */
+  $routeProvider
+  .when('/', {
+    templateUrl: 'views/main.html'
+  })
+  .when('/emails', {
+    templateUrl: 'views/emails.html'
+  })
+  .otherwise({
+    redirectTo: '/'
+  });
+
+}]);
+</code></pre>
+
+<p>Nous pouvons par exemple charger le HTML de notre liste d'emails quand on visite
+l'URL <code>emails.html</code>. Vous pouvez créer une application sophistiquée avec assez
+peu d'efforts.</p>
+
+<p><code>$routeProvider</code> propose d'autres fonctionnalités qui valent la peine de
+fouiller un peu mais avec ceci vous avez déjà de quoi faire des choses
+intéressantes. Il y a, par exemple, ples intercepteurs <code>$http</code> qui émettent des
+événements lorsqu'une requête Ajax est en cours, ce qui permettrait d'afficher
+un spinner pendant que les données sont récupérées.</p>
+
+<h2>Données statiques globales</h2>
+
+<p>Gmail récupère une bonne partie de ses données en les écrivant en JSON dans la
+page (inspectez les sources de la page). Si vous voulez accéder instantanément à
+vos données dès le chargement de l'application et accélérer son lancement, cette
+technique est très pratique.</p>
+
+<p>Lorsque je développe nos applications, des balises issues de Java sont insérez
+dans le DOM et, une fois l'application chargée, les données viennent du serveur.
+Je parle ici de Java mais vous pouvez utiliser n'importe quel langage côté
+serveur. Voici comment ajouter le JSON dans votre page et comment le charger
+ensuite depuis un contrôleur :</p>
+
+<p>``` html</p>
+
+<!-- dans index.html (en bas de page) -->
+
+
+<script>
+window.globalData = {};
+globalData.emails = <baliseJavaPourGenererLesMessages>;
+</script>
+
+
+<pre><code>
+Ma balise Java va être remplacée par les bonnes données au moment de l'affichage
+et Angular va affiche instantanément les emails. Récupérez simplement les
+données dans un contrôleur :
+</code></pre>
+
+<p>myApp.controller(&lsquo;EmailsCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {</p>
+
+<pre><code>$scope.emails = {};
+
+// Assigner les données initiales !
+$scope.emails.messages = globalData.emails;
+</code></pre>
+
+<p>}]);
+```</p>
+
+<h2>Minification (réduction du code)</h2>
+
+<p>Je vais parler rapidement de minification avec le code Angular. Vous avez
+probablement joué un peu avec Angular et avez peut-être utilisé un
+<em>minifier</em>&hellip; et eu une erreur !</p>
+
+<p>Minifier le code AngularJS est simple, vous devez simplement spécifier les
+injections de dépendances dans un tableau, avant la fonction :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl',
+['$scope', 'Dependency', 'Service', 'Factory',
+function ($scope, Dependency, Service, Factory) {
+
+  // code
+
+}]);
+</code></pre>
+
+<p>Une fois minifié :</p>
+
+<pre><code class="javascript">myApp.controller('MainCtrl',
+['$scope', 'Dependency', 'Service', 'Factory',
+function (a,b,c,d) {
+
+  // a = $scope
+  // b = Dependency
+  // c = Service
+  // d = Factory
+
+  // $scope alias usage
+  a.someFunction = function () {...};
+
+}]);
+</code></pre>
+
+<p>Rappelez-vous bien de garder la liste des injections dans le même ordre que les
+paramètres de la fonction, vous risqueriez un bon mal de crâne dans le cas
+contraire.</p>
+
+<h2>Différences avec MVC et MVVM</h2>
+
+<p>Nous arrivons à la fin de ce long article sur AngularJS. Je vais cependant faire
+une passe rapide sur les différences avec MVC/MVVM dont AngularJS est fier :</p>
+
+<ul>
+<li><em>MVC</em>: parle avec un contrôleur, Modèle-Vue-Contrôleur</li>
+<li><em>MVVM</em>: encapsule une <em>binding</em> de données décalaratif qui, téchniquement, se
+parle à lui-même. Modèle-Vue-Vue-Modèle. Le modèle parle à la vue et la vue
+peut parler au modèle. Le binding de données à deux sens d'Angular permet de
+garder cette synchronisation sans rian avoir à écrire. Cela vous permet
+d'écrire de la logique sans contrôleur.</li>
+</ul>
+
+
+<p>Un exemple rapide, vous pouvez utiliser <code>ng-repeat</code> sans contrôleur en
+fournissant directement les données :</p>
+
+<p>
+<code>html
+&lt;li ng-repeat="number in [1,2,3,4,5,6,7,8,9]"&gt;
+  {{ number }}
+&lt;/li&gt;
+</code>
+</p>
+
+<p>Pour un test rapide c'est acceptable mais je vous conseille de toujours avoir
+un contrôleur lorsque vous développez.</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/C9GHF/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2>HTML5 Web Components</h2>
+
+<p>Comme nous l'avons vu plus haut, AngularJS permet de créer des éléments
+personnalisés :</p>
+
+<pre><code class="html">&lt;myCustomElement&gt;&lt;/myCustomElement&gt;
+</code></pre>
+
+<p>Cela permet d'aligner le web avec le futur de HTML5 qui introduit les <em>web
+components</em> et l'élément <code>&lt;template&gt;</code>. Angular nous permet de les utiliser dès
+aujourd'hui. Les <em>web components</em> mélangent éléments personnalisés et injection
+dynamique de JavaScript pour peupler dynamiquement la vue, c'est très excitant
+et déjà possible avec Angular ! Ils ont un cran d'avance et permettent de
+s'assurer que ce qui arrive fonctionne - chapeau bas.</p>
+
+<h2>Commentaires de scope</h2>
+
+<p>Les commentaires de scopes sont, selon moi, utiles dans mon workflow. Plutôt que
+d'ajouter des commentaires comme ceci dans mon HTML :</p>
+
+<p>``` html</p>
+
+<!-- header -->
+
+
+<p><header>
+  Stuff.
+</header></p>
+
+<!-- /header -->
+
+
+<pre><code>
+Lorsque l'on parle d'Angular, il faut penser en termes de vues et de scopes, pas
+de DOM ! Les scopes sont cloisonnés, ce qui signifie que, à moins de partager
+délibérément les données entre les contrôleurs, vos données sont encapsulées et
+inaccessibles de l'extérieur. Je trouve que noter les régions cloisonnées aide
+beaucoup :
+</code></pre>
+
+<!-- scope: MainCtrl -->
+
+
+<div class="content" ng-controller="MainCtrl">
+
+</div>
+
+
+<!-- /scope: MainCtrl -->
+
+
+<p>```</p>
+
+<h2>Debugger AngularJS</h2>
+
+<p>Il y a une extension Chrome géniale que les gens de Google recommandent pour
+développer et debugger avec Angular, il s'agit de Batarang et vous pouvez la
+récupérer <a href="https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk">ici</a>.</p>
+
+<p>Happy coding.</p>
+
+<h2>À lire également</h2>
+
+<p>Apprenez comment <a href="http://toddmotto.com/creating-an-angularjs-directive-from-one-of-your-existing-plugins-scripts">créer votre propre directive</a> depuis un script ou un plugin.</p>
+]]></content>
+  </entry>
+  
+</feed>
