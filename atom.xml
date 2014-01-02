@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2013-11-01T13:38:28+01:00</updated>
+  <updated>2014-01-02T14:19:50+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -293,7 +293,7 @@ représentation interne est utilisée (tout comme les structures classiques mais
 avec d&#8217;autres avantages, coûts et compromis).</p>
 
 <p>Pour une liste (simplement chaînée), si tout ce que nous voulons est insérer de
-nouveaux éléments en tête, nous pouvons de faire efficacement en stockant les
+nouveaux éléments en tête, nous pouvons le faire efficacement en stockant les
 éléments comme ceci :</p>
 
 <pre><code>  +---+    +---+    +---+    +---+
@@ -304,7 +304,7 @@ new list  original
 </code></pre>
 
 <p>Nous ajoutons <code>4</code> dans une nouvelle cellule contenant un lien vers le reste de
-la liste. Cette valeur original est représentée par la référence existante,
+la liste. Cette valeur originale est représentée par la référence existante,
 en commençant à la cellule de valeur <code>3</code>. Si quelqu&#8217;un d&#8217;autre a une référence
 sur cette cellule, il ne verra jamais que la liste a été mise à jour (ce qui ne
 serait pas le cas pour une liste doublement chaînée). Nous pouvons donc affirmer
@@ -363,14 +363,14 @@ n&#8217;impactera pas les autres.</p>
 gestion de versions, ce que l&#8217;on cherche à accomplir c&#8217;est :</p>
 
 <ul>
-<li>mettre à jour notre code avec de nouvelles versions tout en gardant les
+<li>Mettre à jour notre code avec de nouvelles versions tout en gardant les
 anciennes disponibles ;</li>
 <li>Travailler à plusieurs sur un même code sans que les mises à jour
 n&#8217;interfèrent entre elles de façon imprévisible.</li>
 </ul>
 
 
-<p>Une structure de données fonctionnelle permet de</p>
+<p>Une structure de données fonctionnelle permet de :</p>
 
 <ul>
 <li>Mettre à jour la structure tout en gardant un accès aux anciennes valeurs ;</li>
@@ -381,7 +381,7 @@ mettant également la structure à jour.</li>
 
 <p>Si vous vous dites que les structures de données fonctionnelles sont une bonne
 représentation pour un système de gestion de versions, vous êtes dans le vrai.
-J&#8217;irais même plus loin en disant que Git simplement une structure de données
+J&#8217;irais même plus loin en disant que Git est simplement une structure de données
 purement fonctionnelle avec un client en ligne de commande permettant
 d&#8217;effectuer des opérations dessus.</p>
 
@@ -395,8 +395,8 @@ A, B et C. Nous avons demandé trois fois à Git de stocker l&#8217;intégralit�
 l&#8217;état de notre code.</p>
 
 <p>Nous pouvons représenter cela sous la forme <code>[C,B,A]</code>. En réalité, chaque commit
-a des meta-données, comme un message de commit, mais allons ignorer ce fait pour
-une question de simplicité. Voici la version graphe :</p>
+a des meta-données, comme un message de commit, mais nous allons ignorer ce
+fait pour une question de simplicité. Voici la version graphe :</p>
 
 <pre><code>+---+    +---+    +---+
 + C +---&gt;+ B +---&gt;+ A |
@@ -407,7 +407,7 @@ master
 
 <h2>Faire un commit</h2>
 
-<p>Si nous créons un nouveau commit, cela revient à ajouter en tête de
+<p>Si nous créons un nouveau commit, cela revient à l&#8217;ajouter en tête de
 l&#8217;historique. Git utilise même le nom <code>HEAD</code> pour référencer le commit actif.</p>
 
 <pre><code>+---+    +---+    +---+    +---+
@@ -474,9 +474,7 @@ Pour mettre à jour un ancien commit, nous ajoutons l&#8217;option <code>-i</cod
 mode <em>interactif</em>.</p>
 
 <p>Si nous souhaitons modifier le commit <code>C</code> et changer son message, nous faisons
-un checkout sur le commit <code>B</code>
-Say we want to update the commit C with a new commit message. We do
-this by checking out the commit D, and using git rebase -i C.</p>
+un checkout sur le commit <code>B</code></p>
 
 <p>NOTE: Erreur dans le texte original B/D</p>
 
@@ -554,7 +552,7 @@ données fonctionnelle et ne peut donc pas modifier un commit existant.</p>
 
 <p>Puisque <code>rebase</code> crée une nouvelle chaîne de commits, il semble normal de
 pouvoir modifier ce que cette dernière contient et c&#8217;est le cas : <code>rebase -i</code>
-nous permet de réordoner, fusionner ou supprimer des commits. Nous pouvons
+nous permet de réordonner, fusionner ou supprimer des commits. Nous pouvons
 également en créer de nouveaux à tout moment (pour couper un commit en deux par
 exemple) ou commencer à un autre point de l&#8217;historique grâce à l&#8217;option
 <code>--onto</code>. Le processus classique de reporter des changements locaux &ldquo;au dessus&rdquo;
@@ -563,7 +561,7 @@ spécifique de la puissance de <code>rebase</code>.</p>
 
 <h2>Fusionner</h2>
 
-<p>Nous n&#8217;avons pas parler de la fusion de commits (merging). Git nous permet de
+<p>Nous n&#8217;avons pas parlé de la fusion de commits (merging). Git nous permet de
 fusionner deux branches en une.</p>
 
 <pre><code>        +---+
@@ -587,7 +585,7 @@ données dans laquelle il est possible de combiner deux cellules en une a un
 nom : c&#8217;est ce qu&#8217;on appelle une structure de données persistante confluante.
 Une autre appellation des structures de données fonctionnelles est
 structures de données persistantes. J&#8217;ai préféré éviter ce terme pour ne pas
-entrainer de confusion avec la notion de stockage sur media persistants comme
+entrainer de confusion avec la notion de stockage sur médias persistants comme
 un disque dur par exemple.</p>
 
 <h2>Conclusion</h2>
