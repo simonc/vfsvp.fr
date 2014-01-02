@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: angular | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/angular/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-01-02T14:21:07+01:00</updated>
+  <updated>2014-01-02T14:22:44+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -29,6 +29,9 @@ apporte. C'est également un grand bol d'air frais dans le monde des application
 web modernes. Cet article est une vue de bout en bout, issue de mon expérience,
 et contient des conseils et astuces glanés au travers de mon utilisation
 d'Angular.</p>
+
+<!-- more -->
+
 
 <h2>Terminologie</h2>
 
