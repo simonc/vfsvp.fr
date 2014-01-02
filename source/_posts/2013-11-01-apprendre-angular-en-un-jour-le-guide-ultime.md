@@ -21,6 +21,8 @@ web modernes. Cet article est une vue de bout en bout, issue de mon expérience,
 et contient des conseils et astuces glanés au travers de mon utilisation
 d'Angular.
 
+<!-- more -->
+
 ## Terminologie
 
 Angular a une courbe d'apprentissage assez courte qui consiste principalement à
