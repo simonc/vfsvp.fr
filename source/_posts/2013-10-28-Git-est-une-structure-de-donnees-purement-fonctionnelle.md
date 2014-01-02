@@ -57,7 +57,7 @@ représentation interne est utilisée (tout comme les structures classiques mais
 avec d'autres avantages, coûts et compromis).
 
 Pour une liste (simplement chaînée), si tout ce que nous voulons est insérer de
-nouveaux éléments en tête, nous pouvons de faire efficacement en stockant les
+nouveaux éléments en tête, nous pouvons le faire efficacement en stockant les
 éléments comme ceci :
 
       +---+    +---+    +---+    +---+
@@ -67,7 +67,7 @@ nouveaux éléments en tête, nous pouvons de faire efficacement en stockant les
     new list  original
 
 Nous ajoutons `4` dans une nouvelle cellule contenant un lien vers le reste de
-la liste. Cette valeur original est représentée par la référence existante,
+la liste. Cette valeur originale est représentée par la référence existante,
 en commençant à la cellule de valeur `3`. Si quelqu'un d'autre a une référence
 sur cette cellule, il ne verra jamais que la liste a été mise à jour (ce qui ne
 serait pas le cas pour une liste doublement chaînée). Nous pouvons donc affirmer
@@ -123,12 +123,12 @@ n'impactera pas les autres.
 Voyons maintenant quel est le rapport entre tout ceci et Git. Avec un système de
 gestion de versions, ce que l'on cherche à accomplir c'est :
 
-* mettre à jour notre code avec de nouvelles versions tout en gardant les
+* Mettre à jour notre code avec de nouvelles versions tout en gardant les
   anciennes disponibles ;
 * Travailler à plusieurs sur un même code sans que les mises à jour
   n'interfèrent entre elles de façon imprévisible.
 
-Une structure de données fonctionnelle permet de
+Une structure de données fonctionnelle permet de :
 
 * Mettre à jour la structure tout en gardant un accès aux anciennes valeurs ;
 * Mettre à jour la structure à un endroit sans interférer avec quelqu'un d'autre
@@ -136,7 +136,7 @@ Une structure de données fonctionnelle permet de
 
 Si vous vous dites que les structures de données fonctionnelles sont une bonne
 représentation pour un système de gestion de versions, vous êtes dans le vrai.
-J'irais même plus loin en disant que Git simplement une structure de données
+J'irais même plus loin en disant que Git est simplement une structure de données
 purement fonctionnelle avec un client en ligne de commande permettant
 d'effectuer des opérations dessus.
 
@@ -150,8 +150,8 @@ A, B et C. Nous avons demandé trois fois à Git de stocker l'intégralité de
 l'état de notre code.
 
 Nous pouvons représenter cela sous la forme `[C,B,A]`. En réalité, chaque commit
-a des meta-données, comme un message de commit, mais allons ignorer ce fait pour
-une question de simplicité. Voici la version graphe :
+a des meta-données, comme un message de commit, mais nous allons ignorer ce
+fait pour une question de simplicité. Voici la version graphe :
 
     +---+    +---+    +---+
     + C +--->+ B +--->+ A |
@@ -161,7 +161,7 @@ une question de simplicité. Voici la version graphe :
 
 ## Faire un commit
 
-Si nous créons un nouveau commit, cela revient à ajouter en tête de
+Si nous créons un nouveau commit, cela revient à l'ajouter en tête de
 l'historique. Git utilise même le nom `HEAD` pour référencer le commit actif.
 
     +---+    +---+    +---+    +---+
@@ -226,8 +226,6 @@ mode _interactif_.
 
 Si nous souhaitons modifier le commit `C` et changer son message, nous faisons
 un checkout sur le commit `B`
-Say we want to update the commit C with a new commit message. We do
-this by checking out the commit D, and using git rebase -i C.
 
 NOTE: Erreur dans le texte original B/D
 
@@ -292,7 +290,7 @@ données fonctionnelle et ne peut donc pas modifier un commit existant.
 
 Puisque `rebase` crée une nouvelle chaîne de commits, il semble normal de
 pouvoir modifier ce que cette dernière contient et c'est le cas : `rebase -i`
-nous permet de réordoner, fusionner ou supprimer des commits. Nous pouvons
+nous permet de réordonner, fusionner ou supprimer des commits. Nous pouvons
 également en créer de nouveaux à tout moment (pour couper un commit en deux par
 exemple) ou commencer à un autre point de l'historique grâce à l'option
 `--onto`. Le processus classique de reporter des changements locaux "au dessus"
@@ -301,7 +299,7 @@ spécifique de la puissance de `rebase`.
 
 ## Fusionner
 
-Nous n'avons pas parler de la fusion de commits (merging). Git nous permet de
+Nous n'avons pas parlé de la fusion de commits (merging). Git nous permet de
 fusionner deux branches en une.
 
             +---+
@@ -324,7 +322,7 @@ données dans laquelle il est possible de combiner deux cellules en une a un
 nom : c'est ce qu'on appelle une structure de données persistante confluante.
 Une autre appellation des structures de données fonctionnelles est
 structures de données persistantes. J'ai préféré éviter ce terme pour ne pas
-entrainer de confusion avec la notion de stockage sur media persistants comme
+entrainer de confusion avec la notion de stockage sur médias persistants comme
 un disque dur par exemple.
 
 ## Conclusion
