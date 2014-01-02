@@ -1,5 +1,4 @@
 ---
-published: false
 author: Simon Courtois (simonc)
 layout: post
 title: "Apprendre Angular en un jour, le guide ultime"
