@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-01-02T14:22:44+01:00</updated>
+  <updated>2014-01-13T11:04:17+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (simonc)]]></name>
@@ -12,6 +12,293 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Guide de migration vers Capistrano 3]]></title>
+    <link href="http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3"/>
+    <updated>2014-01-13T11:05:00+01:00</updated>
+    <id>http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3</id>
+    <content type="html"><![CDATA[<p>Source: <a href="https://semaphoreapp.com/blog/2013/11/26/capistrano-3-upgrade-guide.html">Capistrano 3 Upgrade Guide de Darko Fabijan sur le blog de Semaphore </a></p>
+
+<p>Nous avons récemment reçu des demandes de support pour Capistrano 3. Pour
+fournir un service de support de qualité, il faut connaitre le sujet, je me suis
+donc lancé dans la quête de migrer scripts de déploiement de Capistrano 2 à
+Capistrano 3. Comme toujours, cela a pris un peu plus de temps que prévu mais au
+final le code est plus propre.</p>
+
+<p>Je dois dire que j'ai eu un flashback remontant à deux ans, lorsque je mettais
+en place Capistrano pour la première fois : la documentation est incomplète
+et il faut jongler entre le
+<a href="https://github.com/capistrano/capistrano">{l-en readme}</a>,
+le <a href="https://github.com/capistrano/capistrano/wiki">wiki</a> et
+<a href="http://www.capistranorb.com/">la page d'accueil officielle</a>. Mais c'est un
+projet open-source et les participations pour améliorer cela sont les
+bienvenues.</p>
+
+<p>Je vais tenter de vous faciliter la migration en vous montrant notre nouvelle
+configuration en parallèle de l'ancienne, étape par étape.</p>
+
+<!-- more -->
+
+
+<h2>Mettre en place la nouvelle configuration</h2>
+
+<h3>Gemfile</h3>
+
+<p>La première étape est d'installer de nouvelles gems. Capistrano 2 ne supportait
+pas les configurations {l-en multistage}, il fallait pour cela
+utiliser la gem <code>capistrano-ext</code>. Capistrano 3 supporte le
+{l-en multistage} en standard. Il est indépendant de tout {l-en framework},
+vous devez donc utiliser <code>capistrano-rails</code> si vous comptez déployer une
+application {l-en Rails}. Suivez l'exemple ci-dessous pour mettre votre
+{l-en Gemfile} à jour, lancez ensuite <code>bundle install</code> et vous êtes prêt pour la
+migration.</p>
+
+<p>Capistrano 2 :</p>
+
+<pre><code class="ruby">group :development do
+  gem "capistrano"
+  gem "capistrano-ext"
+end
+</code></pre>
+
+<p>Capistrano 3 :</p>
+
+<pre><code class="ruby">group :development do
+  gem "capistrano-rails"
+end
+</code></pre>
+
+<h3>Ajouter Capistrano 3 à votre projet</h3>
+
+<p>Comme le conseille
+<a href="http://www.capistranorb.com/documentation/upgrading/">le guide officiel de mise à jour</a>,
+il est préférable de copier les anciens fichiers Capistrano dans un endroit sûr,
+au cas où, et d'ajouter les nouveaux fichiers générés à la main. Voici une
+astuce pour le faire :</p>
+
+<pre><code class="ruby">mkdir old_cap
+mv Capfile old_cap
+mv config/deploy.rb old_cap
+mv config/deploy/ old_cap
+</code></pre>
+
+<p>Une fois cela fait, vous êtes prêt à mettre le nouveau Capistrano en place pour
+votre projet :</p>
+
+<pre><code>bundle exec cap install
+</code></pre>
+
+<h2>Capfile</h2>
+
+<p>Parmi les fichiers fraichement générés, vous devriez trouver le nouveau
+{l-en Capfile}. Ci-dessous, l'ancienne version de notre {l-en Capfile} suivie
+de la nouvelle :</p>
+
+<p>Capistrano 2 :</p>
+
+<pre><code class="ruby">load "deploy"
+load "deploy/assets"
+Dir["vendor/gems/*/recipes/*.rb","vendor/plugins/*/recipes/*.rb"].each { |plugin| load(plugin) }
+load "config/deploy"
+</code></pre>
+
+<p>Capistrano 3 :</p>
+
+<pre><code class="ruby">require "capistrano/setup"
+require "capistrano/deploy"
+
+require "capistrano/bundler"
+require "capistrano/rails/assets"
+require "capistrano/rails/migrations"
+require "whenever/capistrano"
+
+Dir.glob("lib/capistrano/tasks/*.cap").each { |r| import r }
+</code></pre>
+
+<p>Votre nouveau {l-en Capfile} va contenir deux lignes commentées à propos du
+support pour <code>rvm</code> et <code>rbenv</code>. Nous n'utilisons ni l'un ni l'autre pour gérer
+Ruby sur nos serveurs je ne peux pas donc vous en dire long sur le sujet.</p>
+
+<pre><code class="ruby">require "capistrano/rvm"
+require "capistrano/rbenv"
+</code></pre>
+
+<h2>Configuration multistage</h2>
+
+<p>Comme vous pouvez le voir ci-dessous, la configurations des {l-en stages} ne
+change pas vraiment. Il y a cependant une chose à laquelle vous devez prêter
+particulièrement attention. La façon de signifier à Capistrano une révision à
+déployer a changé. Si vous faites du déploiement continu avec Capistrano, vous
+avez probablement déjà vu la ligne suivante :</p>
+
+<pre><code>bundle exec cap -S revision=$REVISION production deploy
+</code></pre>
+
+<p><code>REVISION</code> est une variable d'environnement que Semaphore exporte durant le
+déploiement et Capistrano 2 l'utilisait comme paramètre. Avec Capistrano 3, cela
+n'est plus possible et vous devez donner à la variable <code>branch</code> la révision ou
+la branche que vous souhaitez déployer. Il était déjà possible de spécifier une
+branche en configuration :</p>
+
+<pre><code class="ruby">set :branch, ENV["BRANCH_NAME"] || "master"
+</code></pre>
+
+<p>Il nous suffit donc d'ajouter <code>ENV["REVISION"]</code> à la liste.</p>
+
+<pre><code class="ruby">set :branch, ENV["REVISION"] || ENV["BRANCH_NAME"] || "master"
+</code></pre>
+
+<p>Cela fait partie des choses non documentées et il faut fouiller les sources ou
+poser la question pour le savoir. L'un dans l'autre, le changement est assez
+simple.</p>
+
+<p>Le fichier suivant est notre <code>config/deploy/production.rb</code>.</p>
+
+<p>Capistrano 2 :</p>
+
+<pre><code class="ruby">server "server1.example.com", :app, :web, :db, :primary =&gt; true, :jobs =&gt; true
+server "server2.example.com", :app, :web, :jobs =&gt; true
+
+set :branch, ENV["BRANCH_NAME"] || "master"
+</code></pre>
+
+<p>Capistrano 3 :</p>
+
+<pre><code class="ruby">set :stage, :production
+
+server "server1.example.com", user: "deploy_user", roles: %w{web app db}
+server "server2.example.com", user: "deploy_user", roles: %w{web app}
+
+set :branch, ENV["REVISION"] || ENV["BRANCH_NAME"] || "master"
+</code></pre>
+
+<h2>Configuration principale - <code>config/deploy.rb</code></h2>
+
+<p>C'est ici que les plus gros changements auront lieu. Voici ce à quoi il faut
+faire attention :</p>
+
+<ol>
+<li>Vous n'avez plus besoin d'appeler <code>capistrano/ext/multistage</code> ou
+<code>bundler/capistrano</code>. Le {l-en multistage} est supporté en standard et le
+support de Bundler est fait dans le fichier Capfile.</li>
+<li>Il n'est pas nécessaire de lister les {l-en stages} disponible ou celui par
+défaut.</li>
+<li>La variable pour régler l'url de dépôt source a changé de <code>repository</code> à
+<code>repo_url</code>.</li>
+<li><code>deploy_via :remote_cache</code> n'est plus nécessaire. La façon dont Capistrano
+gère les dépôts a beaucoup changé, il maintient maintenant un mirroir du
+dépôt sur votre serveur.</li>
+<li>L'option PTY est activée par défaut.</li>
+<li><code>ssh_options</code> a un peu changé je crois mais les réglages de base sont à peu
+près les mêmes.</li>
+<li>Capistrano prend maintenant en charge les liens symboliques dont vous avez
+besoin. Il vous suffit de lui dire de parcourir <code>linked_files</code> and
+<code>linked_dirs</code>.</li>
+<li>Si vous n'utilisez ni <code>rvm</code> ni <code>rbenv</code>, vous devez surcharger les commandes
+<code>rake</code> et <code>rails</code> (voyez le fichier deploy.rb de Capistrano 3).</li>
+</ol>
+
+
+<p>L'écriture de {l-en tasks} a également changé et il est nécessaire de fouiller
+la documentation pour écrire ce que vous voulez. La bibliothèque utilisée en
+dessous est <a href="https://github.com/capistrano/sshkit">SSHKit</a> qui semble bien
+sympathique.</p>
+
+<p><strong>Astuce :</strong> avec Capistrano 2 vous pouviez écrire <code>var_name</code> et obtenir sa
+valeur. Avec la nouvelle version, vous devez toujours utiliser
+<code>fetch(:var_name)</code>. Il m'a fallut un certain temps pour le comprendre alors que
+je reprenais une {l-en task} que l'on utilise pour gérer nos {l-en workers}.</p>
+
+<p>Capistrano 2 :</p>
+
+<pre><code class="ruby">require "capistrano/ext/multistage" #1
+require "bundler/capistrano"
+
+set :application, "webapp"
+set :stages, %w(production staging)
+set :default_stage, "staging" #2
+
+set :scm, :git
+set :repository,  "git@github.com:example/webapp.git" #3
+set :deploy_to, "/home/deploy_user/webapp"
+set :deploy_via, :remote_cache #4
+
+default_run_options[:pty] = true #5
+set :user, "deploy_user"
+set :use_sudo, false
+
+ssh_options[:forward_agent] = true #6
+ssh_options[:port] = 3456
+
+set :keep_releases, 20
+
+namespace :deploy do
+
+  desc "Restart application"
+  task :restart, :roles =&gt; :app, :except =&gt; { :no_release =&gt; true } do
+    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+  end
+
+  desc "Prepare our symlinks" #7
+  task :post_symlink, :roles =&gt; :app, :except =&gt; { :no_release =&gt; true } do
+    ["config/database.yml", "config/config.yml"].each do |path|
+      run "ln -fs #{shared_path}/#{path} #{release_path}/#{path}"
+    end
+  end
+
+end
+
+after  "deploy",                   "deploy:post_symlink"
+after  "deploy:restart",           "deploy:cleanup"
+before "deploy:assets:precompile", "deploy:post_symlink"
+</code></pre>
+
+<p>Capistrano 3 :</p>
+
+<pre><code class="ruby">set :application, "webapp"
+
+set :scm, :git
+set :repo_url,  "git@github.com:example/webapp.git"
+set :deploy_to, "/home/deploy_user/webapp"
+
+set :ssh_options, {
+  forward_agent: true,
+  port: 3456
+}
+
+set :log_level, :info
+
+set :linked_files, %w{config/database.yml config/config.yml}
+set :linked_dirs, %w{bin log tmp vendor/bundle public/system}
+
+SSHKit.config.command_map[:rake]  = "bundle exec rake" #8
+SSHKit.config.command_map[:rails] = "bundle exec rails"
+
+set :keep_releases, 20
+
+namespace :deploy do
+
+  desc "Restart application"
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :touch, release_path.join("tmp/restart.txt")
+    end
+  end
+
+  after :finishing, "deploy:cleanup"
+
+end
+</code></pre>
+
+<h2>Conclusion</h2>
+
+<p>Le code que vous obtenez au final et plus propre et Capistrano 3/SSHKit semble
+un mélange puissant. Quoi qu'il en soit, certaines bibliothèques comme
+<code>whenever</code> et <code>bugsnag</code> ne supportent pas encore Capistrano 3, vous devrez donc
+écrire leurs règles vous-même.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Elixir pour les rubyists (partie 2)]]></title>
@@ -936,225 +1223,6 @@ un exemple :</p>
 
 <p>NDT: J'ai testé avec les versions 1.9.3 et 2.0.0, les exemples sont toujours
 valides.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (3/3)]]></title>
-    <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3"/>
-    <updated>2013-10-05T12:00:00+02:00</updated>
-    <id>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3</id>
-    <content type="html"><![CDATA[<p>Source: <a href="http://www.bluebox.net/about/blog/2013/03/using-regular-expressions-in-ruby-part-3-of-3/">Using Regular Expressions in Ruby de Nell Shamrell sur le blog de Blue Box</a></p>
-
-<p>Voici la seconde partie dans une série sur les Expressions Régulières en Ruby.
-Vous pouvez lire la
-<a href="/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3">première partie ici</a> et la
-<a href="/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3">deuxième partie ici</a>.</p>
-
-<h2>Le comportement des Expressions Régulières</h2>
-
-<p>Les expressions régulières sont puissantes. Comme un célèbre super-héros l'a dit
-un jour &ldquo;with great power comes great responsibility&rdquo; (à grands pouvoirs,
-grande responsabilité). Pour éviter qu'une expression régulière ne cause une
-catastrophe, vous devez être capable d'en contrôler le comportement.</p>
-
-<!-- more -->
-
-
-<p>Les expressions régulières ont trois comportements distincts : greedy
-(gourmande), lazy (fainéante) et possessive. Ces termes peuvent sembler
-négatifs mais ne sont pas pour autant de mauvaises attitudes pour vos
-expressions. Ce sont simplement des descriptions des différentes façon d'agir
-que peuvent utiliser vos expressions et que vous pouvez contrôler. Je vais vous
-expliquer comment.</p>
-
-<p>Pour comprendre ces comportements, il nous faut d'abord comprendre les
-quantificateurs. Ils permettent de dire au moteur d'expressions régulières
-combien de fois un caractère ou un groupe de caractères doit apparaitre dans
-notre chaîne.</p>
-
-<p>Un des quantificateurs que j'utilise le plus souvent est le <code>+</code>. Lorsque je le
-place derrière un caractère, j'indique que ce dernier doit apparaitre au moins
-une fois. Il peut apparaitre autant de fois qu'il le souhaite mais doit être au
-minimum présent une fois.</p>
-
-<p>Prenons l'expression suivante :</p>
-
-<pre><code class="ruby">/.+/
-</code></pre>
-
-<p>Celle-ci trouverait une correspondance pour tout caractère apparaissant au moins
-une fois. Elle garantie donc la présence d'un caractère dans la chaîne.</p>
-
-<p>Les quantificateurs sont à la base même du comportement de votre expression, à
-savoir gourmande, fainéante ou possessive. Par défaut, elle est gourmande.</p>
-
-<p>Un quantificateur gourmand tente de trouver la correspondance la plus longue
-possible au sein de la chaîne. Il attrape autant de caractères que ses petites
-mains gourmandes le lui permettent et tente de trouver une correspondance. Si
-toute la chaîne ne correspond pas, il prend un caractère de moins et tente de
-nouveau la recherche. Il recommence ce processus jusqu'à ce qu'il ne trouve
-plus de caractères à tester.</p>
-
-<p>Les quantificateurs gourmands fournissent un effort maximum pour un retour
-maximum. Un quantificateur gourmand essaie autant de cas que possible pour
-trouver une correspondance et retourne le maximum de caractères en faisant
-partie.</p>
-
-<p>Pour l'exemple suivant, je vais changer de science fiction et emprunter une
-citation de <em>Star Trek: First Contact</em> :</p>
-
-<pre><code class="ruby">string = "There's no time to talk about time we don't have the time"
-/.+time/
-</code></pre>
-
-<p>Cette expression régulière capture tout caractère apparaissant au moins une
-fois, le tout suivi du mot &ldquo;time&rdquo;. Si je fais appel à la méthode <code>match</code> sur
-mon expression régulière en lui passant ma chaîne en paramètre :</p>
-
-<pre><code class="ruby">/.+time/.match(string)
-#=&gt; "There's no time to talk about time we don't have the time"
-</code></pre>
-
-<p>Toute la chaîne correspond.</p>
-
-<p>Lorsque cette expression analyse la chaîne, elle tente d'abord de trouver la
-première partie du modèle, <code>.+</code>. Cela correspond à toute la chaîne. Elle essaie
-ensuite de trouver la deuxième partie, le mot <code>time</code>. Comme toute la chaîne a
-été consommée, elle cherche &ldquo;time&rdquo; après la fin de cette dernière et ne trouve
-rien. Elle recule donc d'un caractère (<em>backtrack</em>) et retente le test pour
-trouver une correspondance. Une fois celle-ci trouvée, elle est retournée. Dans
-notre cas, cela représente toute la chaîne.</p>
-
-<p>Les quantificateurs gourmands tentent de faire correspondre toute la chaine puis
-reculent progressivement. Ce recule progressif signifie que, si notre chaîne ne
-correspond pas du tout au modèle, l'expression va tenter autant que possible de
-trouver une correspondance. Elle doit garder en mémoire les possibilités déjà
-tentées ce qui peut prendre beaucoup de ressources systèmes, en particulier
-lorsque vous avez plusieurs tests effectués sur un texte long.</p>
-
-<p>Oniguruma a certaines optimisations qui rendent le recule progressif plus
-rapide. Patrick Shaughnessy a écrit un fantastique article sur son blog qui
-détail comment Oniguruma gère le recul progressif. Malgré les optimisations, une
-expression régulière gourmande consommera tout de même beaucoup de ressources.</p>
-
-<p>Lorsque vous souhaitez une recherche plus réduite et qui consomme moins de
-ressources, vous devez utiliser un quantificateurs fainéant. Également appelé
-quantificateur réticent, celui-ci va commencer sa recherche au tout début
-de la chaîne et tenter de faire correspondre le premier caractère. Si cela ne
-suffit pas, il va consommer un caractère supplémentaire. En dernier ressort il
-tentera de consommer toute la chaîne.</p>
-
-<p>Un quantificateur fainéant fournit l'effort minimum pour un retour minimum. Il
-retourne le moins de caractères possible pour une correspondance. S'il trouve ce
-qu'il cherche avec le premier caractère de la chaîne, il va simplement retourner
-celui-ci. Il est fainéant, il fait le minimum demandé et rien de plus.</p>
-
-<p>Pour utiliser un quantificateur fainéant, il suffit de lui ajouter un point
-d'interrogation.</p>
-
-<pre><code class="ruby">/.+?time/
-</code></pre>
-
-<p>Si j'appelle la méthode <code>match</code> sur ma chaîne en utilisant un quantificateur
-fainéant</p>
-
-<pre><code class="ruby">/.+?time/.match(string)
-#=&gt; "There's no time"
-</code></pre>
-
-<p>Je récupère seulement &ldquo;There&rsquo;s no time&rdquo;. La recherche a commencé au tout début
-de la chaîne et retourne la correspondance minimum. Les expressions régulière
-fainéantes utilisent beaucoup moins de recul progressif et, par conséquent,
-moins de ressources que les expressions gourmandes.</p>
-
-<p>Comment faire lorsque l'on souhaite récupérer un maximum de caractères tout en
-limitant le recul progressif et la consommation de ressources ? Pour cela, il
-existe un troisième quantificateur, le quantificateur possessif. Il fonctionne
-sur le principe de tout ou rien, soit il trouve une correspondance au premier
-essai soit il échoue. Comme le gourmand, il consomme le plus de caractères possibles (la chaîne entière) et tente la correspondance. Si cette tentative
-échoue, il n'y aura ni recul ni nouvel essai.</p>
-
-<p>Les quantificateurs possessifs utilisent un effort minimum pour un retour
-maximum. Ils tentent de retournent autant de caractères que possible en en
-faisant le moins possible (ils tentent une fois puis abandonnent).</p>
-
-<p>Pour rendre un quantificateur possessif, il suffit de lui ajouter un plus <code>+</code> :</p>
-
-<pre><code class="ruby">/.++time/
-</code></pre>
-
-<p>Lançons la méthode <code>match</code> sur notre chaîne en lui passant cette expression
-possessive :</p>
-
-<pre><code class="ruby">/.++time/.match(string)
-#=&gt; nil
-</code></pre>
-
-<p>Cet appel retourne <code>nil</code> car le test a échoué. Pourquoi cet échec ? Il semble
-pourtant que notre chaîne corresponde à l'expression. La raison est qu'aucun
-recul progressif n'est effectué.</p>
-
-<p>L'expression va d'abord tenter de trouver <code>.++</code> ce qui va consommer tout la
-chaîne. Lorsqu'elle tente de trouver le mot <code>time</code>, il ne reste plus de
-caractère à consommer. L'expression ne peut pas reculer à cause du
-quantificateur possessif et va donc échouer.</p>
-
-<p>Le principal avantage des quantificateurs possessifs est l'échec rapide.
-L'absence de recul consomme très peu de ressources. Un quantificateur gourmand
-va tenter tout ce qui est possible pour trouver une correspondance. En cas
-d'échec, tout ce travail et toutes ces ressources n'auront servi à rien. Un
-quantificateur possessif évite cela, si aucune correspondance n'existe l'échec
-sera rapide.</p>
-
-<p>En général, l'utilisation de quantificateurs possessifs se limite à des
-expressions très courte, lorsque vous avez une petite sous-expression au sein
-d'une expression plus large. Ils sont très utiles mais à utiliser avec
-précaution.</p>
-
-<h2>Conclusion</h2>
-
-<p>Les expressions régulières peuvent sembler extrêmement complexes. Lorsque j'ai
-appris à aller plus loin que les bases, au delà des petites astuces de
-validation d'email par exemple, j'ai trouvé que cela m'aidait de les voir comme
-un sous-programme dans un langage différent. En réalité c'est exactement ça.
-Vous écrivez un programme, au sein d'un autre programme, au sein de Ruby
-lui-même.</p>
-
-<p>Comme tout langage de programmation, il est plus simple d'écrire vos expressions
-par petites parties. Lorsque j'écris un <em>lookbehind</em>, j'écris d'abord le modèle
-principal, m'assure qu'il fonctionne. J'écris ensuite le modèle du lookbehind,
-séparément, et m'assure qu'il fonctionne également. Une fois cela fait, je
-joins les deux modèles pour valider qu'ils fonctionnent ensemble.</p>
-
-<p><a href="http://rubular.com/">Rubular</a> est un site fantastic pour écrire et tester vos
-expressions régulières. Testez le, utilisez le, il m'a vraiment facilité la vie.</p>
-
-<p>Comme tout programme informatique, les expressions régulières s'écrivent en
-plusieurs fois. Lorsque vous concevez une expression, il est tout à fait normal
-que celle-ci soit laide au début. Faites la fonctionner et après seulement
-tentez de la rendre plus lisible. C'est le même processus rouge, vert,
-réusinage (red, green, refector) qui est utilisé dans le développement dirigé
-par les tests.</p>
-
-<p>Les expressions régulières sont puissantes. Si puissantes qu'elles font peur à
-beaucoup d'entre-nous. Cette peur peut être surpassée. Aussi obscures qu'elle
-peuvent paraître, elles ont une structure logique et réfléchie. Utilisez-les,
-lancez Rubular et essayez quelques <em>lookaheads</em> et <em>lookbehinds</em>. Tentez les
-quantificateurs gourmands, fainéants et possessifs. Explorez la fantastique
-intégration des expressions régulières dans Ruby, je pense que vous en serez
-surpris ce que vous trouverez.</p>
-
-<h2>L'auteur chez Blue Box</h2>
-
-<p>Nell Shamrell travaille chez Blue Box en tant qu'Ingénieur Développement
-Logiciel. Elle siège également au conseil de Certification de Programmation
-Ruby de l'Université de Washington et est spécialisée en Ruby, Rails et
-Développement Dirigé par les Tests (TDD). Avant le développement, Nell a étudié
-et travaillé dans le domaine du théâtre, une excellente préparation à
-l'environnement dynamique de la création d'applications logicielles. Dans ces
-deux mondes, elle s'efforce de créer une expérience unique. Sur son temps
-libre, elle pratique l'art martial appelé Naginata.</p>
 ]]></content>
   </entry>
   

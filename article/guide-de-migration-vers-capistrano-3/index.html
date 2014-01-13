@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="fr"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Guide de migration vers Capistrano 3 - VF svp</title>
+  <meta name="author" content="Simon Courtois (simonc)">
+
+  
+  <meta name="description" content="Source: Capistrano 3 Upgrade Guide de Darko Fabijan sur le blog de Semaphore Nous avons récemment reçu des demandes de support pour Capistrano 3. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">VF svp</a></h1>
+  
+    <h2>En français dans le texte</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vfsvp.fr" />
+    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Guide de migration vers Capistrano 3</h1>
+    
+    
+      <p class="meta">
+        <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+      </p>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-13T11:05:00+01:00" pubdate data-updated="true">13/01/2014</time>
+        
+        
+         | <a href="#disqus_thread">Commentaires</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Source: <a href="https://semaphoreapp.com/blog/2013/11/26/capistrano-3-upgrade-guide.html">Capistrano 3 Upgrade Guide de Darko Fabijan sur le blog de Semaphore </a></p>
+
+<p>Nous avons récemment reçu des demandes de support pour Capistrano 3. Pour
+fournir un service de support de qualité, il faut connaitre le sujet, je me suis
+donc lancé dans la quête de migrer scripts de déploiement de Capistrano 2 à
+Capistrano 3. Comme toujours, cela a pris un peu plus de temps que prévu mais au
+final le code est plus propre.</p>
+
+<p>Je dois dire que j&#8217;ai eu un flashback remontant à deux ans, lorsque je mettais
+en place Capistrano pour la première fois : la documentation est incomplète
+et il faut jongler entre le
+<a href="https://github.com/capistrano/capistrano"><em lang="en">readme</em></a>,
+le <a href="https://github.com/capistrano/capistrano/wiki">wiki</a> et
+<a href="http://www.capistranorb.com/">la page d&#8217;accueil officielle</a>. Mais c&#8217;est un
+projet open-source et les participations pour améliorer cela sont les
+bienvenues.</p>
+
+<p>Je vais tenter de vous faciliter la migration en vous montrant notre nouvelle
+configuration en parallèle de l&#8217;ancienne, étape par étape.</p>
+
+<!-- more -->
+
+
+<h2>Mettre en place la nouvelle configuration</h2>
+
+<h3>Gemfile</h3>
+
+<p>La première étape est d&#8217;installer de nouvelles gems. Capistrano 2 ne supportait
+pas les configurations <em lang="en">multistage</em>, il fallait pour cela
+utiliser la gem <code>capistrano-ext</code>. Capistrano 3 supporte le
+<em lang="en">multistage</em> en standard. Il est indépendant de tout <em lang="en">framework</em>,
+vous devez donc utiliser <code>capistrano-rails</code> si vous comptez déployer une
+application <em lang="en">Rails</em>. Suivez l&#8217;exemple ci-dessous pour mettre votre
+<em lang="en">Gemfile</em> à jour, lancez ensuite <code>bundle install</code> et vous êtes prêt pour la
+migration.</p>
+
+<p>Capistrano 2 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:development</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;capistrano&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;capistrano-ext&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Capistrano 3 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:development</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;capistrano-rails&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Ajouter Capistrano 3 à votre projet</h3>
+
+<p>Comme le conseille
+<a href="http://www.capistranorb.com/documentation/upgrading/">le guide officiel de mise à jour</a>,
+il est préférable de copier les anciens fichiers Capistrano dans un endroit sûr,
+au cas où, et d&#8217;ajouter les nouveaux fichiers générés à la main. Voici une
+astuce pour le faire :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mkdir</span> <span class="n">old_cap</span>
+</span><span class='line'><span class="n">mv</span> <span class="no">Capfile</span> <span class="n">old_cap</span>
+</span><span class='line'><span class="n">mv</span> <span class="n">config</span><span class="o">/</span><span class="n">deploy</span><span class="o">.</span><span class="n">rb</span> <span class="n">old_cap</span>
+</span><span class='line'><span class="n">mv</span> <span class="n">config</span><span class="o">/</span><span class="n">deploy</span><span class="o">/</span> <span class="n">old_cap</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Une fois cela fait, vous êtes prêt à mettre le nouveau Capistrano en place pour
+votre projet :</p>
+
+<pre><code>bundle exec cap install
+</code></pre>
+
+<h2>Capfile</h2>
+
+<p>Parmi les fichiers fraichement générés, vous devriez trouver le nouveau
+<em lang="en">Capfile</em>. Ci-dessous, l&#8217;ancienne version de notre <em lang="en">Capfile</em> suivie
+de la nouvelle :</p>
+
+<p>Capistrano 2 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="s2">&quot;deploy&quot;</span>
+</span><span class='line'><span class="nb">load</span> <span class="s2">&quot;deploy/assets&quot;</span>
+</span><span class='line'><span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;vendor/gems/*/recipes/*.rb&quot;</span><span class="p">,</span><span class="s2">&quot;vendor/plugins/*/recipes/*.rb&quot;</span><span class="o">].</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">plugin</span><span class="o">|</span> <span class="nb">load</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'><span class="nb">load</span> <span class="s2">&quot;config/deploy&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Capistrano 3 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/setup&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/deploy&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/bundler&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/rails/assets&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/rails/migrations&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;whenever/capistrano&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;lib/capistrano/tasks/*.cap&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="n">import</span> <span class="n">r</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Votre nouveau <em lang="en">Capfile</em> va contenir deux lignes commentées à propos du
+support pour <code>rvm</code> et <code>rbenv</code>. Nous n&#8217;utilisons ni l&#8217;un ni l&#8217;autre pour gérer
+Ruby sur nos serveurs je ne peux pas donc vous en dire long sur le sujet.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/rvm&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/rbenv&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configuration multistage</h2>
+
+<p>Comme vous pouvez le voir ci-dessous, la configurations des <em lang="en">stages</em> ne
+change pas vraiment. Il y a cependant une chose à laquelle vous devez prêter
+particulièrement attention. La façon de signifier à Capistrano une révision à
+déployer a changé. Si vous faites du déploiement continu avec Capistrano, vous
+avez probablement déjà vu la ligne suivante :</p>
+
+<pre><code>bundle exec cap -S revision=$REVISION production deploy
+</code></pre>
+
+<p><code>REVISION</code> est une variable d&#8217;environnement que Semaphore exporte durant le
+déploiement et Capistrano 2 l&#8217;utilisait comme paramètre. Avec Capistrano 3, cela
+n&#8217;est plus possible et vous devez donner à la variable <code>branch</code> la révision ou
+la branche que vous souhaitez déployer. Il était déjà possible de spécifier une
+branche en configuration :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:branch</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;BRANCH_NAME&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;master&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Il nous suffit donc d&#8217;ajouter <code>ENV["REVISION"]</code> à la liste.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:branch</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;REVISION&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;BRANCH_NAME&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;master&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cela fait partie des choses non documentées et il faut fouiller les sources ou
+poser la question pour le savoir. L&#8217;un dans l&#8217;autre, le changement est assez
+simple.</p>
+
+<p>Le fichier suivant est notre <code>config/deploy/production.rb</code>.</p>
+
+<p>Capistrano 2 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">server</span> <span class="s2">&quot;server1.example.com&quot;</span><span class="p">,</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:web</span><span class="p">,</span> <span class="ss">:db</span><span class="p">,</span> <span class="ss">:primary</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">:jobs</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">server</span> <span class="s2">&quot;server2.example.com&quot;</span><span class="p">,</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:web</span><span class="p">,</span> <span class="ss">:jobs</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:branch</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;BRANCH_NAME&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;master&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Capistrano 3 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:stage</span><span class="p">,</span> <span class="ss">:production</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server</span> <span class="s2">&quot;server1.example.com&quot;</span><span class="p">,</span> <span class="ss">user</span><span class="p">:</span> <span class="s2">&quot;deploy_user&quot;</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="sx">%w{web app db}</span>
+</span><span class='line'><span class="n">server</span> <span class="s2">&quot;server2.example.com&quot;</span><span class="p">,</span> <span class="ss">user</span><span class="p">:</span> <span class="s2">&quot;deploy_user&quot;</span><span class="p">,</span> <span class="ss">roles</span><span class="p">:</span> <span class="sx">%w{web app}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:branch</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;REVISION&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;BRANCH_NAME&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;master&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configuration principale - <code>config/deploy.rb</code></h2>
+
+<p>C&#8217;est ici que les plus gros changements auront lieu. Voici ce à quoi il faut
+faire attention :</p>
+
+<ol>
+<li>Vous n&#8217;avez plus besoin d&#8217;appeler <code>capistrano/ext/multistage</code> ou
+<code>bundler/capistrano</code>. Le <em lang="en">multistage</em> est supporté en standard et le
+support de Bundler est fait dans le fichier Capfile.</li>
+<li>Il n&#8217;est pas nécessaire de lister les <em lang="en">stages</em> disponible ou celui par
+défaut.</li>
+<li>La variable pour régler l&#8217;url de dépôt source a changé de <code>repository</code> à
+<code>repo_url</code>.</li>
+<li><code>deploy_via :remote_cache</code> n&#8217;est plus nécessaire. La façon dont Capistrano
+gère les dépôts a beaucoup changé, il maintient maintenant un mirroir du
+dépôt sur votre serveur.</li>
+<li>L&#8217;option PTY est activée par défaut.</li>
+<li><code>ssh_options</code> a un peu changé je crois mais les réglages de base sont à peu
+près les mêmes.</li>
+<li>Capistrano prend maintenant en charge les liens symboliques dont vous avez
+besoin. Il vous suffit de lui dire de parcourir <code>linked_files</code> and
+<code>linked_dirs</code>.</li>
+<li>Si vous n&#8217;utilisez ni <code>rvm</code> ni <code>rbenv</code>, vous devez surcharger les commandes
+<code>rake</code> et <code>rails</code> (voyez le fichier deploy.rb de Capistrano 3).</li>
+</ol>
+
+
+<p>L&#8217;écriture de <em lang="en">tasks</em> a également changé et il est nécessaire de fouiller
+la documentation pour écrire ce que vous voulez. La bibliothèque utilisée en
+dessous est <a href="https://github.com/capistrano/sshkit">SSHKit</a> qui semble bien
+sympathique.</p>
+
+<p><strong>Astuce :</strong> avec Capistrano 2 vous pouviez écrire <code>var_name</code> et obtenir sa
+valeur. Avec la nouvelle version, vous devez toujours utiliser
+<code>fetch(:var_name)</code>. Il m&#8217;a fallut un certain temps pour le comprendre alors que
+je reprenais une <em lang="en">task</em> que l&#8217;on utilise pour gérer nos <em lang="en">workers</em>.</p>
+
+<p>Capistrano 2 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;capistrano/ext/multistage&quot;</span> <span class="c1">#1</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;bundler/capistrano&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:application</span><span class="p">,</span> <span class="s2">&quot;webapp&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:stages</span><span class="p">,</span> <span class="sx">%w(production staging)</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:default_stage</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span> <span class="c1">#2</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:scm</span><span class="p">,</span> <span class="ss">:git</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:repository</span><span class="p">,</span>  <span class="s2">&quot;git@github.com:example/webapp.git&quot;</span> <span class="c1">#3</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:deploy_to</span><span class="p">,</span> <span class="s2">&quot;/home/deploy_user/webapp&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:deploy_via</span><span class="p">,</span> <span class="ss">:remote_cache</span> <span class="c1">#4</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">default_run_options</span><span class="o">[</span><span class="ss">:pty</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span> <span class="c1">#5</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:user</span><span class="p">,</span> <span class="s2">&quot;deploy_user&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:use_sudo</span><span class="p">,</span> <span class="kp">false</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">ssh_options</span><span class="o">[</span><span class="ss">:forward_agent</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span> <span class="c1">#6</span>
+</span><span class='line'><span class="n">ssh_options</span><span class="o">[</span><span class="ss">:port</span><span class="o">]</span> <span class="o">=</span> <span class="mi">3456</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:keep_releases</span><span class="p">,</span> <span class="mi">20</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">desc</span> <span class="s2">&quot;Restart application&quot;</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">run</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">try_sudo</span><span class="si">}</span><span class="s2"> touch </span><span class="si">#{</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_path</span><span class="p">,</span><span class="s1">&#39;tmp&#39;</span><span class="p">,</span><span class="s1">&#39;restart.txt&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">desc</span> <span class="s2">&quot;Prepare our symlinks&quot;</span> <span class="c1">#7</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:post_symlink</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span> <span class="k">do</span>
+</span><span class='line'>    <span class="o">[</span><span class="s2">&quot;config/database.yml&quot;</span><span class="p">,</span> <span class="s2">&quot;config/config.yml&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;ln -fs </span><span class="si">#{</span><span class="n">shared_path</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">release_path</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">after</span>  <span class="s2">&quot;deploy&quot;</span><span class="p">,</span>                   <span class="s2">&quot;deploy:post_symlink&quot;</span>
+</span><span class='line'><span class="n">after</span>  <span class="s2">&quot;deploy:restart&quot;</span><span class="p">,</span>           <span class="s2">&quot;deploy:cleanup&quot;</span>
+</span><span class='line'><span class="n">before</span> <span class="s2">&quot;deploy:assets:precompile&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:post_symlink&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Capistrano 3 :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:application</span><span class="p">,</span> <span class="s2">&quot;webapp&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:scm</span><span class="p">,</span> <span class="ss">:git</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:repo_url</span><span class="p">,</span>  <span class="s2">&quot;git@github.com:example/webapp.git&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:deploy_to</span><span class="p">,</span> <span class="s2">&quot;/home/deploy_user/webapp&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:ssh_options</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">forward_agent</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">port</span><span class="p">:</span> <span class="mi">3456</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:log_level</span><span class="p">,</span> <span class="ss">:info</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:linked_files</span><span class="p">,</span> <span class="sx">%w{config/database.yml config/config.yml}</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:linked_dirs</span><span class="p">,</span> <span class="sx">%w{bin log tmp vendor/bundle public/system}</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">SSHKit</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">command_map</span><span class="o">[</span><span class="ss">:rake</span><span class="o">]</span>  <span class="o">=</span> <span class="s2">&quot;bundle exec rake&quot;</span> <span class="c1">#8</span>
+</span><span class='line'><span class="no">SSHKit</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">command_map</span><span class="o">[</span><span class="ss">:rails</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;bundle exec rails&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:keep_releases</span><span class="p">,</span> <span class="mi">20</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">desc</span> <span class="s2">&quot;Restart application&quot;</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">on</span> <span class="n">roles</span><span class="p">(</span><span class="ss">:app</span><span class="p">),</span> <span class="k">in</span><span class="p">:</span> <span class="ss">:sequence</span><span class="p">,</span> <span class="ss">wait</span><span class="p">:</span> <span class="mi">5</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">execute</span> <span class="ss">:touch</span><span class="p">,</span> <span class="n">release_path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;tmp/restart.txt&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">after</span> <span class="ss">:finishing</span><span class="p">,</span> <span class="s2">&quot;deploy:cleanup&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>Le code que vous obtenez au final et plus propre et Capistrano 3/SSHKit semble
+un mélange puissant. Quoi qu&#8217;il en soit, certaines bibliothèques comme
+<code>whenever</code> et <code>bugsnag</code> ne supportent pas encore Capistrano 3, vous devrez donc
+écrire leurs règles vous-même.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-13T11:05:00+01:00" pubdate data-updated="true">13/01/2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/tags/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/article/apprendre-angular-en-un-jour-le-guide-ultime" title="Previous Post: Apprendre Angular en un jour, le guide ultime">&laquo; Apprendre Angular en un jour, le guide ultime</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Commentaires</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <p><a href="https://twitter.com/VFsvp">@VFsvp</a> sur Twitter</p>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Simon Courtois (simonc) -
+  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+<script type="text/javascript">
+    var disqus_shortname = 'vfsvp';
+    
+      var disqus_identifier = 'http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3';
+      var disqus_url = 'http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3';
+      var disqus_script = 'embed.js';
+    
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+<script src="/javascripts/octopress.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</body>
+</html>
