@@ -1,0 +1,101 @@
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "variables";
+
+@import "bootstrap";
+@import "github";
+
+body > footer {
+  background: #FFF;
+  padding: 1em 0;
+  color: #999;
+}
+
+.article-body {
+  background: #FFF;
+  margin-bottom: 1em;
+  padding: .5em 1em;
+
+  p, ul {
+    margin-bottom: 1.5em;
+  }
+
+  h2, h3 {
+    margin-bottom: 20px;
+  }
+
+  table {
+    @extend .table;
+    @extend .table-condensed;
+    font-size: .8em;
+  }
+
+  img {
+    @extend .thumbnail;
+    max-width: 100%;
+  }
+}
+
+.article-date {
+  background: lighten($brand-primary, 45%);
+  font-size: 1.5em;
+  line-height: 1;
+  padding: 1em .5em;
+  text-align: center;
+}
+
+.article-comments-count {
+  font-size: 1.3em;
+  text-align: right;
+}
+
+.sharing {
+  border-top: 1px dashed #EEE;
+  border-bottom: 1px dashed #EEE;
+  margin: 1em 0 1em;
+  padding: 1em 1em .8em;
+}
+
+.sidebar {
+  section {
+    background: lighten($brand-primary, 45%);
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+
+  h1 {
+    font-size: 1.5em;
+    margin-top: 0;
+  }
+}
+
+pre {
+  font-size: 14px;
+}
+
+.archive-row {
+  background: #FFF;
+  margin-bottom: 1em;
+  font-size: 1em;
+
+  .article {
+    margin-bottom: 1em;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
+.article-comments-count {
+  font-size: 2em;
+  text-align: center;
+
+  i {
+    color: #999;
+    font-size: .9em;
+    vertical-align: text-top;
+    position: relative;
+    top: 3px;
+  }
+}

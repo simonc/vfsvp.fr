@@ -1,34 +1,62 @@
-{% unless page.no_header %}
-  <header>
-    {% if index %}
-      <h1 class="entry-title"><a href="{{ root_url }}{{ post.url }}">{% if site.titlecase %}{{ post.title | titlecase }}{% else %}{{ post.title }}{% endif %}</a></h1>
-    {% else %}
-      <h1 class="entry-title">{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
-    {% endif %}
-    {% unless page.sharing == false or index %}
-      <p class="meta">
-        {% include post/sharing.html %}
-      </p>
-    {% endunless %}
-    {% unless page.meta == false %}
-      <p class="meta">
-        {% include post/date.html %}{{ time }}
-        
-        {% if site.disqus_short_name and page.comments != false and post.comments != false and site.disqus_show_comment_count == true %}
-         | <a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#disqus_thread">Commentaires</a>
+{% capture excerpted %}{{content | has_excerpt}}{% endcapture %}
+<article class="article" role="article">
+  <div class="row">
+    <div class="col-sm-2">
+      <p class="article-date">
+        {% if index %}
+          <span class="day">{{post.date | date: '%d/%m'}}</span>
+          <span class="year">{{post.date | date: '%Y'}}</span>
+        {% else %}
+          <span class="day">{{page.date | date: '%d/%m'}}</span>
+          <span class="year">{{page.date | date: '%Y'}}</span>
         {% endif %}
       </p>
-    {% endunless %}
-  </header>
-{% endunless %}
-{% if index %}
-  <div class="entry-content">{{ content | excerpt }}</div>
-  {% capture excerpted %}{{ content | has_excerpt }}{% endcapture %}
-  {% if excerpted == 'true' %}
-    <footer>
-      <a rel="full-article" href="{{ root_url }}{{ post.url }}">{{ site.excerpt_link }}</a>
-    </footer>
-  {% endif %}
-{% else %}
-<div class="entry-content">{{ content }}</div>
-{% endif %}
+      <p class="article-comments-count">
+        <a href="{% if index %}{{site.url}}{{post.url}}{% endif %}#" title="Commentaires">0</a>
+        <i class="fa fa-comment"></i>
+      </p>
+    </div>
+    <div class="col-sm-10 article-body">
+      <header>
+        {% if index %}
+          <h1 class="article-title"><a href="{{root_url}}{{post.url}}">{% if site.titlecase %}{{post.title | titlecase}}{% else %}{{post.title}}{% endif %}</a></h1>
+        {% else %}
+          <h1 class="article-title">{% if site.titlecase %}{{page.title | titlecase}}{% else %}{{page.title}}{% endif %}</h1>
+          {% include post/sharing.html %}
+        {% endif %}
+      </header>
+
+      {% if index %}
+        <div class="article-content">{{content | excerpt}}</div>
+        {% if excerpted == 'true' %}
+          <footer>
+            <a rel="full-article" href="{{root_url}}{{post.url}}" class="btn btn-primary">{{site.excerpt_link}}</a>
+          </footer>
+        {% endif %}
+      {% else %}
+        <div class="article-content">{{content}}</div>
+
+        <footer>
+          <p class="meta">
+            {% include post/author.html %}
+            {% include post/date.html %}{% if updated %}{{ updated }}{% else %}{{ time }}{% endif %}
+            {% include post/categories.html %}
+          </p>
+          <p class="meta">
+            {% if page.previous.url %}
+              <a class="basic-alignment left" href="{{page.previous.url}}" title="Previous Post: {{page.previous.title}}">&laquo; {{page.previous.title}}</a>
+            {% endif %}
+            {% if page.next.url %}
+              <a class="basic-alignment right" href="{{page.next.url}}" title="Next Post: {{page.next.title}}">{{page.next.title}} &raquo;</a>
+            {% endif %}
+          </p>
+        </footer>
+
+        <section>
+          <h1>Commentaires</h1>
+          <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
+        </section>
+      {% endif %}
+    </div>
+  </div>
+</article>

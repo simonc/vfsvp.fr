@@ -2,28 +2,23 @@
 layout: default
 ---
 
-<div class="blog-index">
-  {% assign index = true %}
-  {% for post in paginator.posts %}
-  {% assign content = post.content %}
-    <article>
-      {% include article.html %}
-    </article>
-  {% endfor %}
-  <div class="pagination">
-    {% if paginator.next_page %}
-      <a class="prev" href="{{paginator.next_page}}">&larr; Older</a>
-    {% endif %}
-    <a href="/blog/archives">Archives</a>
-    {% if paginator.previous_page %}
-    <a class="next" href="{{paginator.previous_page}}">Newer &rarr;</a>
-    {% endif %}
+{% assign index = true %}
+{% for post in paginator.posts %}
+  <article class="article" role="article">
+    {% assign content = post.content %}
+    {% include article.html %}
+  </article>
+{% endfor %}
+
+<div class="row">
+  <div class="col-sm-10 col-sm-offset-2">
+    <ul class="pager">
+      <li class="previous{% unless paginator.next_page %} disabled{% endunless %}">
+        <a href="{{paginator.next_page}}" rel="prev">&larr; anciens</a>
+      </li>
+      <li class="next{% unless paginator.previous_page %} disabled{% endunless %}">
+        <a href="{{paginator.previous_page}}" rel="next">récents &rarr;</a>
+      </li>
+    </ul>
   </div>
 </div>
-<aside class="sidebar">
-  {% if site.blog_index_asides.size %}
-    {% include_array blog_index_asides %}
-  {% else %}
-    {% include_array default_asides %}
-  {% endif %}
-</aside>
