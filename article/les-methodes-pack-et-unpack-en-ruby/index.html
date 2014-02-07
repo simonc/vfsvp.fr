@@ -1,108 +1,90 @@
 
+
+
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="fr"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Les méthodes pack et unpack en Ruby - VF svp</title>
-  <meta name="author" content="Simon Courtois (simonc)">
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Les méthodes pack et unpack en Ruby · VF svp</title>
+    <meta name="author" content="Simon Courtois (@simonc)" />
+    <meta name="description" content="" />
 
-  
-  <meta name="description" content="Source: Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary Le langage C permet aux développeurs d&#8217;accéder directement à la mémoire où &hellip;">
-  
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="
+  http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby
+" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/stylesheets/style.css" media="screen" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="alternate" href="/atom.xml" title="VF svp" type="application/atom+xml" />
 
-  
-  <link rel="canonical" href="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby">
-  <link href="/favicon.ico" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+    <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
-</head>
+  </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">VF svp</a></h1>
-  
-    <h2>En français dans le texte</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:vfsvp.fr" />
-    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Les méthodes pack et unpack en Ruby</h1>
-    
-    
-      <p class="meta">
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="small"></div>
-  
-  
+  <body>
+    <div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#menu">
+        <span class="sr-only">Voir la navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">VFsvp</a>
+    </div>
+    <div id="menu" class="collapse navbar-collapse navbar-right">
+      <ul class="main-nav nav nav-pills">
+        <li><a href="/">Blog</a></li>
+        <li><a href="/blog/archives">Archives</a></li>
+        <li>
+          <a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">
+            <i class="fa fa-rss"></i> RSS
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-      </p>
-    
-    
-      <p class="meta">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          
+<article class="article" role="article">
+  <div class="row">
+    <div class="col-sm-2">
+      <p class="article-date">
         
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-07T10:00:00+02:00" pubdate data-updated="true">07/10/2013</time>
-        
-        
-         | <a href="#disqus_thread">Commentaires</a>
+          <span class="day">07/10</span>
+          <span class="year">2013</span>
         
       </p>
-    
-  </header>
+      <p class="article-comments-count">
+        <a href="#" title="Commentaires">0</a>
+        <i class="fa fa-comment"></i>
+      </p>
+    </div>
+    <div class="col-sm-10 article-body">
+      <header>
+        
+          <h1 class="article-title">Les méthodes pack et unpack en Ruby</h1>
+          <div class="sharing">
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby" >Tweet</a>
+  <div class="g-plusone" data-size="medium" data-href="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby"></div>
+</div>
 
+        
+      </header>
 
-<div class="entry-content"><p>Source: <a href="http://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html">Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary</a></p>
+      
+        <div class="article-content"><p>Source: <a href="http://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html">Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary</a></p>
 
 <p>Le langage C permet aux développeurs d&#8217;accéder directement à la mémoire où sont
 stockées les variables. Ruby ne le permet pas. Il est cependant des cas dans
@@ -112,11 +94,9 @@ mémoire tout en travaillant avec Ruby. Ce dernier fournit deux méthods <code>p
 
 <p>Voici un exemple :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;10000010&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 
@@ -130,18 +110,16 @@ valeur de <code>'A'</code> est 65 et la représentation binaire de 65 est <code>
 
 <p>Un autre exemple :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;B*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;B*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;01000001&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Notez bien le changement de résultat entre les deux exemples. Quelle est la
 différence entre <code>b*</code> et <code>B*</code> ? Pour le comprendre nous devons d&#8217;abord parler
 de <em>MSB</em> et <em>LSB</em>.</p>
 
-<h2>Bit de poids fort et bit de poids faible</h2>
+<h2 id="bit-de-poids-fort-et-bit-de-poids-faible">Bit de poids fort et bit de poids faible</h2>
 
 <p>Tous les bits ne sont pas créés égaux. <code>'C'</code> a la valeur ASCII 67. La
 représentation binaire de 67 est <code>1000011</code>.</p>
@@ -181,50 +159,39 @@ b | bit string (LSB first) | représentation binaire (bit de poids faible en
 
 <p>Voyons maintenant deux exemples.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s1">&#39;C&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s1">&#39;C&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;11000010&quot;]</span>
 </span><span class='line'>
 </span><span class='line'><span class="s1">&#39;C&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;B*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;01000011&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p><code>b*</code> et <code>B*</code> voient tous les deux là même donnée. Ils représentent simplement
 cette donnée différemment.</p>
 
-<h2>Différentes façons de représenter une même donnée</h2>
+<h2 id="differentes-facons-de-representer-une-meme-donnee">Différentes façons de représenter une même donnée</h2>
 
 <p>Disons que je souhaite la représentation binaire de la chaîne <code>hello</code>. D&#8217;après
 ce que nous avons vu précédemment cela devrait être assez facile :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;B*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;B*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;0110100001100101011011000110110001101111&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Nous pouvons également obtenir le résultat suivant</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">to_s</span> <span class="mi">2</span><span class="p">}</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">to_s</span> <span class="mi">2</span><span class="p">}</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;1101000&quot;, &quot;1100101&quot;, &quot;1101100&quot;, &quot;1101100&quot;, &quot;1101111&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Voyons un exemple similaire mais en découpant les étapes cette fois.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [104, 101, 108, 108, 111]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>La directive <code>C*</code> retourne les caractères sous la forme d&#8217;un entier non signé
@@ -234,37 +201,28 @@ tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et
 <p>En utilisant la technique vu précédemment, nous pouvons obtenir une
 représentation hexadécimale de notre chaîne :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">to_s</span> <span class="mi">16</span><span class="p">}</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="o">.</span><span class="n">to_s</span> <span class="mi">16</span><span class="p">}</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;68&quot;, &quot;65&quot;, &quot;6c&quot;, &quot;6c&quot;, &quot;6f&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Il est toutefois possible d&#8217;obtenir directement cette valeur hexadécimale :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;68656c6c6f&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
-<h2>High nibble first vs Low nibble first</h2>
+<h2 id="high-nibble-first-vs-low-nibble-first">High nibble first vs Low nibble first</h2>
 
 <p>Observez la différence entre les deux cas suivants :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;68656c6c6f&quot;]</span>
 </span><span class='line'>
 </span><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;h*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;8656c6c6f6&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>La documentation Ruby indique</p>
@@ -287,31 +245,21 @@ basse en premier</em> donne donc 86.</p>
 <p>Cette notation est utilisée pour chaque octet. Pour cette raison, la version
 <em>moitié basse en premier</em> de <code>68 65 6c 6c 6f</code> est <code>86 56 c6 c6 f6</code>.</p>
 
-<h2>Mélanger les directives</h2>
+<h2 id="melanger-les-directives">Mélanger les directives</h2>
 
 <p>Dans les exemples précédents, nous avons utilisé le caractère <code>*</code>. Cela indique
 de traiter autant de caractères que possible. Par exemple :</p>
 
 <p>A single C will get a single byte.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [104]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Vous pouvez ajouter plus de <code>C</code> si vous le souhaitez.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;CC&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;CC&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [104, 101]</span>
 </span><span class='line'>
 </span><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;CCC&#39;</span><span class="p">)</span>
@@ -319,57 +267,47 @@ de traiter autant de caractères que possible. Par exemple :</p>
 </span><span class='line'>
 </span><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;CCCCC&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [104, 101, 108, 108, 111]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Plutôt que de répéter ces directives, nous pouvons utiliser un nombre pour
 indiquer combien de fois la directive doit être répétée.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C5&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C5&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [104, 101, 108, 108, 111]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Nous pouvons utiliser <code>*</code> pour capturer toutes les octets restants.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [104, 101, 108, 108, 111]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Voyons un exemple dans lequel nous mélangeons les notations <em>MSB</em> et <em>LSB</em> :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;aa&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b8B8&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;aa&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;b8B8&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [&quot;10000110&quot;, &quot;01100001&quot;]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
-<h2>pack est l&#8217;inverse de unpack</h2>
+<h2 id="pack-est-linverse-de-unpack">pack est l&#8217;inverse de unpack</h2>
 
 <p>La méthode <code>pack</code> est utilisée pour lire les données stockées. Voyons quelques
 exemples d&#8217;utilisation :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">1000001</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">1000001</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; &quot;A&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Dans le code ci-dessus, le valeur binaire est interpretée comme un entier non
 signé sur 8 bits et le résultat est <code>'A'</code>.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="s1">&#39;A&#39;</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="s1">&#39;A&#39;</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; &quot;\xA0&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Ici, l&#8217;entrée <code>'A'</code> n&#8217;est pas le <code>A</code> ASCII mais le <code>A</code> hexadécimale. C&#8217;est
@@ -387,20 +325,16 @@ qu&#8217;il s&#8217;agit d&#8217;une valeur hexadécimale.</p>
 par <code>a</code> dans notre exemple précédent et le résultat reste inchangé. Essayons
 pour voir :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; &quot;\xA0&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Un autre exemple :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; &quot;\n&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Dans le code ci-dessus, il y a une différence notable dans le résultat. Nous
@@ -411,26 +345,19 @@ regarde dans la table ASCII, <code>0A</code> vaut 10 et le caractère correspond
 <code>NL</code>, <em>new line</em> soit un saut de ligne. C&#8217;est pour cela que nous voyons
 s&#8217;afficher <code>\n</code> qui représente un saut de ligne.</p>
 
-<h2>Utilisation de unpack dans le code de Rails</h2>
+<h2 id="utilisation-de-unpack-dans-le-code-de-rails">Utilisation de unpack dans le code de Rails</h2>
 
 <p>J&#8217;ai cherché un peu dans le code source de Rails et trouvé les utilisations
 suivantes de la méthode <code>unpack</code> :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">email_address_obfuscated</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="n">email_address_obfuscated</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="s1">&#39;mailto:&#39;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="n">email_address</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="n">char</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;H2&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="n">column</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">string_to_binary</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;H*&quot;</span><span class="p">)</span>
 </span><span class='line'><span class="n">data</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
 </span><span class='line'><span class="n">s</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;U*&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Nous avons déjà vu les directives <code>C*</code> et <code>H</code>, les directives <code>m</code> et <code>U</code> sont
@@ -438,14 +365,12 @@ cependant nouvelles. La première sert à donner une représentation encodée en
 base64 de la valeur, la seconde retourne le caractère UTF-8 correspondant. Voici
 un exemple :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;Hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;U*&#39;</span><span class="p">)</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="s2">&quot;Hello&quot;</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;U*&#39;</span><span class="p">)</span>
 </span><span class='line'><span class="c1">#=&gt; [72, 101, 108, 108, 111]</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
-<h2>Versions de test</h2>
+<h2 id="versions-de-test">Versions de test</h2>
 
 <p>Les exmples de code précédents ont été testés avec la version <em>1.9.2</em> de Ruby.</p>
 
@@ -453,15 +378,14 @@ un exemple :</p>
 valides.</p>
 </div>
 
-
-  <footer>
-    <p class="meta">
-      
+        <footer>
+          <p class="meta">
+            
   
 
 <span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
 
-      
+            
 
 
 
@@ -473,8 +397,11 @@ valides.</p>
   
 
 
+
+  
+
 <time datetime="2013-10-07T10:00:00+02:00" pubdate data-updated="true">07/10/2013</time>
-      
+            
 
 <span class="categories">
   
@@ -483,33 +410,45 @@ valides.</p>
 </span>
 
 
-    </p>
-    <p class="meta">
+          </p>
+          <p class="meta">
+            
+              <a class="basic-alignment left" href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3" title="Previous Post: Utiliser les Expressions Régulières en Ruby (3/3)">&laquo; Utiliser les Expressions Régulières en Ruby (3/3)</a>
+            
+            
+              <a class="basic-alignment right" href="/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails" title="Next Post: 6 façons de réduire la souffrance due aux tests fonctionnels avec Rails">6 façons de réduire la souffrance due aux tests fonctionnels avec Rails &raquo;</a>
+            
+          </p>
+        </footer>
+
+        <section>
+          <h1>Commentaires</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
       
-        <a class="basic-alignment left" href="/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3" title="Previous Post: Utiliser les Expressions Régulières en Ruby (3/3)">&laquo; Utiliser les Expressions Régulières en Ruby (3/3)</a>
-      
-      
-        <a class="basic-alignment right" href="/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails" title="Next Post: 6 façons de réduire la souffrance due aux tests fonctionnels avec Rails">6 façons de réduire la souffrance due aux tests fonctionnels avec Rails &raquo;</a>
-      
-    </p>
-  </footer>
+    </div>
+  </div>
 </article>
 
-  <section>
-    <h1>Commentaires</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
 
-</div>
+        </div>
 
-<aside class="sidebar">
-  
-    <section>
+        <aside class="sidebar col-sm-3">
+          <section>
   <h1>VF svp</h1>
   <p>VF svp est un projet communautaire de traduction d'articles techniques.
     Pour proposer une traduction, rendez-vous sur
     <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+<section>
+  <h1>Recherche</h1>
+  <form role="search" action="http://google.com/search" method="get">
+    <div class="form-group">
+      <input type="hidden" name="q" value="site:vfsvp.fr" />
+      <input type="text" name="q" results="0" class="form-control" placeholder="Rechercher..." />
+    </div>
+  </form>
 </section>
 
 <section>
@@ -518,35 +457,35 @@ valides.</p>
 </section>
 
 
-  
-</aside>
-
-
+        </aside>
+      </div>
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Simon Courtois (simonc) -
-  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
-</p>
 
+    <footer class="text-center">
+      <footer role="contentinfo">
+  <p>Copyright © 2014 - Simon Courtois (@simonc) -
+    <span class="credit">Publié grâce à
+    <a href="http://octopress.org">Octopress</a></span></p>
 </footer>
+
+    </footer>
+    <script type="text/javascript">
+  var disqus_shortname = 'vfsvp';
+
   
-<script type="text/javascript">
-    var disqus_shortname = 'vfsvp';
-    
-      var disqus_identifier = 'http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby';
-      var disqus_url = 'http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby';
-      var disqus_script = 'embed.js';
-    
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    var disqus_identifier = 'http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby';
+    var disqus_url = 'http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby';
+    var disqus_script = 'embed.js';
+  
+
+  (function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
 </script>
-
-
-
 
 
   <script type="text/javascript">
@@ -571,13 +510,6 @@ valides.</p>
 
 
 
-
-
-  <script src="/javascripts/modernizr-2.0.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-<script src="/javascripts/octopress.js" type="text/javascript"></script>
-
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-15419839-2']);
@@ -592,5 +524,5 @@ valides.</p>
 
 
 
-</body>
+  </body>
 </html>

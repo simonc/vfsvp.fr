@@ -1,118 +1,100 @@
 
+
+
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="fr"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Elixir pour les rubyists (partie 2) - VF svp</title>
-  <meta name="author" content="Simon Courtois (simonc)">
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Elixir pour les rubyists (partie 2) · VF svp</title>
+    <meta name="author" content="Simon Courtois (@simonc)" />
+    <meta name="description" content="" />
 
-  
-  <meta name="description" content="Source: Elixir for Rubyists part 2 par Nate West Voici une tentative de réponse aux questions de la partie 1. Immuable ?? Les variables d&#8217; &hellip;">
-  
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="
+  http://vfsvp.fr/article/elixir-pour-les-rubyists-2
+" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/stylesheets/style.css" media="screen" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="alternate" href="/atom.xml" title="VF svp" type="application/atom+xml" />
 
-  
-  <link rel="canonical" href="http://vfsvp.fr/article/elixir-pour-les-rubyists-2">
-  <link href="/favicon.ico" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="VF svp" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+    <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
-</head>
+  </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">VF svp</a></h1>
-  
-    <h2>En français dans le texte</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:vfsvp.fr" />
-    <input class="search" type="text" name="q" results="0" placeholder="Rechercher..."/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Elixir pour les rubyists (partie 2)</h1>
-    
-    
-      <p class="meta">
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/elixir-pour-les-rubyists-2" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/elixir-pour-les-rubyists-2" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="small"></div>
-  
-  
+  <body>
+    <div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#menu">
+        <span class="sr-only">Voir la navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">VFsvp</a>
+    </div>
+    <div id="menu" class="collapse navbar-collapse navbar-right">
+      <ul class="main-nav nav nav-pills">
+        <li><a href="/">Blog</a></li>
+        <li><a href="/blog/archives">Archives</a></li>
+        <li>
+          <a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">
+            <i class="fa fa-rss"></i> RSS
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-      </p>
-    
-    
-      <p class="meta">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          
+<article class="article" role="article">
+  <div class="row">
+    <div class="col-sm-2">
+      <p class="article-date">
         
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-29T21:00:00+01:00" pubdate data-updated="true">29/10/2013</time>
-        
-        
-         | <a href="#disqus_thread">Commentaires</a>
+          <span class="day">29/10</span>
+          <span class="year">2013</span>
         
       </p>
-    
-  </header>
+      <p class="article-comments-count">
+        <a href="#" title="Commentaires">0</a>
+        <i class="fa fa-comment"></i>
+      </p>
+    </div>
+    <div class="col-sm-10 article-body">
+      <header>
+        
+          <h1 class="article-title">Elixir pour les rubyists (partie 2)</h1>
+          <div class="sharing">
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/elixir-pour-les-rubyists-2" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/elixir-pour-les-rubyists-2" >Tweet</a>
+  <div class="g-plusone" data-size="medium" data-href="http://vfsvp.fr/article/elixir-pour-les-rubyists-2"></div>
+</div>
 
+        
+      </header>
 
-<div class="entry-content"><p>Source: <a href="http://www.natescottwest.com/blog/2013/10/09/elixir-for-rubyists-part-2/">Elixir for Rubyists part 2 par Nate West</a></p>
+      
+        <div class="article-content"><p>Source: <a href="http://www.natescottwest.com/blog/2013/10/09/elixir-for-rubyists-part-2/">Elixir for Rubyists part 2 par Nate West</a></p>
 
 <p>Voici une tentative de réponse aux questions de la <a href="/article/elixir-pour-les-rubyists-1">partie 1</a>.</p>
 
-<h2>Immuable ??</h2>
+<h2 id="immuable">Immuable ??</h2>
 
 <p>Les variables d&#8217;Elixir sont immuables. Elles ne sont pas à assignation unique.
 Je vous entends déjà dire &ldquo;Mais Nate ! Si on réassigne une variable, n&#8217;est-ce
 pas une mutation ?&rdquo;. Non !</p>
 
-<h2>Elixir assure la transparence référentielle des variables</h2>
+<h2 id="elixir-assure-la-transparence-referentielle-des-variables">Elixir assure la transparence référentielle des variables</h2>
 
 <p>Transparence référentielle est une façon académique de dire &ldquo;quand je fais
 quelque chose qui modifie une valeur, je peux toujours revenir à la valeur
@@ -125,38 +107,26 @@ de code :</p>
 
 
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Nate&quot;</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='elixir'><span class='line'><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Nate&quot;</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;Nate&quot;</span>
 </span><span class='line'><span class="no">String</span><span class="o">.</span><span class="n">upcase</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;NATE&quot;</span>
 </span><span class='line'><span class="n">name</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;Nate&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p><code>String.upcase</code> est référentiellement transparent. Il retourne une nouvelle
 valeur transformée mais ne modifie pas la valeur originale. On peut comparer
 cela avec <code>String#upcase!</code> en Ruby.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;Nate&quot;</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="nb">name</span> <span class="o">=</span> <span class="s2">&quot;Nate&quot;</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;Nate&quot;</span>
 </span><span class='line'><span class="nb">name</span><span class="o">.</span><span class="n">upcase!</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;NATE&quot;</span>
 </span><span class='line'><span class="nb">name</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;NATE&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p><code>String#upcase!</code> <em>n&#8217;est pas</em> référentiellement transparent. Non seulement il
@@ -165,15 +135,7 @@ retourne une valeur transformée mais modifie également la valeur originale.</p
 <p>Avec Elixir, dans le contexte d&#8217;une fonction vous ne pourrez pas modifier la
 valeur d&#8217;une variable.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Nate&quot;</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='elixir'><span class='line'><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Nate&quot;</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;Nate&quot;</span>
 </span><span class='line'><span class="n">capitalize</span> <span class="o">=</span> <span class="k">fn</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">string</span> <span class="o">=</span> <span class="no">String</span><span class="o">.</span><span class="n">upcase</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="k">end</span>
 </span><span class='line'><span class="c1"># =&gt; #Function&lt;6.80484245 in :erl_eval.expr/5&gt;</span>
@@ -181,21 +143,18 @@ valeur d&#8217;une variable.</p>
 </span><span class='line'><span class="c1"># =&gt; &quot;NATE&quot;</span>
 </span><span class='line'><span class="n">name</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;Nate&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
-<h2>En quoi la transparence référentielle est importante ?</h2>
+<h2 id="en-quoi-la-transparence-referentielle-est-importante">En quoi la transparence référentielle est importante ?</h2>
 
 <p>Pour faire court, un code référentiellement transparent est simple à tester,
 facile à comprendre et à rendre <em>threadsafe</em>. Si on a ceci en Ruby :</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">greeting</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='elixir'><span class='line'><span class="n">greeting</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span>
 </span><span class='line'><span class="n">do_something_to_string</span><span class="p">(</span><span class="n">greeting</span><span class="p">)</span>
 </span><span class='line'><span class="n">print</span><span class="p">(</span><span class="n">greeting</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>On s&#8217;attend à ce que <code>greeting</code> ait la valeur &ldquo;Hello&rdquo; lorsque l&#8217;on appelle
@@ -213,7 +172,7 @@ pourrait tout aussi bien contenir &ldquo;Game over !&rdquo;.</p>
 </ul>
 
 
-<h2>Un piège&hellip;</h2>
+<h2 id="un-piege">Un piège&hellip;</h2>
 
 <p>Il est possible d&#8217;assigner une nouvelle valeur à une variable en se basant sur
 sa valeur actuelle. Notez bien qu&#8217;ici <code>=</code> n&#8217;est pas un opérateur d&#8217;assignation.
@@ -221,27 +180,7 @@ C&#8217;est un opérateur de test de correspondance. Lorsque l&#8217;on utilise 
 variable, on peut choisir de tester la valeur de la variable ou nous pouvons
 l&#8217;autoriser à prendre une nouvelle valeur.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="m">1</span> <span class="o">=</span> <span class="m">2</span> <span class="c1"># la valeur 1 ne correspond pas à la valeur 2</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='elixir'><span class='line'><span class="m">1</span> <span class="o">=</span> <span class="m">2</span> <span class="c1"># la valeur 1 ne correspond pas à la valeur 2</span>
 </span><span class='line'><span class="c1"># =&gt; ** (MatchError) aucune correspondance avec : 3</span>
 </span><span class='line'><span class="c1">#    :erl_eval.expr/3</span>
 </span><span class='line'>
@@ -261,7 +200,7 @@ l&#8217;autoriser à prendre une nouvelle valeur.</p>
 </span><span class='line'><span class="n">num</span> <span class="o">=</span> <span class="m">3</span> <span class="c1"># ici on ne cherche pas de correspondance, on peut donc assigner la</span>
 </span><span class='line'>        <span class="c1"># valeur 3 à num</span>
 </span><span class='line'><span class="c1"># =&gt; 3</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
 <p>Tel que je le comprends, cela fait parti d&#8217;Elixir pour des questions pratique
@@ -277,28 +216,13 @@ nouvelle valeur. Lorsque vous le faites, l&#8217;ancienne valeur va être retir�
 contexte d&#8217;exécution afin de laisser la place libre pour stocker une nouvelle
 valeur.</p>
 
-<h2>Essayez donc de le briser</h2>
+<h2 id="essayez-donc-de-le-briser">Essayez donc de le briser</h2>
 
 <p>Vous aurez tout de même beaucoup de mal à écrire une fonction qui brise la
 transparence référentielle. Si vous réassignez une variable dans une fonction,
 vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="k">defmodule</span> <span class="no">Assignment</span> <span class="k">do</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='elixir'><span class='line'><span class="k">defmodule</span> <span class="no">Assignment</span> <span class="k">do</span>
 </span><span class='line'><span class="k">  def</span> <span class="n">change_me</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="k">do</span>
 </span><span class='line'><span class="k">    </span><span class="n">string</span> <span class="o">=</span> <span class="m">2</span>
 </span><span class='line'>  <span class="k">end</span>
@@ -313,23 +237,22 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 </span><span class='line'><span class="c1"># =&gt; 2</span>
 </span><span class='line'><span class="n">greeting</span>
 </span><span class='line'><span class="c1"># =&gt; &quot;Hi&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></div></figure>
 
 
-<h2>C&#8217;est tout pour aujourd&#8217;hui</h2>
+<h2 id="cest-tout-pour-aujourdhui">C&#8217;est tout pour aujourd&#8217;hui</h2>
 
 <p>Voici la fin de la partie 2. À bientôt pour la partie 3.</p>
 </div>
 
-
-  <footer>
-    <p class="meta">
-      
+        <footer>
+          <p class="meta">
+            
   
 
 <span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
 
-      
+            
 
 
 
@@ -341,8 +264,11 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
   
 
 
+
+  
+
 <time datetime="2013-10-29T21:00:00+01:00" pubdate data-updated="true">29/10/2013</time>
-      
+            
 
 <span class="categories">
   
@@ -351,33 +277,45 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 </span>
 
 
-    </p>
-    <p class="meta">
+          </p>
+          <p class="meta">
+            
+              <a class="basic-alignment left" href="/article/Git-est-une-structure-de-donnees-purement-fonctionnelle" title="Previous Post: Git est une structure de données purement fonctionnelle">&laquo; Git est une structure de données purement fonctionnelle</a>
+            
+            
+              <a class="basic-alignment right" href="/article/apprendre-angular-en-un-jour-le-guide-ultime" title="Next Post: Apprendre Angular en un jour, le guide ultime">Apprendre Angular en un jour, le guide ultime &raquo;</a>
+            
+          </p>
+        </footer>
+
+        <section>
+          <h1>Commentaires</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
       
-        <a class="basic-alignment left" href="/article/Git-est-une-structure-de-donnees-purement-fonctionnelle" title="Previous Post: Git est une structure de données purement fonctionnelle">&laquo; Git est une structure de données purement fonctionnelle</a>
-      
-      
-        <a class="basic-alignment right" href="/article/apprendre-angular-en-un-jour-le-guide-ultime" title="Next Post: Apprendre Angular en un jour, le guide ultime">Apprendre Angular en un jour, le guide ultime &raquo;</a>
-      
-    </p>
-  </footer>
+    </div>
+  </div>
 </article>
 
-  <section>
-    <h1>Commentaires</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
 
-</div>
+        </div>
 
-<aside class="sidebar">
-  
-    <section>
+        <aside class="sidebar col-sm-3">
+          <section>
   <h1>VF svp</h1>
   <p>VF svp est un projet communautaire de traduction d'articles techniques.
     Pour proposer une traduction, rendez-vous sur
     <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+<section>
+  <h1>Recherche</h1>
+  <form role="search" action="http://google.com/search" method="get">
+    <div class="form-group">
+      <input type="hidden" name="q" value="site:vfsvp.fr" />
+      <input type="text" name="q" results="0" class="form-control" placeholder="Rechercher..." />
+    </div>
+  </form>
 </section>
 
 <section>
@@ -386,35 +324,35 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 </section>
 
 
-  
-</aside>
-
-
+        </aside>
+      </div>
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Simon Courtois (simonc) -
-  <span class="credit">Publié grâce à <a href="http://octopress.org">Octopress</a></span>
-</p>
 
+    <footer class="text-center">
+      <footer role="contentinfo">
+  <p>Copyright © 2014 - Simon Courtois (@simonc) -
+    <span class="credit">Publié grâce à
+    <a href="http://octopress.org">Octopress</a></span></p>
 </footer>
+
+    </footer>
+    <script type="text/javascript">
+  var disqus_shortname = 'vfsvp';
+
   
-<script type="text/javascript">
-    var disqus_shortname = 'vfsvp';
-    
-      var disqus_identifier = 'http://vfsvp.fr/article/elixir-pour-les-rubyists-2';
-      var disqus_url = 'http://vfsvp.fr/article/elixir-pour-les-rubyists-2';
-      var disqus_script = 'embed.js';
-    
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+    var disqus_identifier = 'http://vfsvp.fr/article/elixir-pour-les-rubyists-2';
+    var disqus_url = 'http://vfsvp.fr/article/elixir-pour-les-rubyists-2';
+    var disqus_script = 'embed.js';
+  
+
+  (function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
 </script>
-
-
-
 
 
   <script type="text/javascript">
@@ -439,13 +377,6 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 
 
 
-
-
-  <script src="/javascripts/modernizr-2.0.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-<script src="/javascripts/octopress.js" type="text/javascript"></script>
-
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-15419839-2']);
@@ -460,5 +391,5 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 
 
 
-</body>
+  </body>
 </html>

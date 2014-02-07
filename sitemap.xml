@@ -2,53 +2,57 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3</loc>
-        <lastmod>2013-10-05T12:34:16+02:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3</loc>
-        <lastmod>2013-10-14T11:07:09+02:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3</loc>
-        <lastmod>2013-10-05T12:35:18+02:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby</loc>
-        <lastmod>2013-10-07T09:53:13+02:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>
             http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails
         </loc>
-        <lastmod>2013-10-12T13:08:52+02:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/elixir-pour-les-rubyists-1</loc>
-        <lastmod>2013-11-01T13:36:01+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle</loc>
-        <lastmod>2013-11-09T23:04:03+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/elixir-pour-les-rubyists-2</loc>
-        <lastmod>2013-11-01T13:37:59+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/apprendre-angular-en-un-jour-le-guide-ultime</loc>
-        <lastmod>2014-01-02T14:22:14+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3</loc>
-        <lastmod>2014-01-13T11:02:11+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://vfsvp.fr/article/une-introduction-en-profondeur-a-emberjs</loc>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/blog/archives/</loc>
-        <lastmod>2014-01-13T11:02:11+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/</loc>
-        <lastmod>2014-01-13T11:02:11+01:00</lastmod>
+        <lastmod>2014-02-07T18:59:48+01:00</lastmod>
     </url>
     <url>
         <loc>http://vfsvp.fr/robots.txt</loc>
