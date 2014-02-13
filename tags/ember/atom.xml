@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ember | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ember/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-02-07T19:01:20+01:00</updated>
+  <updated>2014-02-13T10:18:46+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -146,14 +146,14 @@ le W3C travaille actuellement avec l'équipe {l-en Ember} sur la
 <p>Pour faire simple, un {l-en template} est la partie HTML d'une vue. Il permet
 d'afficher les données du modèle et se met automatiquement à jour lorsque ce
 dernier change. {l-en Ember.js} utilise [Handlebars][HANDLEBARS], un mécanisme
-léger de {l-en templating} également maintenant par l'équipe {l-en Ember}. Il
+léger de {l-en templating} également maintenu par l'équipe {l-en Ember}. Il
 fournit les outils logiques habituels comme <code>if</code> et <code>else</code>, les boucles et les
 <code>helpers</code> de formatage, ce genre de choses. Les {l-en templates} peuvent être
 précompilés (si vous souhaitez les organiser en fichiers <code>.hbs</code> ou <code>.handlebars</code>
 séparés) ou tout simplement écrits dans une balise
 <code>&lt;script type="text/x-handlebars"&gt;&lt;/script&gt;</code> dans votre page HTML. Pour en
 savoir plus sur le sujet, vous pouvez vous reporter à la section
-<a href="#precompiler-les-templates">Précompiler les templates</a>.</p>
+<a href="#precompiler-ou-non-les-templates">Précompiler ou non les {l-en templates}</a>.</p>
 
 <h3>Helpers</h3>
 
@@ -163,7 +163,7 @@ données avant leur affichage (par exemple, pour donner un meilleur format que
 sous la forme <code>{{date}}</code> dans votre {l-en template} et que vous avez un
 {l-en helper} <code>formatDate</code> (qui converti une date en quelque chose de plus
 élégant, comme &ldquo;Il y a un mois&rdquo; ou &ldquo;29 juillet 2013&rdquo;), vous pouvez vous en
-servir en utilisant <code>{{formatDate}}</code>.</p>
+servir en utilisant <code>{{formatDate date}}</code>.</p>
 
 <h3>Composants ? Helpers ? Vues ? Au secours !</h3>
 
@@ -191,7 +191,7 @@ dans le {l-en local storage} du navigateur.</li>
 
 <p>Nous avons besoin d'une vue assez simple qui affiche un groupe d'utilisateurs
 (voir 1 ci-dessous). Il nous faut également une vue pour voir les informations
-d'une utilisateur spécifique (2). Nous devons être capables de modifier et
+d'un utilisateur spécifique (2). Nous devons être capables de modifier et
 supprimer ces informations (3). Nous devons enfin être à même de créer un nouvel
 utilisateur, pour ce faire nous réutiliserons le formulaire de modification.</p>
 
@@ -244,7 +244,7 @@ le moment, {l-en Handlebars} n'est pas présent sur la page, vous le trouverez
 sur le [site officiel de Handlebars][HANDLEBARS].</p>
 
 <p>Une fois les dépendances récupérées, nous pouvons commencer à créer notre
-application. Nous allons tout d'abord créer une fichier nommé <code>app.js</code> dans
+application. Nous allons tout d'abord créer un fichier nommé <code>app.js</code> dans
 lequel nous allons initialiser {l-en Ember} :</p>
 
 <pre><code class="javascript">/* /app.js
@@ -316,9 +316,9 @@ comparer les deux techniques.
 {l-en Ember-Data} est une bibliothèque qui permet de récupérer les données
 stockées sur le serveur, de les retenir dans un `Store`, de les mettre à jour
 dans le navigateur et enfin des les renvoyer au serveur pour sauvegarde. Le
-`Store` peut être configuré avec différents {l-en adapters} (par exemoke, le
+`Store` peut être configuré avec différents {l-en adapters} (par exemple, le
 `RESTAdapter` qui interagit avec une API JSON ou le `LSAdapter` qui stocke les
-données dans {l-en local storage} du navigateur).
+données dans le {l-en local storage} du navigateur).
 Une [section entière](#quest-ce-quember-data) de cet article est dédiée à
 {l-en Ember-Data}.
 
@@ -330,8 +330,8 @@ Nous allons utiliser `FixtureAdapter`. Nous commençons donc par l'instancier :
 App.ApplicationAdapter = DS.FixtureAdapter;
 ```</p>
 
-<p>Dans les versions précédentes versions d'{l-en Ember}, il fallait hériter de
-<code>DS.Store</code>. Ce n'est plus nécessaire pour instancier les {l-en adapters}.</p>
+<p>Dans les versions précédentes d'{l-en Ember}, il fallait hériter de <code>DS.Store</code>.
+Ce n'est plus nécessaire pour instancier les {l-en adapters}.</p>
 
 <p><code>FixtureAdapter</code> est un très bon moyen de démarrer avec {l-en Ember.js} et
 {l-en Ember-Data}. Il vous permet de travailler avec des données en
@@ -339,8 +339,8 @@ développement. Nous passerons au
 [LocalStorage adapter][LSAdapterGihub]
 (ou <code>LSAdapter</code>) en fin de parcours.</p>
 
-<p>Commençons par définir notre modèle. Un utilisateur un nom <code>name</code>, une adresse
-<code>email</code>, une <code>bio</code> courte, un avatar <code>avatarUrl</code> et une date de création
+<p>Commençons par définir notre modèle. Un utilisateur aura un nom <code>name</code>, une
+adresse <code>email</code>, une courte <code>bio</code>, un avatar <code>avatarUrl</code> et une date de création
 <code>creationDate</code>.</p>
 
 <pre><code class="javascript">/* /models/user.js
@@ -479,7 +479,7 @@ sera injecté dans l'URL à cet emplacement. Cela aura donc la forme
 groupe de routes et permet d'imbriquer d'autres routes.</p>
 
 <p>Une <code>resource</code> réinitialise également la convention de nommage de la ressource
-précédente. Cela signifie  q'au lieu d'avoir <code>UsersUserEditRoute</code>, nous aurons
+précédente. Cela signifie qu'au lieu d'avoir <code>UsersUserEditRoute</code>, nous aurons
 <code>UserEditRoute</code>. En d'autres termes, si vous avez une ressource imbriquée dans
 une autre ressource, les noms de nos fichiers seraient :</p>
 
@@ -533,10 +533,10 @@ quoi devrait ressembler votre `index.html` :
 <h3>La route {l-en users}</h3>
 
 <p>Cette route est liée à notre liste d'utilisateurs. Comme nous l'avons vu
-<a href="#le-router">précédemment</a> dans les définitions, une route est chargée d'appeler
-le modèle. Les routes ont un {l-en hook} <code>model</code> au travers duquel nous pouvons
-effectuer une requête AJAX (pour récupérer les données lorsque l'on n'utilise
-pas {l-en Ember-Data}) ou faire appel au <code>Store</code> (si l'on utilise
+<a href="#le-routeur">précédemment</a> dans les définitions, une route est chargée
+d'appeler le modèle. Les routes ont un {l-en hook} <code>model</code> au travers duquel
+nous pouvons effectuer une requête AJAX (pour récupérer les données lorsque
+l'on n'utilise pas {l-en Ember-Data}) ou faire appel au <code>Store</code> (si l'on utilise
 {l-en Ember-Data}). Si vous souhaitez savoir comment récupérer les données sans
 {l-en Ember-Data}, vous pouvez consulter la <a href="#sans-utiliser-ember-data">section</a>
 dans laquelle j'explique brièvement comment le faire.</p>
@@ -672,9 +672,9 @@ exécutée lorsque <code>firsName</code> ou <code>lastName</code> change.</p>
 <p>Les propriétés (statiques ou calculées) sont récupérables grâce à la méthode
 <code>.get('property')</code> et peuvent être assignées via <code>.set('property', newValue)</code>.</p>
 
-<p>Si vous avez besoin d'assigner plusieurs propriétés à assigner, il y a mieux
-que de le faire une par une. Vous pouvez utiliser <code>.setProperties({})</code> plutôt
-que plusieurs appels à <code>.set()</code>. Au lieu de ceci :</p>
+<p>Si vous avez besoin d'assigner plusieurs propriétés, il y a mieux que de le
+faire une par une. Vous pouvez utiliser <code>.setProperties({})</code> plutôt que
+plusieurs appels à <code>.set()</code>. Au lieu de ceci :</p>
 
 <pre><code class="javascript">this.set('propertyA', 'valueA');
 this.set('propertyB', valueB);
@@ -724,7 +724,7 @@ mais {l-en Ember} gère automatiquement la classe <code>active</code> en fonctio
 route active. <code>link-to</code> est parfait pour une menu par exemple. Vous pouvez en
 apprendre plus <a href="http://emberjs.com/guides/templates/links">dans les guides</a>.</p>
 
-<p>Une autre approche pourrait être de dire <code>IndexRoute</code> de rediriger vers
+<p>Une autre approche pourrait être de dire à <code>IndexRoute</code> de rediriger vers
 <code>UsersRoute</code>. Encore une fois, c'est assez simple :</p>
 
 <pre><code class="javascript">/* /routes/indexRoute.js
@@ -759,8 +759,7 @@ utilisateur depuis le {l-en template} <code>users</code>. Utilisons le {l-en blo
 
 <p>Le deuxième argument passé à <code>link-to</code> est le modèle à passer à <code>UserRoute</code>.</p>
 
-<p>OK, let’s get back to our single user template. It looks like this:
-Occupons-nous maintenant du {l-en template} d'un utilisateur spécifique. Il
+<p>Occupons-nous maintenant du {l-en template} d'un utilisateur spécifique. Il
 ressemble à ceci :</p>
 
 <p>``` html
@@ -778,8 +777,8 @@ ressemble à ceci :</p>
 
 <pre><code>
 Notez que vous ne pouvez pas utiliser `&lt;img src="{{avatarUrl}}"&gt;`, les données
-attachées à un attribut doivent doivent utiliser le {l-en helper} `bind-attr`.
-Vous pouvez par exemple écrire `&lt;img {{bind-attr height="imgHeight"}}&gt;` avec
+attachées à un attribut doivent utiliser le {l-en helper} `bind-attr`. Vous
+pouvez par exemple écrire `&lt;img {{bind-attr height="imgHeight"}}&gt;` avec
 `imgHeight` qui serait une propriété calculée dans le contrôleur.
 
 Vous trouverez tout ce dont vous avez besoin sur les
@@ -836,7 +835,7 @@ rendez-vous dans les guides.</p>
 <h3>Modifier un utilisateur</h3>
 
 <p>Passons maintenant au formulaire de modification d'un utilisateur, imbriqué dans
-la page de ce dernier. e {l-en template} ressemble à ceci :</p>
+la page de ce dernier. Le {l-en template} ressemble à ceci :</p>
 
 <p>``` html
 /<em> /templates/user/edit.hbs
@@ -935,7 +934,7 @@ App.UserController = Ember.ObjectController.extend({
 });
 </code></pre>
 
-<p>Les actions, que ce soit dans un contrôleur ou un route, sont stockées dans
+<p>Les actions, que ce soit dans un contrôleur ou une route, sont stockées dans
 le {l-en hash} <code>actions</code>. Ce n'est cependant pas le cas des actions par défaut
 comme <code>click</code>, <code>doubleClick</code>, <code>mouseLeave</code> ou <code>dragStart</code>. Le site
 d'{l-en Ember.js} contient la
@@ -992,7 +991,7 @@ App.UserEditController = Ember.ObjectController.extend({
 <p>Notre mode &ldquo;modification&rdquo; fonctionne bien. Passons maintenant à la suppression
 d'un utilisateur.</p>
 
-<h3>Supprimer une utilisateur</h3>
+<h3>Supprimer un utilisateur</h3>
 
 <p>Nous pouvons ajouter un <code>button</code> &ldquo;Supprimer&rdquo; à côté du bouton &ldquo;Modifier&rdquo; dans le
 {l-en template} d'un utilisateur. Cette fois nous aurons une <code>{{action}}</code>
@@ -1262,14 +1261,14 @@ d'une vue dans le DOM, comme ceci :</p>
 
 <p>La combinaison des propriétés calculées et de classes (<code>className</code>) dynamiques
 peut sembler une technique un peu folle mais ce n'est pas si terrible en
-réalité. L'idée est simplement d'ajouter ou de retirer une classe une classe
-CSS sur un élément en fonction d'une propriété qui peut être <code>true</code> ou <code>false</code>.
-La classe CSS contient bien sûr une transition CSS.</p>
+réalité. L'idée est simplement d'ajouter ou de retirer une classe CSS sur un
+élément en fonction d'une propriété qui peut être <code>true</code> ou <code>false</code>. La classe
+CSS contient bien sûr une transition CSS.</p>
 
 <p>Mettons que nous avons une <code>div</code> cachée dans le DOM. Lorsque cette <code>div</code> a la
 classe <code>opened</code>, elle s'affiche en glissant. Lorsqu'elle a la classe <code>closed</code>,
 elle glisse de nouveau pour se cacher. Un panneau latéral est l'exemple parfait,
-nous allons donc en écrire une.</p>
+nous allons donc en écrire un.</p>
 
 <p>Voici un JS Bin pour que vous puissiez tester le code :</p>
 
@@ -1322,7 +1321,7 @@ appelée par une <code>action</code> qui remonte, en passant par le contrôleur 
 les routes, jusqu'à trouver l'action <code>showModal</code> correspondante. Nous avons
 placé <code>showModal</code> dans la route la plus haute possible, <code>applicationRoute</code>.
 Son seul but est de valuer la propriété <code>modalVisible</code> dans le contrôleur
-passé en secod argument de l'<code>action</code>. Et oui, créer une propriété en même
+passé en second argument de l'<code>action</code>. Et oui, créer une propriété en même
 temps qu'on lui donne sa valeur est possible.</li>
 <li><strong>HTML</strong><br />
 Chaque {l-en modal} a son propre {l-en template} et nous utilisons le bloc
@@ -1407,8 +1406,8 @@ se fait comme ceci :</p>
 Vous pouvez utiliser un autre {l-en adapter} que les deux par défaut
 (<code>FixtureAdapter</code> et <code>RESTAdapter</code>). On en trouve bon nombre
 <a href="https://github.com/search?q=ember+adapter&amp;amp;ref=reposearch">sur Github</a>.
-Il y a, par exemple, l'[{l-en adpter} LocalStorage][LSAdapterGihub] dont on
-peut trouver un démo dans la
+Il y a, par exemple, l'[{l-en adapter} LocalStorage][LSAdapterGihub] dont on
+peut trouver une démo dans la
 <a href="http://emberjs.com/guides/getting-started/using-other-adapters">{l-en Todo}</a>
 d'exemple des guides. Je l'utilise également dans la [démo][STYLED_DEMO].</p></li>
 </ul>
@@ -1500,7 +1499,7 @@ déclarer un fichier <code>_yourpartial.hbs</code> ou, si vous ne précompilez p
 <code>&lt;script type="text/x-handlebars" id="_yourpartial"&gt;</code>.</p>
 
 <p>Les [composants][GUIDES_PARTIALS]
-doivent commencer par <code>composants/</code>. Vous devez donc les stocker dans un dossier
+doivent commencer par <code>components/</code>. Vous devez donc les stocker dans un dossier
 <code>components/</code> ou, si vous ne précompilez pas vos {l-en templates}, une
 balise <code>&lt;script type="text/x-handlebars" id="components/votre-composant"&gt;</code>. Vous
 devez utiliser un tiret comme séparateur dans le nom des composants.</p>
@@ -1544,8 +1543,8 @@ configuration :</p>
 </ul>
 
 
-<p>Ue fois configurés, vous devriez être à même de lancer <code>grunt</code> en ligne de
-commande et cela devrait produite le fichier <code>templates.js</code>. Chargez-le dans
+<p>Une fois configurés, vous devriez être à même de lancer <code>grunt</code> en ligne de
+commande et cela devrait produire le fichier <code>templates.js</code>. Chargez-le dans
 <code>index.html</code> (après <code>ember.js</code>) puis rendez-vous dans la console du navigateur
 et tapez <code>Em.TEMPLATES</code>. Vous devriez voir un {l-en hash} contenant tous les
 {l-en templates} compilés.</p>
@@ -1615,7 +1614,7 @@ lien vers chaque version sur le [site d'{l-en Ember.js}][EMBER_BUILDS].</p>
 console du navigateur (si vous utilisez bien la version de développement). Il
 peut être cependant difficile de deviner d'où vient l'erreur. Quelques méthodes
 bien pratiques sont <code>{{log something}}</code> et <code>{{controller}}</code> qui affiche le
-<code>controller</code> courant pour le {l-en template} dans lequel nous appelons
+<code>controller</code> courant pour le {l-en template} dans lequel nous appelons le
 {l-en helper}.</p>
 
 <p>Ou vous pouvez afficher chaque transition du <code>Router</code> comme ceci :</p>
@@ -1697,6 +1696,7 @@ relecture de ce bien long article.
 [DYNAMIC_SEGMENTS]: <a href="http://emberjs.com/guides/routing/specifying-a-routes-model/#toc_dynamic-models">http://emberjs.com/guides/routing/specifying-a-routes-model/#toc_dynamic-models</a>
 [EMBER_BUILDS]: <a href="http://emberjs.com/builds">http://emberjs.com/builds</a>
 [EMBER_FORUM]: <a href="http://discuss.emberjs.com/t/whats-the-difference-between-ember-helpers-components-and-views/2201/2">http://discuss.emberjs.com/t/whats-the-difference-between-ember-helpers-components-and-views/2201/2</a>
+[EMBER_WO_ED]: <a href="http://eviltrout.com/2013/03/23/ember-without-data.html">http://eviltrout.com/2013/03/23/ember-without-data.html</a>
 [GUIDES]: <a href="http://emberjs.com/guides/">http://emberjs.com/guides/</a>
 [GUIDES_ATTRIBUTES]: <a href="http://emberjs.com/guides/templates/binding-element-attributes/">http://emberjs.com/guides/templates/binding-element-attributes/</a>
 [GUIDES_CONTROLLERS]: <a href="http://emberjs.com/guides/controllers">http://emberjs.com/guides/controllers</a>

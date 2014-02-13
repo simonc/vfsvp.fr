@@ -55,11 +55,11 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-9">
+        <div class="col-xs-12 col-sm-9">
           
 <article class="article" role="article">
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-xs-12 col-sm-2">
       <p class="article-date">
         
           <span class="day">16/01</span>
@@ -71,20 +71,21 @@
         <i class="fa fa-comment"></i>
       </p>
     </div>
-    <div class="col-sm-10 article-body">
-      <header>
-        
-          <h1 class="article-title">Une introduction en profondeur à Ember.js</h1>
-          <div class="sharing">
+    <div class="col-xs-12 col-sm-10">
+      <div class="article-body">
+        <header>
+          
+            <h1 class="article-title">Une introduction en profondeur à Ember.js</h1>
+            <div class="sharing">
   <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/une-introduction-en-profondeur-a-emberjs" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/une-introduction-en-profondeur-a-emberjs" >Tweet</a>
   <div class="g-plusone" data-size="medium" data-href="http://vfsvp.fr/article/une-introduction-en-profondeur-a-emberjs"></div>
 </div>
 
-        
-      </header>
+          
+        </header>
 
-      
-        <div class="article-content"><p>Source:
+        
+          <div class="article-content"><p>Source:
 <a href="http://coding.smashingmagazine.com/2013/11/07/an-in-depth-introduction-to-ember-js/">An In-Depth Introduction To Ember.js de Julien Knebel pour Smashing</a></p>
 
 <p>Maintenant que <em lang="en">Ember.js 1.0</em> est sorti, il est temps d&#8217;y jeter un coup
@@ -155,7 +156,7 @@ de CSS, d&#8217;animations et de réactivité sur petits écrans.</p>
 <li><a href="#notre-premiere-action">Notre première action</a></li>
 <li><a href="#transitionto-ou-transitiontoroute">TransitionTo ou TransitionToRoute ?</a></li>
 <li><a href="#sauvegarder-les-modifications-apportees-a-lutilisateur">Sauvegarder les modifications apportées à l&#8217;utilisateur</a></li>
-<li><a href="#supprimer-une-utilisateur">Supprimer une utilisateur</a></li>
+<li><a href="#supprimer-un-utilisateur">Supprimer un utilisateur</a></li>
 <li><a href="#creer-un-utilisateur">Créer un utilisateur</a></li>
 <li><a href="#formater-les-donnees-avec-les-helpers">Formater les données avec les <em lang="en">helpers</em></a></li>
 <li><a href="#formater-les-donnees-avec-un-boundhelper">Formater les données avec un <em lang="en">BoundHelper</em></a></li>
@@ -295,14 +296,14 @@ le W3C travaille actuellement avec l&#8217;équipe <em lang="en">Ember</em> sur 
 <p>Pour faire simple, un <em lang="en">template</em> est la partie HTML d&#8217;une vue. Il permet
 d&#8217;afficher les données du modèle et se met automatiquement à jour lorsque ce
 dernier change. <em lang="en">Ember.js</em> utilise <a href="http://handlebarsjs.com">Handlebars</a>, un mécanisme
-léger de <em lang="en">templating</em> également maintenant par l&#8217;équipe <em lang="en">Ember</em>. Il
+léger de <em lang="en">templating</em> également maintenu par l&#8217;équipe <em lang="en">Ember</em>. Il
 fournit les outils logiques habituels comme <code>if</code> et <code>else</code>, les boucles et les
 <code>helpers</code> de formatage, ce genre de choses. Les <em lang="en">templates</em> peuvent être
 précompilés (si vous souhaitez les organiser en fichiers <code>.hbs</code> ou <code>.handlebars</code>
 séparés) ou tout simplement écrits dans une balise
 <code>&lt;script type="text/x-handlebars"&gt;&lt;/script&gt;</code> dans votre page HTML. Pour en
 savoir plus sur le sujet, vous pouvez vous reporter à la section
-<a href="#precompiler-les-templates">Précompiler les templates</a>.</p>
+<a href="#precompiler-ou-non-les-templates">Précompiler ou non les <em lang="en">templates</em></a>.</p>
 
 <h3 id="helpers">Helpers</h3>
 
@@ -312,7 +313,7 @@ données avant leur affichage (par exemple, pour donner un meilleur format que
 sous la forme <code>{{date}}</code> dans votre <em lang="en">template</em> et que vous avez un
 <em lang="en">helper</em> <code>formatDate</code> (qui converti une date en quelque chose de plus
 élégant, comme &ldquo;Il y a un mois&rdquo; ou &ldquo;29 juillet 2013&rdquo;), vous pouvez vous en
-servir en utilisant <code>{{formatDate}}</code>.</p>
+servir en utilisant <code>{{formatDate date}}</code>.</p>
 
 <h3 id="composants-helpers-vues-au-secours">Composants ? Helpers ? Vues ? Au secours !</h3>
 
@@ -340,7 +341,7 @@ dans le <em lang="en">local storage</em> du navigateur.</li>
 
 <p>Nous avons besoin d&#8217;une vue assez simple qui affiche un groupe d&#8217;utilisateurs
 (voir 1 ci-dessous). Il nous faut également une vue pour voir les informations
-d&#8217;une utilisateur spécifique (2). Nous devons être capables de modifier et
+d&#8217;un utilisateur spécifique (2). Nous devons être capables de modifier et
 supprimer ces informations (3). Nous devons enfin être à même de créer un nouvel
 utilisateur, pour ce faire nous réutiliserons le formulaire de modification.</p>
 
@@ -394,7 +395,7 @@ le moment, <em lang="en">Handlebars</em> n&#8217;est pas présent sur la page, v
 sur le <a href="http://handlebarsjs.com">site officiel de Handlebars</a>.</p>
 
 <p>Une fois les dépendances récupérées, nous pouvons commencer à créer notre
-application. Nous allons tout d&#8217;abord créer une fichier nommé <code>app.js</code> dans
+application. Nous allons tout d&#8217;abord créer un fichier nommé <code>app.js</code> dans
 lequel nous allons initialiser <em lang="en">Ember</em> :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="cm">/* /app.js</span>
@@ -465,9 +466,9 @@ comparer les deux techniques.</p>
 <p><em lang="en">Ember-Data</em> est une bibliothèque qui permet de récupérer les données
 stockées sur le serveur, de les retenir dans un <code>Store</code>, de les mettre à jour
 dans le navigateur et enfin des les renvoyer au serveur pour sauvegarde. Le
-<code>Store</code> peut être configuré avec différents <em lang="en">adapters</em> (par exemoke, le
+<code>Store</code> peut être configuré avec différents <em lang="en">adapters</em> (par exemple, le
 <code>RESTAdapter</code> qui interagit avec une API JSON ou le <code>LSAdapter</code> qui stocke les
-données dans <em lang="en">local storage</em> du navigateur).
+données dans le <em lang="en">local storage</em> du navigateur).
 Une <a href="#quest-ce-quember-data">section entière</a> de cet article est dédiée à
 <em lang="en">Ember-Data</em>.</p>
 
@@ -479,8 +480,8 @@ Une <a href="#quest-ce-quember-data">section entière</a> de cet article est dé
 </span></code></pre></div></figure>
 
 
-<p>Dans les versions précédentes versions d&#8217;<em lang="en">Ember</em>, il fallait hériter de
-<code>DS.Store</code>. Ce n&#8217;est plus nécessaire pour instancier les <em lang="en">adapters</em>.</p>
+<p>Dans les versions précédentes d&#8217;<em lang="en">Ember</em>, il fallait hériter de <code>DS.Store</code>.
+Ce n&#8217;est plus nécessaire pour instancier les <em lang="en">adapters</em>.</p>
 
 <p><code>FixtureAdapter</code> est un très bon moyen de démarrer avec <em lang="en">Ember.js</em> et
 <em lang="en">Ember-Data</em>. Il vous permet de travailler avec des données en
@@ -488,8 +489,8 @@ développement. Nous passerons au
 <a href="https://github.com/rpflorence/ember-localstorage-adapter">LocalStorage adapter</a>
 (ou <code>LSAdapter</code>) en fin de parcours.</p>
 
-<p>Commençons par définir notre modèle. Un utilisateur un nom <code>name</code>, une adresse
-<code>email</code>, une <code>bio</code> courte, un avatar <code>avatarUrl</code> et une date de création
+<p>Commençons par définir notre modèle. Un utilisateur aura un nom <code>name</code>, une
+adresse <code>email</code>, une courte <code>bio</code>, un avatar <code>avatarUrl</code> et une date de création
 <code>creationDate</code>.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="cm">/* /models/user.js</span>
@@ -631,7 +632,7 @@ sera injecté dans l&#8217;URL à cet emplacement. Cela aura donc la forme
 groupe de routes et permet d&#8217;imbriquer d&#8217;autres routes.</p>
 
 <p>Une <code>resource</code> réinitialise également la convention de nommage de la ressource
-précédente. Cela signifie  q&#8217;au lieu d&#8217;avoir <code>UsersUserEditRoute</code>, nous aurons
+précédente. Cela signifie qu&#8217;au lieu d&#8217;avoir <code>UsersUserEditRoute</code>, nous aurons
 <code>UserEditRoute</code>. En d&#8217;autres termes, si vous avez une ressource imbriquée dans
 une autre ressource, les noms de nos fichiers seraient :</p>
 
@@ -683,10 +684,10 @@ quoi devrait ressembler votre <code>index.html</code> :</p>
 <h3 id="la-route-users">La route <em lang="en">users</em></h3>
 
 <p>Cette route est liée à notre liste d&#8217;utilisateurs. Comme nous l&#8217;avons vu
-<a href="#le-router">précédemment</a> dans les définitions, une route est chargée d&#8217;appeler
-le modèle. Les routes ont un <em lang="en">hook</em> <code>model</code> au travers duquel nous pouvons
-effectuer une requête AJAX (pour récupérer les données lorsque l&#8217;on n&#8217;utilise
-pas <em lang="en">Ember-Data</em>) ou faire appel au <code>Store</code> (si l&#8217;on utilise
+<a href="#le-routeur">précédemment</a> dans les définitions, une route est chargée
+d&#8217;appeler le modèle. Les routes ont un <em lang="en">hook</em> <code>model</code> au travers duquel
+nous pouvons effectuer une requête AJAX (pour récupérer les données lorsque
+l&#8217;on n&#8217;utilise pas <em lang="en">Ember-Data</em>) ou faire appel au <code>Store</code> (si l&#8217;on utilise
 <em lang="en">Ember-Data</em>). Si vous souhaitez savoir comment récupérer les données sans
 <em lang="en">Ember-Data</em>, vous pouvez consulter la <a href="#sans-utiliser-ember-data">section</a>
 dans laquelle j&#8217;explique brièvement comment le faire.</p>
@@ -820,9 +821,9 @@ exécutée lorsque <code>firsName</code> ou <code>lastName</code> change.</p>
 <p>Les propriétés (statiques ou calculées) sont récupérables grâce à la méthode
 <code>.get('property')</code> et peuvent être assignées via <code>.set('property', newValue)</code>.</p>
 
-<p>Si vous avez besoin d&#8217;assigner plusieurs propriétés à assigner, il y a mieux
-que de le faire une par une. Vous pouvez utiliser <code>.setProperties({})</code> plutôt
-que plusieurs appels à <code>.set()</code>. Au lieu de ceci :</p>
+<p>Si vous avez besoin d&#8217;assigner plusieurs propriétés, il y a mieux que de le
+faire une par une. Vous pouvez utiliser <code>.setProperties({})</code> plutôt que
+plusieurs appels à <code>.set()</code>. Au lieu de ceci :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;propertyA&#39;</span><span class="p">,</span> <span class="s1">&#39;valueA&#39;</span><span class="p">);</span>
 </span><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;propertyB&#39;</span><span class="p">,</span> <span class="nx">valueB</span><span class="p">);</span>
@@ -874,7 +875,7 @@ mais <em lang="en">Ember</em> gère automatiquement la classe <code>active</code
 route active. <code>link-to</code> est parfait pour une menu par exemple. Vous pouvez en
 apprendre plus <a href="http://emberjs.com/guides/templates/links">dans les guides</a>.</p>
 
-<p>Une autre approche pourrait être de dire <code>IndexRoute</code> de rediriger vers
+<p>Une autre approche pourrait être de dire à <code>IndexRoute</code> de rediriger vers
 <code>UsersRoute</code>. Encore une fois, c&#8217;est assez simple :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="cm">/* /routes/indexRoute.js</span>
@@ -911,8 +912,7 @@ utilisateur depuis le <em lang="en">template</em> <code>users</code>. Utilisons 
 
 <p>Le deuxième argument passé à <code>link-to</code> est le modèle à passer à <code>UserRoute</code>.</p>
 
-<p>OK, let’s get back to our single user template. It looks like this:
-Occupons-nous maintenant du <em lang="en">template</em> d&#8217;un utilisateur spécifique. Il
+<p>Occupons-nous maintenant du <em lang="en">template</em> d&#8217;un utilisateur spécifique. Il
 ressemble à ceci :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'>/* /templates/user.hbs
@@ -928,8 +928,8 @@ ressemble à ceci :</p>
 
 
 <p>Notez que vous ne pouvez pas utiliser <code>&lt;img src="{{avatarUrl}}"&gt;</code>, les données
-attachées à un attribut doivent doivent utiliser le <em lang="en">helper</em> <code>bind-attr</code>.
-Vous pouvez par exemple écrire <code>&lt;img {{bind-attr height="imgHeight"}}&gt;</code> avec
+attachées à un attribut doivent utiliser le <em lang="en">helper</em> <code>bind-attr</code>. Vous
+pouvez par exemple écrire <code>&lt;img {{bind-attr height="imgHeight"}}&gt;</code> avec
 <code>imgHeight</code> qui serait une propriété calculée dans le contrôleur.</p>
 
 <p>Vous trouverez tout ce dont vous avez besoin sur les
@@ -987,7 +987,7 @@ rendez-vous dans les guides.</p>
 <h3 id="modifier-un-utilisateur">Modifier un utilisateur</h3>
 
 <p>Passons maintenant au formulaire de modification d&#8217;un utilisateur, imbriqué dans
-la page de ce dernier. e <em lang="en">template</em> ressemble à ceci :</p>
+la page de ce dernier. Le <em lang="en">template</em> ressemble à ceci :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'>/* /templates/user/edit.hbs
 </span><span class='line'>*/
@@ -1085,7 +1085,7 @@ l&#8217;action <code>edit</code> qui se trouve dans le contrôleur. Ajoutons-la 
 </span></code></pre></div></figure>
 
 
-<p>Les actions, que ce soit dans un contrôleur ou un route, sont stockées dans
+<p>Les actions, que ce soit dans un contrôleur ou une route, sont stockées dans
 le <em lang="en">hash</em> <code>actions</code>. Ce n&#8217;est cependant pas le cas des actions par défaut
 comme <code>click</code>, <code>doubleClick</code>, <code>mouseLeave</code> ou <code>dragStart</code>. Le site
 d&#8217;<em lang="en">Ember.js</em> contient la
@@ -1147,7 +1147,7 @@ une <code>{{action}}</code>.</p>
 <p>Notre mode &ldquo;modification&rdquo; fonctionne bien. Passons maintenant à la suppression
 d&#8217;un utilisateur.</p>
 
-<h3 id="supprimer-une-utilisateur">Supprimer une utilisateur</h3>
+<h3 id="supprimer-un-utilisateur">Supprimer un utilisateur</h3>
 
 <p>Nous pouvons ajouter un <code>button</code> &ldquo;Supprimer&rdquo; à côté du bouton &ldquo;Modifier&rdquo; dans le
 <em lang="en">template</em> d&#8217;un utilisateur. Cette fois nous aurons une <code>{{action}}</code>
@@ -1432,14 +1432,14 @@ d&#8217;une vue dans le DOM, comme ceci :</p>
 
 <p>La combinaison des propriétés calculées et de classes (<code>className</code>) dynamiques
 peut sembler une technique un peu folle mais ce n&#8217;est pas si terrible en
-réalité. L&#8217;idée est simplement d&#8217;ajouter ou de retirer une classe une classe
-CSS sur un élément en fonction d&#8217;une propriété qui peut être <code>true</code> ou <code>false</code>.
-La classe CSS contient bien sûr une transition CSS.</p>
+réalité. L&#8217;idée est simplement d&#8217;ajouter ou de retirer une classe CSS sur un
+élément en fonction d&#8217;une propriété qui peut être <code>true</code> ou <code>false</code>. La classe
+CSS contient bien sûr une transition CSS.</p>
 
 <p>Mettons que nous avons une <code>div</code> cachée dans le DOM. Lorsque cette <code>div</code> a la
 classe <code>opened</code>, elle s&#8217;affiche en glissant. Lorsqu&#8217;elle a la classe <code>closed</code>,
 elle glisse de nouveau pour se cacher. Un panneau latéral est l&#8217;exemple parfait,
-nous allons donc en écrire une.</p>
+nous allons donc en écrire un.</p>
 
 <p>Voici un JS Bin pour que vous puissiez tester le code :</p>
 
@@ -1492,7 +1492,7 @@ appelée par une <code>action</code> qui remonte, en passant par le contrôleur 
 les routes, jusqu&#8217;à trouver l&#8217;action <code>showModal</code> correspondante. Nous avons
 placé <code>showModal</code> dans la route la plus haute possible, <code>applicationRoute</code>.
 Son seul but est de valuer la propriété <code>modalVisible</code> dans le contrôleur
-passé en secod argument de l&#8217;<code>action</code>. Et oui, créer une propriété en même
+passé en second argument de l&#8217;<code>action</code>. Et oui, créer une propriété en même
 temps qu&#8217;on lui donne sa valeur est possible.</li>
 <li><strong>HTML</strong><br />
 Chaque <em lang="en">modal</em> a son propre <em lang="en">template</em> et nous utilisons le bloc
@@ -1577,8 +1577,8 @@ se fait comme ceci :</p>
 Vous pouvez utiliser un autre <em lang="en">adapter</em> que les deux par défaut
 (<code>FixtureAdapter</code> et <code>RESTAdapter</code>). On en trouve bon nombre
 <a href="https://github.com/search?q=ember+adapter&amp;amp;ref=reposearch">sur Github</a>.
-Il y a, par exemple, l&#8217;<a href="https://github.com/rpflorence/ember-localstorage-adapter"><em lang="en">adpter</em> LocalStorage</a> dont on
-peut trouver un démo dans la
+Il y a, par exemple, l&#8217;<a href="https://github.com/rpflorence/ember-localstorage-adapter"><em lang="en">adapter</em> LocalStorage</a> dont on
+peut trouver une démo dans la
 <a href="http://emberjs.com/guides/getting-started/using-other-adapters"><em lang="en">Todo</em></a>
 d&#8217;exemple des guides. Je l&#8217;utilise également dans la <a href="http://jkneb.github.io/ember-crud">démo</a>.</p></li>
 </ul>
@@ -1605,7 +1605,7 @@ a rédigé un petit articles qui liste les
 
 <p>Une autre façon de faire pourrait être de ne pas utiliser de bibliothèque. Dans
 ce cas, vous devez implémenter les méthodes de récupération des modèles via
-requêtes AJAX. &ldquo;[<em lang="en">Ember Without Ember-Data</em>][EMBER_WO_ED]&rdquo;, par Robin Ward
+requêtes AJAX. &ldquo;<a href="http://eviltrout.com/2013/03/23/ember-without-data.html"><em lang="en">Ember Without Ember-Data</em></a>&rdquo;, par Robin Ward
 (le mec derrière <a href="http://www.discourse.org/">Discourse</a>), est une lecture
 intéressante. &ldquo;<a href="http://net.tutsplus.com/tutorials/javascript-ajax/getting-into-ember-js-part-3"><em lang="en">Getting Into Ember.js, Part 3</em></a>&rdquo;, par Rey
 Bango sur Nettuts+ traite en particulier des modèles.</p>
@@ -1672,7 +1672,7 @@ déclarer un fichier <code>_yourpartial.hbs</code> ou, si vous ne précompilez p
 <code>&lt;script type="text/x-handlebars" id="_yourpartial"&gt;</code>.</p>
 
 <p>Les <a href="http://emberjs.com/guides/templates/rendering-with-helpers/">composants</a>
-doivent commencer par <code>composants/</code>. Vous devez donc les stocker dans un dossier
+doivent commencer par <code>components/</code>. Vous devez donc les stocker dans un dossier
 <code>components/</code> ou, si vous ne précompilez pas vos <em lang="en">templates</em>, une
 balise <code>&lt;script type="text/x-handlebars" id="components/votre-composant"&gt;</code>. Vous
 devez utiliser un tiret comme séparateur dans le nom des composants.</p>
@@ -1718,8 +1718,8 @@ configuration :</p>
 </ul>
 
 
-<p>Ue fois configurés, vous devriez être à même de lancer <code>grunt</code> en ligne de
-commande et cela devrait produite le fichier <code>templates.js</code>. Chargez-le dans
+<p>Une fois configurés, vous devriez être à même de lancer <code>grunt</code> en ligne de
+commande et cela devrait produire le fichier <code>templates.js</code>. Chargez-le dans
 <code>index.html</code> (après <code>ember.js</code>) puis rendez-vous dans la console du navigateur
 et tapez <code>Em.TEMPLATES</code>. Vous devriez voir un <em lang="en">hash</em> contenant tous les
 <em lang="en">templates</em> compilés.</p>
@@ -1789,7 +1789,7 @@ lien vers chaque version sur le <a href="http://emberjs.com/builds">site d&#8217
 console du navigateur (si vous utilisez bien la version de développement). Il
 peut être cependant difficile de deviner d&#8217;où vient l&#8217;erreur. Quelques méthodes
 bien pratiques sont <code>{{log something}}</code> et <code>{{controller}}</code> qui affiche le
-<code>controller</code> courant pour le <em lang="en">template</em> dans lequel nous appelons
+<code>controller</code> courant pour le <em lang="en">template</em> dans lequel nous appelons le
 <em lang="en">helper</em>.</p>
 
 <p>Ou vous pouvez afficher chaque transition du <code>Router</code> comme ceci :</p>
@@ -1864,14 +1864,14 @@ relecture de ce bien long article.</p>
 
 </div>
 
-        <footer>
-          <p class="meta">
-            
+          <footer>
+            <p class="meta">
+              
   
 
 <span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
 
-            
+              
 
 
 
@@ -1887,7 +1887,7 @@ relecture de ce bien long article.</p>
   
 
 <time datetime="2014-01-16T12:00:00+01:00" pubdate data-updated="true">16/01/2014</time>
-            
+              
 
 <span class="categories">
   
@@ -1896,21 +1896,22 @@ relecture de ce bien long article.</p>
 </span>
 
 
-          </p>
-          <p class="meta">
-            
-              <a class="basic-alignment left" href="/article/guide-de-migration-vers-capistrano-3" title="Previous Post: Guide de migration vers Capistrano 3">&laquo; Guide de migration vers Capistrano 3</a>
-            
-            
-          </p>
-        </footer>
+            </p>
+            <p class="meta">
+              
+                <a class="basic-alignment left" href="/article/guide-de-migration-vers-capistrano-3" title="Previous Post: Guide de migration vers Capistrano 3">&laquo; Guide de migration vers Capistrano 3</a>
+              
+              
+            </p>
+          </footer>
 
-        <section>
-          <h1>Commentaires</h1>
-          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <section>
+            <h1>Commentaires</h1>
+            <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-        </section>
-      
+          </section>
+        
+      </div>
     </div>
   </div>
 </article>
@@ -1918,7 +1919,7 @@ relecture de ce bien long article.</p>
 
         </div>
 
-        <aside class="sidebar col-sm-3">
+        <aside class="sidebar col-xs-12 col-sm-3">
           <section>
   <h1>VF svp</h1>
   <p>VF svp est un projet communautaire de traduction d'articles techniques.
