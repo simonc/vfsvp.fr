@@ -5352,7 +5352,7 @@ body > footer {
 
 .article-date {
   background: #f5f9fc;
-  font-size: .8em;
+  font-size: 1.5em;
   line-height: 1;
   padding: 1em .5em;
   text-align: center; }
@@ -5372,7 +5372,7 @@ body > footer {
   padding: 1em;
   margin-bottom: 1em; }
 .sidebar h1 {
-  font-size: 1em;
+  font-size: 1.5em;
   margin-top: 0; }
 
 pre {
@@ -5388,7 +5388,7 @@ pre {
     font-size: 1.5em; }
 
 .article-comments-count {
-  font-size: 1em;
+  font-size: 2em;
   text-align: center; }
   .article-comments-count i {
     color: #999;

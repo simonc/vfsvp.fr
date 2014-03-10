@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-02-13T10:18:46+01:00</updated>
+  <updated>2014-03-10T10:25:18+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -2874,7 +2874,7 @@ c&#8217;est gratuit :</p>
 </span><span class='line'>  <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;message in emails.messages&quot;</span><span class="nt">&gt;</span>
 </span><span class='line'>    <span class="nt">&lt;p&gt;</span>From: {{ message.from }}<span class="nt">&lt;/p&gt;</span>
 </span><span class='line'>    <span class="nt">&lt;p&gt;</span>Subject: {{ message.subject }}<span class="nt">&lt;/p&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;p&gt;</span>{{ message.sent | date:&#39;MMM d, y h:mm:ss a&#39;&quot; }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>{{ message.sent | date:&#39;MMM d, y h:mm:ss a&#39; }}<span class="nt">&lt;/p&gt;</span>
 </span><span class='line'>  <span class="nt">&lt;/li&gt;</span>
 </span><span class='line'><span class="nt">&lt;/ul&gt;</span>
 </span></code></pre></div></figure>
