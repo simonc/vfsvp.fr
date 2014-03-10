@@ -784,7 +784,7 @@ c'est gratuit :
   <li ng-repeat="message in emails.messages">
     <p>From: {{ message.from }}</p>
     <p>Subject: {{ message.subject }}</p>
-    <p>{{ message.sent | date:'MMM d, y h:mm:ss a'" }}</p>
+    <p>{{ message.sent | date:'MMM d, y h:mm:ss a' }}</p>
   </li>
 </ul>
 ```
