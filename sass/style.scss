@@ -71,6 +71,10 @@ body > footer {
 
 pre {
   font-size: 14px;
+
+  code {
+    white-space: pre;
+  }
 }
 
 .archive-row {

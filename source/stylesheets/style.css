@@ -5377,6 +5377,8 @@ body > footer {
 
 pre {
   font-size: 14px; }
+  pre code {
+    white-space: pre; }
 
 .archive-row {
   background: #FFF;
