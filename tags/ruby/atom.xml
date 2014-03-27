@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ruby | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ruby/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-03-10T10:25:18+01:00</updated>
+  <updated>2014-03-27T14:33:43+01:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -12,6 +12,137 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Tri de dépendances en Ruby avec TSort]]></title>
+    <link href="http://vfsvp.fr/article/dependency-sorting-in-ruby-with-tsort"/>
+    <updated>2014-03-27T16:00:00+01:00</updated>
+    <id>http://vfsvp.fr/article/dependency-sorting-in-ruby-with-tsort</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://viget.com/extend/dependency-sorting-in-ruby-with-tsort">Dependency Sorting in Ruby with TSort de Lawson Kurtz sur le blog de Viget</a></p>
+
+<p>Si vous utilisez Ruby, vous avez probablement eu l'occasion d'expérimenter les
+miracles de la gestion de dépendances de <a href="http://bundler.io/">{l-en Bundler}</a>.
+Ce que vous ne savez peut-être pas, c'est que vous pouvez utiliser les mêmes
+mécanismes de tri de dépendances dans vos propres applications et dans d'autres
+contextes.</p>
+
+<!-- more -->
+
+
+<h2>Hello TSort</h2>
+
+<p><a href="http://www.ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">{l-en TSort}</a>
+est un module Ruby, disponible dans la bibliothèque standard, qui permet de
+faire du <a href="http://fr.wikipedia.org/wiki/Tri_topologique">tri topologique</a>.
+{l-en Bundler} utilise {l-en TSort} pour démêler le sac de nœuds de dépendances
+de vos {l-en gems}. La gestion de ces dépendances est la partie émergée de
+l'iceberg en ce qui concerne les possibilités du tri topologique. Il est assez
+facile de profiter de l'incroyable puissance de {l-en TSort} dans votre projet.</p>
+
+<h2>Use Case : Ajouter des données d'exemple dans un base de données</h2>
+
+<p>Imaginons une tâche qui doit peupler une base de données avec plusieurs
+enregistrements. Mais rien n'est jamais facile, nos enregistrements ont des
+dépendances comme le montre l'exemple ci-dessous :</p>
+
+<pre><code class="ruby">user_1 = User.create address: address_1
+
+school_1 = School.create address: address_2, faculty: [user_1]
+school_2 = School.create address: address_3
+
+address_1 = Address.create zip_code: zip_code_1
+address_2 = Address.create zip_code: zip_code_2
+address_3 = Address.create zip_code: zip_code_2
+
+zip_code_1 = ZipCode.create
+zip_code_2 = ZipCode.create
+</code></pre>
+
+<h3>Le problème</h3>
+
+<p>Si on lance le pseudo-code précédent, il va bien sûr lever une exception
+<code>NameError</code> puisque plusieurs enregistrements en référencent d'autres qui ne
+sont pas encore créés.</p>
+
+<p>Pour cet exemple simpliste, il serait facile de trier les lignes à la main, pour
+que les insertions aient lieu dans le bon ordre. Mais comment faire quand les
+relations dépendantes sont plus complexes ou quand le nombre d'enregistrements
+est tout simplement trop important ? Trier à la main n'est simplement pas
+envisageable (qui aime faire les choses à la main de toute façon ?).</p>
+
+<h3>La solution</h3>
+
+<p>C'est ici que {l-en TSort} entre en scène. Nous pouvons l'utiliser pour
+déterminer l'ordre dans lequel ces enregistrements doivent être insérés.</p>
+
+<p>La façon la plus rapide d'utiliser {l-en TSort} est de créer puis trier un
+{l-en hash} dans lequel chaque clé représente un objet et chaque valeur est un
+tableau de références aux objets dont l'objet-clé dépend.</p>
+
+<p>Si <code>skier</code> dépend de <code>neige</code> et <code>neige</code> dépend de <code>nuages</code> et <code>froid</code>, notre
+{l-en hash} va ressembler à ceci :</p>
+
+<pre><code class="ruby">{
+  'nuages' =&gt; [],
+  'froid'  =&gt; [],
+  'skier'  =&gt; ['neige'],
+  'neige'  =&gt; ['nuages', 'froid']
+}
+</code></pre>
+
+<p>Nous listons seulement les dépendances de premier niveau, {l-en TSort} se
+débrouillera tout seul pour déterminer le reste.</p>
+
+<p>Pour faire un tri topologique sur ce {l-en hash} de dépendances, il nous faut
+quelques fonctionnalités de {l-en TSort}. Le plus simple est de créer une classe
+qui hérite de {l-en Hash} comme ceci :</p>
+
+<pre><code class="ruby">require 'tsort'
+
+class TsortableHash &lt; Hash
+  include TSort
+
+  alias tsort_each_node each_key
+
+  def tsort_each_child(node, &amp;block)
+    fetch(node).each(&amp;block)
+  end
+end
+</code></pre>
+
+<p>Nous pouvons maintenant utiliser notre classe pour construire le {l-en hash} de
+dépendances. Pour nos enregistrements du début, il va ressembler à ceci :</p>
+
+<pre><code class="ruby">dependency_hash = \
+TsortableHash[
+  user_1     =&gt; [address_1],
+  school_1   =&gt; [address_2, user_1],
+  school_2   =&gt; [address_3],
+  address_1  =&gt; [zip_code_1],
+  address_2  =&gt; [zip_code_2],
+  address_3  =&gt; [zip_code_2],
+  zip_code_1 =&gt; [],
+  zip_code_2 =&gt; []
+]
+</code></pre>
+
+<p>Une fois notre {l-en hash} de dépendances {l-en tsortable} créé, le plus dur
+est fait. {l-en TSort} s'occupe du reste et nous donne un tableau ordonné qu'il
+nous suffit de suivre pour insérer les enregistrements sans problème.</p>
+
+<pre><code class="ruby">dependency_hash.tsort
+#=&gt; [zip_code_1, address_1, user_1, zip_code_2, address_2, school_1, address_3, school_2]
+
+# Si vous avez des dépendances circulaires, #tsort lèvera une exception TSort::Cyclic.
+</code></pre>
+
+<p>{l-en TSort} est un outil incroyablement puissant et simple pour ordonner des
+relations dépendantes. La prochaine fois que vous avez du mal à gérer des
+dépendances, rassurez-vous,
+<a href="http://ruby-doc.org/stdlib-2.0.0/libdoc/tsort/rdoc/TSort.html">TSort</a> est
+disponible en un clic.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Guide de migration vers Capistrano 3]]></title>
@@ -945,284 +1076,6 @@ illisibles.</p>
 temps passe mais j'ai augmenté ma sensibilité aux mauvais tests fonctionnels
 pour toujours. Refactorez de façon agressive, concevez intelligemment et aimez
 vos tests fonctionnels.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Les méthodes pack et unpack en Ruby]]></title>
-    <link href="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby"/>
-    <updated>2013-10-07T10:00:00+02:00</updated>
-    <id>http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby</id>
-    <content type="html"><![CDATA[<p>Source: <a href="http://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html">Ruby Pack Unpack de Neeraj Singh sur le blog de BigBinary</a></p>
-
-<p>Le langage C permet aux développeurs d'accéder directement à la mémoire où sont
-stockées les variables. Ruby ne le permet pas. Il est cependant des cas dans
-lesquels on peut avoir besoin d'accéder aux bits et octets contenus dans cette
-mémoire tout en travaillant avec Ruby. Ce dernier fournit deux méthods <code>pack</code> et
-<code>unpack</code> pour cela.</p>
-
-<p>Voici un exemple :</p>
-
-<pre><code class="ruby">'A'.unpack('b*')
-#=&gt; ["10000010"]
-</code></pre>
-
-<!-- more -->
-
-
-<p>Dans le cas ci-dessus, <code>'A'</code> est une chaîne de caractères stockée et, grâce à
-<code>unpack</code> je tente d'en lire la valeur binaire. La table ASCII indique que la
-valeur de <code>'A'</code> est 65 et la représentation binaire de 65 est <code>10000010</code>.</p>
-
-<p>Un autre exemple :</p>
-
-<pre><code class="ruby">'A'.unpack('B*')
-#=&gt; ["01000001"]
-</code></pre>
-
-<p>Notez bien le changement de résultat entre les deux exemples. Quelle est la
-différence entre <code>b*</code> et <code>B*</code> ? Pour le comprendre nous devons d'abord parler
-de <em>MSB</em> et <em>LSB</em>.</p>
-
-<h2>Bit de poids fort et bit de poids faible</h2>
-
-<p>Tous les bits ne sont pas créés égaux. <code>'C'</code> a la valeur ASCII 67. La
-représentation binaire de 67 est <code>1000011</code>.</p>
-
-<p>Parlons d'abord du style <em>MSB</em> (most significant bit, bit de poids fort). Si
-vous utilisez le style <em>MSB</em>, et lisez donc de gauche à droite (en lisant tout
-le temps de gauche à droite), le bit de poids le plus fort est donc le premier.
-Puisque le bit de poids le plus fort vient en premier, nous pouvons ajouter un
-<code>0</code> devant pour obtenir huit bits. Après avoir ajouté un <code>0</code> la représentation
-binaire est donc <code>01000011</code>.</p>
-
-<p>Pour convertir cette valeur en <em>LSB</em> (least significant bit, bit de poids
-faible), nous devons stocker le bit de poids faible en premier (à gauche). Nous
-pouvons voir ci-dessous comment les bits vont être déplacés lors de la
-convertion de <em>MSB</em> vers <em>LSB</em>. Notez qu'ici la position 1 indique le bit le
-plus à gauche.</p>
-
-<ul>
-<li>déplacer la valeur 1 de la position <em>MSB</em> 8 à la position <em>LSB</em> 1</li>
-<li>déplacer la valeur 1 de la position <em>MSB</em> 7 à la position <em>LSB</em> 2</li>
-<li>déplacer la valeur 0 de la position <em>MSB</em> 6 à la position <em>LSB</em> 3</li>
-<li>et ainsi de suite</li>
-</ul>
-
-
-<p>Une fois l'exercice terminé, la valeur sera <code>11000010</code>.</p>
-
-<p>Nous avons effectué cette transformation à la main pour bien comprendre la
-différence entre bit de poids fort et bit de poids faible. La méthode <code>unpack</code>
-est cependant capable de donner les deux représentations. Cette méthode peut
-prendre <code>b*</code> ou <code>B*</code> en entrée, voici leur différence selon la documentation de
-Ruby :</p>
-
-<pre><code>B | bit string (MSB first) | représentation binaire (bit de poids fort en premier)
-b | bit string (LSB first) | représentation binaire (bit de poids faible en
-</code></pre>
-
-<p>Voyons maintenant deux exemples.</p>
-
-<pre><code class="ruby">'C'.unpack('b*')
-#=&gt; ["11000010"]
-
-'C'.unpack('B*')
-#=&gt; ["01000011"]
-</code></pre>
-
-<p><code>b*</code> et <code>B*</code> voient tous les deux là même donnée. Ils représentent simplement
-cette donnée différemment.</p>
-
-<h2>Différentes façons de représenter une même donnée</h2>
-
-<p>Disons que je souhaite la représentation binaire de la chaîne <code>hello</code>. D'après
-ce que nous avons vu précédemment cela devrait être assez facile :</p>
-
-<pre><code class="ruby">"hello".unpack('B*')
-#=&gt; ["0110100001100101011011000110110001101111"]
-</code></pre>
-
-<p>Nous pouvons également obtenir le résultat suivant</p>
-
-<pre><code class="ruby">"hello".unpack('C*').map {|e| e.to_s 2}
-#=&gt; ["1101000", "1100101", "1101100", "1101100", "1101111"]
-</code></pre>
-
-<p>Voyons un exemple similaire mais en découpant les étapes cette fois.</p>
-
-<pre><code class="ruby">"hello".unpack('C*')
-#=&gt; [104, 101, 108, 108, 111]
-</code></pre>
-
-<p>La directive <code>C*</code> retourne les caractères sous la forme d'un entier non signé
-tenant sur 8 bits. On peut voir que la valeur ASCII de <code>h</code> est 104 et celle de
-<code>e</code> est 101, etc.</p>
-
-<p>En utilisant la technique vu précédemment, nous pouvons obtenir une
-représentation hexadécimale de notre chaîne :</p>
-
-<pre><code class="ruby">"hello".unpack('C*').map {|e| e.to_s 16}
-#=&gt; ["68", "65", "6c", "6c", "6f"]
-</code></pre>
-
-<p>Il est toutefois possible d'obtenir directement cette valeur hexadécimale :</p>
-
-<pre><code class="ruby">"hello".unpack('H*')
-#=&gt; ["68656c6c6f"]
-</code></pre>
-
-<h2>High nibble first vs Low nibble first</h2>
-
-<p>Observez la différence entre les deux cas suivants :</p>
-
-<pre><code class="ruby">"hello".unpack('H*')
-#=&gt; ["68656c6c6f"]
-
-"hello".unpack('h*')
-#=&gt; ["8656c6c6f6"]
-</code></pre>
-
-<p>La documentation Ruby indique</p>
-
-<pre><code>H | hex string (high nibble first) | représentation hexadécimale (moitié haute en premier)
-h | hex string (low nibble first)  | représentation hexadécimale (moitié basse en premier)
-</code></pre>
-
-<p>Un octet est composé de 8 bits. Une moitié contient donc 4 bits. Un octet
-donc deux moitiés. La valeur ASCII de <code>h</code> est 104. 104 en hexadécimale s'écrit
-68. Ce nombre 68 est stocké en deux moitiés. La première contient la valeur 6
-sur 4 bits et la seconde contient la valeur 8. En général on utilise la notation
-moitié haute puis moitié basse, de gauche à droite, la valeur 6 pour la
-valeur 8.</p>
-
-<p>Si cependant vous devez utiliser la notation moitié basse puis moitié haute, la
-valeur 8 prendra la première place suivie de la valeur 6. La notation <em>moitié
-basse en premier</em> donne donc 86.</p>
-
-<p>Cette notation est utilisée pour chaque octet. Pour cette raison, la version
-<em>moitié basse en premier</em> de <code>68 65 6c 6c 6f</code> est <code>86 56 c6 c6 f6</code>.</p>
-
-<h2>Mélanger les directives</h2>
-
-<p>Dans les exemples précédents, nous avons utilisé le caractère <code>*</code>. Cela indique
-de traiter autant de caractères que possible. Par exemple :</p>
-
-<p>A single C will get a single byte.</p>
-
-<pre><code class="ruby">"hello".unpack('C')
-#=&gt; [104]
-</code></pre>
-
-<p>Vous pouvez ajouter plus de <code>C</code> si vous le souhaitez.</p>
-
-<pre><code class="ruby">"hello".unpack('CC')
-#=&gt; [104, 101]
-
-"hello".unpack('CCC')
-#=&gt; [104, 101, 108]
-
-"hello".unpack('CCCCC')
-#=&gt; [104, 101, 108, 108, 111]
-</code></pre>
-
-<p>Plutôt que de répéter ces directives, nous pouvons utiliser un nombre pour
-indiquer combien de fois la directive doit être répétée.</p>
-
-<pre><code class="ruby">"hello".unpack('C5')
-#=&gt; [104, 101, 108, 108, 111]
-</code></pre>
-
-<p>Nous pouvons utiliser <code>*</code> pour capturer toutes les octets restants.</p>
-
-<pre><code class="ruby">"hello".unpack('C*')
-#=&gt; [104, 101, 108, 108, 111]
-</code></pre>
-
-<p>Voyons un exemple dans lequel nous mélangeons les notations <em>MSB</em> et <em>LSB</em> :</p>
-
-<pre><code class="ruby">"aa".unpack('b8B8')
-#=&gt; ["10000110", "01100001"]
-</code></pre>
-
-<h2>pack est l'inverse de unpack</h2>
-
-<p>La méthode <code>pack</code> est utilisée pour lire les données stockées. Voyons quelques
-exemples d'utilisation :</p>
-
-<pre><code class="ruby">[1000001].pack('C')
-#=&gt; "A"
-</code></pre>
-
-<p>Dans le code ci-dessus, le valeur binaire est interpretée comme un entier non
-signé sur 8 bits et le résultat est <code>'A'</code>.</p>
-
-<pre><code class="ruby">['A'].pack('H')
-#=&gt; "\xA0"
-</code></pre>
-
-<p>Ici, l'entrée <code>'A'</code> n'est pas le <code>A</code> ASCII mais le <code>A</code> hexadécimale. C'est
-la version hexadécimale à cause de la directive <code>H</code>. Cette dernière indique à
-<code>pack</code> de traiter l'entrée comme une valeur hexadécimale. Comme <code>H</code> utilise la
-notation <em>moitié haute en premier</em>, puisque l'entrée ne contient qu'une moitié,
-cela signifie que la deuxième moitié, la moitié basse, a la valeur <code>0</code>. L'entrée
-est donc vue comme <code>'A0'</code>.</p>
-
-<p>Comme la valeur hexadécimale <code>A0</code> ne correspond à rien dans la table ASCII, le
-résultat final est laissé tel quel et vaut donc <code>'\xA0'</code>. Le préfix <code>\x</code> indique
-qu'il s'agit d'une valeur hexadécimale.</p>
-
-<p>En hexadécimale, <code>a</code> a la même valeur que <code>A</code>. Nous pouvons donc remplacer <code>A</code>
-par <code>a</code> dans notre exemple précédent et le résultat reste inchangé. Essayons
-pour voir :</p>
-
-<pre><code class="ruby">['a'].pack('H')
-#=&gt; "\xA0"
-</code></pre>
-
-<p>Un autre exemple :</p>
-
-<pre><code class="ruby">['a'].pack('h')
-#=&gt; "\n"
-</code></pre>
-
-<p>Dans le code ci-dessus, il y a une différence notable dans le résultat. Nous
-avons changé la directive de <code>H</code> à <code>h</code>. Comme <code>h</code> indique d'utiliser la notation
-<em>moitié basse en premier</em> et que l'entrée ne contient qu'une moitié, la moitié
-basse vaut <code>0</code> et l'entrée est donc <code>0a</code>. Le résultat est <code>\x0A</code> et si l'on
-regarde dans la table ASCII, <code>0A</code> vaut 10 et le caractère correspondant est
-<code>NL</code>, <em>new line</em> soit un saut de ligne. C'est pour cela que nous voyons
-s'afficher <code>\n</code> qui représente un saut de ligne.</p>
-
-<h2>Utilisation de unpack dans le code de Rails</h2>
-
-<p>J'ai cherché un peu dans le code source de Rails et trouvé les utilisations
-suivantes de la méthode <code>unpack</code> :</p>
-
-<pre><code class="ruby">email_address_obfuscated.unpack('C*')
-'mailto:'.unpack('C*')
-email_address.unpack('C*')
-char.unpack('H2')
-column.class.string_to_binary(value).unpack("H*")
-data.unpack("m")
-s.unpack("U*")
-</code></pre>
-
-<p>Nous avons déjà vu les directives <code>C*</code> et <code>H</code>, les directives <code>m</code> et <code>U</code> sont
-cependant nouvelles. La première sert à donner une représentation encodée en
-base64 de la valeur, la seconde retourne le caractère UTF-8 correspondant. Voici
-un exemple :</p>
-
-<pre><code class="ruby">"Hello".unpack('U*')
-#=&gt; [72, 101, 108, 108, 111]
-</code></pre>
-
-<h2>Versions de test</h2>
-
-<p>Les exmples de code précédents ont été testés avec la version <em>1.9.2</em> de Ruby.</p>
-
-<p>NDT: J'ai testé avec les versions 1.9.3 et 2.0.0, les exemples sont toujours
-valides.</p>
 ]]></content>
   </entry>
   
