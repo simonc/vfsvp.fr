@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: javascript | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/javascript/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-03-27T14:35:09+01:00</updated>
+  <updated>2014-03-30T22:55:30+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -1769,7 +1769,7 @@ application. En voici les composants :</p>
 <dt>Modèle</dt>
 <dd>   structure donnée représentant une entité de l'application, généralement
 transmise en JSON. Pour bien démarrer avec Angular, quelques notions de JSON
-son nécésssaires, cela vous permettra de faire communiquer votre serveur et vos
+sont nécessaires, cela vous permettra de faire communiquer votre serveur et vos
 vues. Un groupe d'<em>id</em> d'utilisateurs pourrait par exemple ressembler à ceci :</dd>
 </dl>
 
@@ -1787,8 +1787,8 @@ vues. Un groupe d'<em>id</em> d'utilisateurs pourrait par exemple ressembler à 
 <p>Vous pouvez accéder à cette information de deux façons. En passant par une XHR
 (XMLHttp Request), vous connaissez sûrement <code>$.ajax</code> en jQuery, Angular
 l'encapsule dans <code>$http</code>. L'autre méthode est de l'écrire dans le code de la
-page pour qu'elle soit chargée pendant l'interprétation (depuis datastore ou
-la base de données). Une fois que vous avez accès à l'information, vous pouvez
+page pour qu'elle soit chargée pendant l'interprétation (depuis un datastore ou
+une base de données). Une fois que vous avez accès à l'information, vous pouvez
 mettre à jour votre modèle et le renvoyer.</p>
 
 <dl>
@@ -1912,7 +1912,7 @@ vous en avez). La démo donne une petite idée de comment &ldquo;pousser&rdquo; 
 dans le DOM.</p>
 
 <p>Regardons maintenant une structure de données plus représentative que nous avons
-hypothétique récupérée depuis le serveur pour afficher les détails de
+hypothétiquement récupérée depuis le serveur pour afficher les détails de
 l'utilisateur. À partir de maintenant, j'utiliserai des données statiques, je
 vous montrerai plus tard comment récupérer dynamiquement des données JSON.</p>
 
@@ -2022,7 +2022,7 @@ Voici quelques exemples :</p>
 
 <pre><code>
 Je préfère les utiliser sous forme d'attribut. Les éléments personnalisés
-feront partie de futures version de HTML5 sous le nom de _Web Components_ mais
+feront partie de futures versions de HTML5 sous le nom de _Web Components_ mais
 Angular les considère comme assez instables, en particulier pour les vieux
 navigateurs.
 
@@ -2040,7 +2040,7 @@ dans sa forme la plus simple :
 });
 ```</p>
 
-<p>Je définie ma directive avec la méthode <code>.directive()</code> en lui passant le nom de
+<p>Je définis ma directive avec la méthode <code>.directive()</code> en lui passant le nom de
 la directive <code>'customButton'</code>. Lorsque vous capitalisez une lettre dans le nom
 d'une directive, il faut utiliser un tiret lorsque vous vous en servez (comme
 dans l'exemple vu plus haut).</p>
@@ -2141,7 +2141,7 @@ template dans une balise <code>&lt;script&gt;</code> :</p>
 Cela indique à Angular que c'est un `ng-template` et lui donne un ID. Angular va
 chercher le _ng-template_ ou le fichier _*.hml_. Je préfère utiliser des
 fichiers _*.html_, ils sont plus faciles à gérer, augmentent les performances et
-garde le DOM propre. Si vous avez une centaine de directives, ce sera plus
+gardent le DOM propre. Si vous avez une centaine de directives, ce sera plus
 simple pour les parcourir.
 
 ### Services
@@ -2325,9 +2325,9 @@ Voici également un cas d'utilisation réel de filtres dans un contrôleur :
 <iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/cZbCf/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 
-<p>Voilà notre tour des briques majeures d'Angular terminé. C'est la partie
-immergée de l'iceberg mais c'est amplement suffisant pour vous permettre de
-créer votre première application Angular.</p>
+<p>Voilà notre tour des briques majeures d'Angular terminé. Ce n'est que le tout
+début de notre plongée en eaux profondes, mais c'est amplement suffisant pour
+vous permettre de créer votre première application Angular.</p>
 
 <h2>Binding de données à deux sens</h2>
 
@@ -2691,7 +2691,7 @@ travers de <code>$routeProvider</code>, en fonction de l'URL.</p>
 <p>Lorsque vous êtes sur l'URL <code>/</code> (la page d'accueil du site), le template utilisé
 est <code>main.html</code>. Vous devez appeler votre vue initiale <code>main.html</code> puisque vous
 avez déjà un fichier <code>index.html</code> contenant votre site en page unique. Il est
-très simple d'ajouter des vuews supplémentaire en fonction de l'URL :</p>
+très simple d'ajouter des vues supplémentaires en fonction de l'URL :</p>
 
 <pre><code class="javascript">myApp.config(['$routeProvider', function ($routeProvider) {
 
@@ -2717,8 +2717,8 @@ l'URL <code>emails.html</code>. Vous pouvez créer une application sophistiquée
 peu d'efforts.</p>
 
 <p><code>$routeProvider</code> propose d'autres fonctionnalités qui valent la peine de
-fouiller un peu mais avec ceci vous avez déjà de quoi faire des choses
-intéressantes. Il y a, par exemple, ples intercepteurs <code>$http</code> qui émettent des
+fouiller un peu, mais avec ceci vous avez déjà de quoi faire des choses
+intéressantes. Il y a, par exemple, les intercepteurs <code>$http</code> qui émettent des
 événements lorsqu'une requête Ajax est en cours, ce qui permettrait d'afficher
 un spinner pendant que les données sont récupérées.</p>
 

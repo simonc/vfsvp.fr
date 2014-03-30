@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-03-27T14:35:09+01:00</updated>
+  <updated>2014-03-30T22:55:30+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -2270,7 +2270,7 @@ application. En voici les composants :</p>
 <dt>Modèle</dt>
 <dd>   structure donnée représentant une entité de l&#8217;application, généralement
 transmise en JSON. Pour bien démarrer avec Angular, quelques notions de JSON
-son nécésssaires, cela vous permettra de faire communiquer votre serveur et vos
+sont nécessaires, cela vous permettra de faire communiquer votre serveur et vos
 vues. Un groupe d&#8217;<em>id</em> d&#8217;utilisateurs pourrait par exemple ressembler à ceci :</dd>
 </dl>
 
@@ -2289,8 +2289,8 @@ vues. Un groupe d&#8217;<em>id</em> d&#8217;utilisateurs pourrait par exemple re
 <p>Vous pouvez accéder à cette information de deux façons. En passant par une XHR
 (XMLHttp Request), vous connaissez sûrement <code>$.ajax</code> en jQuery, Angular
 l&#8217;encapsule dans <code>$http</code>. L&#8217;autre méthode est de l&#8217;écrire dans le code de la
-page pour qu&#8217;elle soit chargée pendant l&#8217;interprétation (depuis datastore ou
-la base de données). Une fois que vous avez accès à l&#8217;information, vous pouvez
+page pour qu&#8217;elle soit chargée pendant l&#8217;interprétation (depuis un datastore ou
+une base de données). Une fois que vous avez accès à l&#8217;information, vous pouvez
 mettre à jour votre modèle et le renvoyer.</p>
 
 <dl>
@@ -2411,7 +2411,7 @@ vous en avez). La démo donne une petite idée de comment &ldquo;pousser&rdquo; 
 dans le DOM.</p>
 
 <p>Regardons maintenant une structure de données plus représentative que nous avons
-hypothétique récupérée depuis le serveur pour afficher les détails de
+hypothétiquement récupérée depuis le serveur pour afficher les détails de
 l&#8217;utilisateur. À partir de maintenant, j&#8217;utiliserai des données statiques, je
 vous montrerai plus tard comment récupérer dynamiquement des données JSON.</p>
 
@@ -2508,7 +2508,7 @@ Voici quelques exemples :</p>
 
 
 <p>Je préfère les utiliser sous forme d&#8217;attribut. Les éléments personnalisés
-feront partie de futures version de HTML5 sous le nom de <em>Web Components</em> mais
+feront partie de futures versions de HTML5 sous le nom de <em>Web Components</em> mais
 Angular les considère comme assez instables, en particulier pour les vieux
 navigateurs.</p>
 
@@ -2526,7 +2526,7 @@ dans sa forme la plus simple :</p>
 </span></code></pre></div></figure>
 
 
-<p>Je définie ma directive avec la méthode <code>.directive()</code> en lui passant le nom de
+<p>Je définis ma directive avec la méthode <code>.directive()</code> en lui passant le nom de
 la directive <code>'customButton'</code>. Lorsque vous capitalisez une lettre dans le nom
 d&#8217;une directive, il faut utiliser un tiret lorsque vous vous en servez (comme
 dans l&#8217;exemple vu plus haut).</p>
@@ -2624,7 +2624,7 @@ template dans une balise <code>&lt;script&gt;</code> :</p>
 <p>Cela indique à Angular que c&#8217;est un <code>ng-template</code> et lui donne un ID. Angular va
 chercher le <em>ng-template</em> ou le fichier <em>*.hml</em>. Je préfère utiliser des
 fichiers <em>*.html</em>, ils sont plus faciles à gérer, augmentent les performances et
-garde le DOM propre. Si vous avez une centaine de directives, ce sera plus
+gardent le DOM propre. Si vous avez une centaine de directives, ce sera plus
 simple pour les parcourir.</p>
 
 <h3 id="services">Services</h3>
@@ -2802,9 +2802,9 @@ méthode. Voici la version en méthode, qui peut s&#8217;utiliser partout :</p>
 <iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/cZbCf/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 
-<p>Voilà notre tour des briques majeures d&#8217;Angular terminé. C&#8217;est la partie
-immergée de l&#8217;iceberg mais c&#8217;est amplement suffisant pour vous permettre de
-créer votre première application Angular.</p>
+<p>Voilà notre tour des briques majeures d&#8217;Angular terminé. Ce n&#8217;est que le tout
+début de notre plongée en eaux profondes, mais c&#8217;est amplement suffisant pour
+vous permettre de créer votre première application Angular.</p>
 
 <h2 id="binding-de-donnees-a-deux-sens">Binding de données à deux sens</h2>
 
@@ -3158,7 +3158,7 @@ travers de <code>$routeProvider</code>, en fonction de l&#8217;URL.</p>
 <p>Lorsque vous êtes sur l&#8217;URL <code>/</code> (la page d&#8217;accueil du site), le template utilisé
 est <code>main.html</code>. Vous devez appeler votre vue initiale <code>main.html</code> puisque vous
 avez déjà un fichier <code>index.html</code> contenant votre site en page unique. Il est
-très simple d&#8217;ajouter des vuews supplémentaire en fonction de l&#8217;URL :</p>
+très simple d&#8217;ajouter des vues supplémentaires en fonction de l&#8217;URL :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>
@@ -3185,8 +3185,8 @@ l&#8217;URL <code>emails.html</code>. Vous pouvez créer une application sophist
 peu d&#8217;efforts.</p>
 
 <p><code>$routeProvider</code> propose d&#8217;autres fonctionnalités qui valent la peine de
-fouiller un peu mais avec ceci vous avez déjà de quoi faire des choses
-intéressantes. Il y a, par exemple, ples intercepteurs <code>$http</code> qui émettent des
+fouiller un peu, mais avec ceci vous avez déjà de quoi faire des choses
+intéressantes. Il y a, par exemple, les intercepteurs <code>$http</code> qui émettent des
 événements lorsqu&#8217;une requête Ajax est en cours, ce qui permettrait d&#8217;afficher
 un spinner pendant que les données sont récupérées.</p>
 
