@@ -39,7 +39,7 @@ application. En voici les composants :
 Modèle
 :    structure donnée représentant une entité de l'application, généralement
 transmise en JSON. Pour bien démarrer avec Angular, quelques notions de JSON
-son nécésssaires, cela vous permettra de faire communiquer votre serveur et vos
+sont nécessaires, cela vous permettra de faire communiquer votre serveur et vos
 vues. Un groupe d'_id_ d'utilisateurs pourrait par exemple ressembler à ceci :
 
 ``` json
@@ -57,8 +57,8 @@ vues. Un groupe d'_id_ d'utilisateurs pourrait par exemple ressembler à ceci :
 Vous pouvez accéder à cette information de deux façons. En passant par une XHR
 (XMLHttp Request), vous connaissez sûrement `$.ajax` en jQuery, Angular
 l'encapsule dans `$http`. L'autre méthode est de l'écrire dans le code de la
-page pour qu'elle soit chargée pendant l'interprétation (depuis datastore ou
-la base de données). Une fois que vous avez accès à l'information, vous pouvez
+page pour qu'elle soit chargée pendant l'interprétation (depuis un datastore ou
+une base de données). Une fois que vous avez accès à l'information, vous pouvez
 mettre à jour votre modèle et le renvoyer.
 
 Vue
@@ -155,9 +155,9 @@ une chaîne de caractères dans le DOM :
 var myApp = angular.module('myApp', []);
 
 myApp.controller('MainCtrl', ['$scope', function ($scope) {
-    
+
     $scope.text = 'Hello, Angular fanatic.';
-    
+
 }]);
 ```
 
@@ -177,7 +177,7 @@ vous en avez). La démo donne une petite idée de comment "pousser" des données
 dans le DOM.
 
 Regardons maintenant une structure de données plus représentative que nous avons
-hypothétique récupérée depuis le serveur pour afficher les détails de
+hypothétiquement récupérée depuis le serveur pour afficher les détails de
 l'utilisateur. À partir de maintenant, j'utiliserai des données statiques, je
 vous montrerai plus tard comment récupérer dynamiquement des données JSON.
 
@@ -187,7 +187,7 @@ Commençons par un peu de JavaScript :
 var myApp = angular.module('myApp', []);
 
 myApp.controller('UserCtrl', ['$scope', function ($scope) {
-    
+
     // Créons un namespace pour les détails de l'utilisateur
     // Également utile pour une aide visuelle dans le DOM
     $scope.user = {};
@@ -195,7 +195,7 @@ myApp.controller('UserCtrl', ['$scope', function ($scope) {
       "username": "Todd Motto",
       "id": "89101112"
     };
-    
+
 }]);
 ```
 
@@ -275,7 +275,7 @@ Voici quelques exemples :
 ```
 
 Je préfère les utiliser sous forme d'attribut. Les éléments personnalisés
-feront partie de futures version de HTML5 sous le nom de _Web Components_ mais
+feront partie de futures versions de HTML5 sous le nom de _Web Components_ mais
 Angular les considère comme assez instables, en particulier pour les vieux
 navigateurs.
 
@@ -293,7 +293,7 @@ myApp.directive('customButton', function () {
 });
 ```
 
-Je définie ma directive avec la méthode `.directive()` en lui passant le nom de
+Je définis ma directive avec la méthode `.directive()` en lui passant le nom de
 la directive `'customButton'`. Lorsque vous capitalisez une lettre dans le nom
 d'une directive, il faut utiliser un tiret lorsque vous vous en servez (comme
 dans l'exemple vu plus haut).
@@ -392,7 +392,7 @@ template dans une balise `<script>` :
 Cela indique à Angular que c'est un `ng-template` et lui donne un ID. Angular va
 chercher le _ng-template_ ou le fichier _*.hml_. Je préfère utiliser des
 fichiers _*.html_, ils sont plus faciles à gérer, augmentent les performances et
-garde le DOM propre. Si vous avez une centaine de directives, ce sera plus
+gardent le DOM propre. Si vous avez une centaine de directives, ce sera plus
 simple pour les parcourir.
 
 ### Services
@@ -574,9 +574,9 @@ Résultat :
 
 <iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/cZbCf/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
-Voilà notre tour des briques majeures d'Angular terminé. C'est la partie
-immergée de l'iceberg mais c'est amplement suffisant pour vous permettre de
-créer votre première application Angular.
+Voilà notre tour des briques majeures d'Angular terminé. Ce n'est que le tout
+début de notre plongée en eaux profondes, mais c'est amplement suffisant pour
+vous permettre de créer votre première application Angular.
 
 ## Binding de données à deux sens
 
@@ -930,7 +930,7 @@ myApp.config(['$routeProvider', function ($routeProvider) {
 Lorsque vous êtes sur l'URL `/` (la page d'accueil du site), le template utilisé
 est `main.html`. Vous devez appeler votre vue initiale `main.html` puisque vous
 avez déjà un fichier `index.html` contenant votre site en page unique. Il est
-très simple d'ajouter des vuews supplémentaire en fonction de l'URL :
+très simple d'ajouter des vues supplémentaires en fonction de l'URL :
 
 ``` javascript
 myApp.config(['$routeProvider', function ($routeProvider) {
@@ -957,8 +957,8 @@ l'URL `emails.html`. Vous pouvez créer une application sophistiquée avec assez
 peu d'efforts.
 
 `$routeProvider` propose d'autres fonctionnalités qui valent la peine de
-fouiller un peu mais avec ceci vous avez déjà de quoi faire des choses
-intéressantes. Il y a, par exemple, ples intercepteurs `$http` qui émettent des
+fouiller un peu, mais avec ceci vous avez déjà de quoi faire des choses
+intéressantes. Il y a, par exemple, les intercepteurs `$http` qui émettent des
 événements lorsqu'une requête Ajax est en cours, ce qui permettrait d'afficher
 un spinner pendant que les données sont récupérées.
 
@@ -991,10 +991,10 @@ données dans un contrôleur :
 myApp.controller('EmailsCtrl', ['$scope', function ($scope) {
 
     $scope.emails = {};
-    
+
     // Assigner les données initiales !
     $scope.emails.messages = globalData.emails;
-    
+
 }]);
 ```
 
