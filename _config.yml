@@ -56,6 +56,7 @@ default_asides:
 - custom/asides/about.html
 - custom/asides/search.html
 - custom/asides/twitter.html
+- custom/asides/sponsors.html
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.

@@ -5374,6 +5374,8 @@ body > footer {
 .sidebar h1 {
   font-size: 1.5em;
   margin-top: 0; }
+.sidebar img {
+  max-width: 100%; }
 
 pre {
   font-size: 14px; }
