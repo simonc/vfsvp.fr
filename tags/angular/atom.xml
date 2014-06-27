@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: angular | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/angular/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-06-23T20:05:58+02:00</updated>
+  <updated>2014-06-27T17:27:18+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -149,11 +149,11 @@ jetons un oeil à la façon dont Angular implémente les contrôleurs.</p>
 
 <p>Reprenons l'exemple vu plus haut et regardons pas à pas comment pousser des
 données dans le DOM depuis un contrôleur. Angular utilise un système de template
-qui ressemble à ceci pour parler à votre HTML : <code>{{ handlebars }}</code>. Idéalement, votre HTML ne contient aucun texte ou valeur en dur, cela
+qui ressemble à ceci pour parler à votre HTML : {% raw %}<code>{{ handlebars }}</code>{% endraw %}. Idéalement, votre HTML ne contient aucun texte ou valeur en dur, cela
 permet de tirer un maximum d'Angular. Voici un exemple dans lequel nous poussons
 une chaîne de caractères dans le DOM :</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <div ng-app="myApp">
@@ -163,7 +163,7 @@ une chaîne de caractères dans le DOM :</p>
 </div>
 
 
-<pre><code>
+<pre><code>{% endraw %}
 </code></pre>
 
 <p>var myApp = angular.module(&lsquo;myApp&rsquo;, []);</p>
@@ -216,7 +216,7 @@ myApp.controller('UserCtrl', ['$scope', function ($scope) {
 
 <p>Poussons ces données vers le DOM pour les afficher :</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <div ng-app="myApp">
@@ -228,7 +228,7 @@ myApp.controller('UserCtrl', ['$scope', function ($scope) {
 
 
 <p>```
-</p>
+{% endraw %}</p>
 
 <p>Résultat:</p>
 
@@ -543,7 +543,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 
 <p>DOM usage:</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <div ng-app="myApp">
@@ -555,7 +555,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 
 
 <p>```
-</p>
+{% endraw %}</p>
 
 <p>Résultat :</p>
 
@@ -564,7 +564,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 
 <p>Et voici comment l'utiliser dans un <code>ng-repeat</code> :</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <ul>
@@ -572,7 +572,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 </ul>
 
 
-<pre><code>
+<pre><code>{% endraw %}
 
 Voici également un cas d'utilisation réel de filtres dans un contrôleur :
 </code></pre>
@@ -593,13 +593,13 @@ Voici également un cas d'utilisation réel de filtres dans un contrôleur :
 
 <p>Et son utilisation dans <code>ng-repeat</code> :</p>
 
-<p>
+<p>{% raw %}
 <code>html
 &lt;li ng-repeat="number in numbers | filter:greaterThanNum"&gt;
   {{ number }}
 &lt;/li&gt;
 </code>
-</p>
+{% endraw %}</p>
 
 <p>Résultat :</p>
 
@@ -625,7 +625,7 @@ temps.</p>
 utiliser les accolades pour afficher la donnée de mon modèle (ainsi que ses
 mises à jour) dans la vue :</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <div ng-app="myApp">
@@ -636,7 +636,7 @@ mises à jour) dans la vue :</p>
 </div>
 
 
-<pre><code>
+<pre><code>{% endraw %}
 </code></pre>
 
 <p>myApp.controller(&lsquo;MainCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {
@@ -750,7 +750,7 @@ ce qui nous donne &lsquo;Todd Motto&rsquo;.</p>
 
 <p>Il nous suffit maintenant de faire ceci dans le DOM :</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <div ng-controller="UserCtrl">
@@ -758,7 +758,7 @@ ce qui nous donne &lsquo;Todd Motto&rsquo;.</p>
 </div>
 
 
-<pre><code>
+<pre><code>{% endraw %}
 
 Ceci va afficher le nom de l'utilisateur. Nous allons faire un pas de plus et
 comprendre le _data-binding_ déclaratif et c'est là que ça devient vraiment
@@ -811,7 +811,7 @@ directive</code>ng-repeat` d'Angular qui va parcourir les données et générer 
 résultat sans que nous ayant à faire de <em>callbacks</em> ou de changements d'état,
 c'est gratuit :</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <ul>
@@ -824,7 +824,7 @@ c'est gratuit :</p>
 
 
 <p>```
-</p>
+{% endraw %}</p>
 
 <p>Résultat :</p>
 
@@ -924,14 +924,14 @@ habituellement JavaScript en écrivant beaucoup de code répétitif.</p>
 modifiez le DOM en fonction de l'état des données. Angular vous permet de faire
 la même chose sans écrire une ligne de JavaScript !</p>
 
-<p>
+<p>{% raw %}
 ``` html</p>
 
 <p>{{ data.length > 0 && 'My data' || 'No data' }}</p>
 
 
 <p>```
-</p>
+{% endraw %}</p>
 
 <p>Ce morceau de DOM va être automatiquement mis à jour, sans besoin de callback,
 au fur et à mesure que votre application récupère les données. Il vous indiquera
@@ -1101,13 +1101,13 @@ d'écrire de la logique sans contrôleur.</li>
 <p>Un exemple rapide, vous pouvez utiliser <code>ng-repeat</code> sans contrôleur en
 fournissant directement les données :</p>
 
-<p>
+<p>{% raw %}
 <code>html
 &lt;li ng-repeat="number in [1,2,3,4,5,6,7,8,9]"&gt;
   {{ number }}
 &lt;/li&gt;
 </code>
-</p>
+{% endraw %}</p>
 
 <p>Pour un test rapide c'est acceptable mais je vous conseille de toujours avoir
 un contrôleur lorsque vous développez.</p>

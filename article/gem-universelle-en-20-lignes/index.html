@@ -1,0 +1,432 @@
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Une gem Ruby universelle en 20 lignes de code · VF svp</title>
+    <meta name="author" content="Simon Courtois (@simonc)" />
+    <meta name="description" content="" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="canonical" href="
+  http://vfsvp.fr/article/gem-universelle-en-20-lignes
+" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/stylesheets/style.css" media="screen" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="alternate" href="/atom.xml" title="VF svp" type="application/atom+xml" />
+
+    <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  </head>
+
+  <body>
+    <div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#menu">
+        <span class="sr-only">Voir la navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">VFsvp</a>
+    </div>
+    <div id="menu" class="collapse navbar-collapse navbar-right">
+      <ul class="main-nav nav nav-pills">
+        <li><a href="/">Blog</a></li>
+        <li><a href="/blog/archives">Archives</a></li>
+        <li>
+          <a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">
+            <i class="fa fa-rss"></i> RSS
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          
+<article class="article" role="article">
+  <div class="row">
+    <div class="col-sm-2">
+      <p class="article-date">
+        
+          <span class="day">27/06</span>
+          <span class="year">2014</span>
+        
+      </p>
+      <p class="article-comments-count">
+        <a href="#" title="Commentaires">0</a>
+        <i class="fa fa-comment"></i>
+      </p>
+    </div>
+    <div class="col-sm-10 article-body">
+      <header>
+        
+          <h1 class="article-title">Une gem Ruby universelle en 20 lignes de code</h1>
+          <div class="sharing">
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vfsvp.fr/article/gem-universelle-en-20-lignes" data-via="VFsvp" data-counturl="http://vfsvp.fr/article/gem-universelle-en-20-lignes" >Tweet</a>
+  <div class="g-plusone" data-size="medium" data-href="http://vfsvp.fr/article/gem-universelle-en-20-lignes"></div>
+</div>
+
+        
+      </header>
+
+      
+        <div class="article-content"><p>Source: <a href="http://blog.crossplatformruby.com/universal-ruby-gems-in-20-lines-of-code">Universal Ruby Gems in 20 Lines of Code de Michal Taszycki</a></p>
+
+<p>Les gems Ruby sont les blocs essentiels à la création d&#8217;applications Ruby Cross-Plateformes. Nous les utilisons pour encapsuler la logique de nos applications et extraire des fonctionnalités réutilisables sur différentes plateformes.</p>
+
+<p>Je vais vous montrer comment préparer une gem Ruby pour qu&#8217;elle fonctionne avec <strong>Ruby</strong>, <strong>Opal.rb</strong> et <strong>RubyMotion</strong> sans aucune modification. De cette façon vous pourrez l&#8217;utiliser dans vos applications Rails/iOS/OSX/Android/Navigateur Client.</p>
+
+<!-- more -->
+
+
+<p>Nous avons tout d&#8217;abord besoin d&#8217;un gem d&#8217;exemple&hellip;</p>
+
+<h2 id="la-gem-pig-latin">La gem pig_latin</h2>
+
+<p>La gem pig_latin est un simple utilitaire de traduction. Elle convertit n&#8217;importe quel mot anglais en son équivalent <a href="http://en.wikipedia.org/wiki/Pig_Latin">pig latin</a>.</p>
+
+<p>Nous pouvons l&#8217;utiliser comme ceci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;osscray atformplay ubyray&quot;</span>
+</span></code></pre></div></figure>
+
+
+<p>La gem pig_latin est disponible sur <a href="https://github.com/crossplatformruby/pig_latin">github</a> vous pouvez donc en lire le code ou l&#8217;essayer.</p>
+
+<p>C&#8217;est une petite gem toute bête avec laquelle on peut s&#8217;amuser. Elle a cependant un aspect qui la rend particulièrement intéressante.</p>
+
+<p>Voyons ce qu&#8217;il se passe lorsque nous ajoutons la ligne suivante au Gemfile d&#8217;une application Rails ou RubyMotion.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;pig_latin&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git@github.com:crossplatformruby/pig_latin.git&#39;</span>
+</span></code></pre></div></figure>
+
+
+<p>Et bien&hellip;</p>
+
+<h2 id="cela-fonctionne-partout">Cela fonctionne partout !</h2>
+
+<p>Que vous utilisiez Rails, RubyMotion ou même une application en ligne de commande, ça fonctionne tout seul. Si vous utilisez Opal.rb dans votre application, vous pouvez appeler <code>require</code> dessus et l&#8217;utiliser dans votre navigateur.</p>
+
+<p>Essayez-la.</p>
+
+<h3 id="rails">Rails</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">TranslationsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@phrase</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:phrase</span><span class="o">]</span>
+</span><span class='line'>    <span class="vi">@translation</span> <span class="o">=</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="vi">@phrase</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="/images/universal_gems/rails.png" alt="Pig Latin avec Rails" /></p>
+
+<h3 id="opal-dot-rb">Opal.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;opal&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;opal_ujs&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">puts</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="/images/universal_gems/opal.png" alt="Pig Latin dans un navigateur" /></p>
+
+<h3 id="ios">iOS</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="ss">didFinishLaunchingWithOptions</span><span class="p">:</span><span class="n">launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">alert</span> <span class="o">=</span> <span class="no">UIAlertView</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">show</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="/images/universal_gems/ios.png" alt="Pig Latin sur iOS" /></p>
+
+<h3 id="osx">OSX</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">applicationDidFinishLaunching</span><span class="p">(</span><span class="n">notification</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">buildMenu</span>
+</span><span class='line'>    <span class="n">buildWindow</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">alert</span> <span class="o">=</span> <span class="no">NSAlert</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">messageText</span> <span class="o">=</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">runModal</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">buildWindow</span>
+</span><span class='line'>    <span class="c1"># (...) details omis pour plus de clareté</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="/images/universal_gems/osx.png" alt="Pig Latin sur OS X" /></p>
+
+<h3 id="android-bientot">Android (bientôt)</h3>
+
+<p>Dans les mois qui viennent, RubyMotion permettra la création d&#8217;applications Ruby pour Android. Je mettrais à jour cet article quand ce sera possible. Il semble cependant qu&#8217;aucun réglage additionnel ne sera nécessaire.</p>
+
+<h2 id="comment-cela-fonctionne-t-il">Comment cela fonctionne-t-il ?</h2>
+
+<p>Lorsque l&#8217;on parle d&#8217;écrire une gem, la principale différence entre les plateformes est la façon dont les fichiers sont appelés.</p>
+
+<p>RubyMotion et Opal.rb ne permettent pas l&#8217;usage de <code>require</code> au runtime. Nous devons donc nous assurer que tous les fichiers de notre gem sont appelés en amont.</p>
+
+<p>En Ruby Cross-Plateforme, le fichier faisant office de point d&#8217;entrée devient le manifeste de la gem.</p>
+
+<h3 id="1-faire-fonctionner-la-gem-avec-ruby">1. Faire fonctionner la gem avec Ruby</h3>
+
+<p>Si votre seule plateforme est MRI ou Rubinius, votre point d&#8217;entrée, <code>pig_latin.rb</code>, doit ressembler à ceci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/version&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/word_translator&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/phrase_translator&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/class_methods&quot;</span>
+</span></code></pre></div></figure>
+
+
+<p>Aucun code spécifique à la gem ne doit être présent dans ce fichier, uniquement une suite d&#8217;appels à <code>require</code>, c&#8217;est important pour plus tard.</p>
+
+<h3 id="2-supporter-opal-dot-rb">2. Supporter Opal.rb</h3>
+
+<p>Il est facile de faire fonctionner notre manifeste sous Opal. Collez simplement le code ci-dessous n&#8217;importe où dans <code>pig_latin.rb</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">Opal</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">defined?</span><span class="p">(</span><span class="no">File</span><span class="p">)</span>
+</span><span class='line'>  <span class="no">Opal</span><span class="o">.</span><span class="n">append_path</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">))</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p>Il est plus difficile de comprendre pourquoi ça fonctionne.</p>
+
+<p>Lorsque Opal compile les fichiers, il transforme les appels à <code>require</code> en directives <code>Sprockets</code>. Cela veut dire qu&#8217;au moment où l&#8217;on appelle <code>application.rb</code>, il comprend les <code>require</code> mais ne sait pas où trouver les fichiers.</p>
+
+<p>C&#8217;est pour cette raison que nous devons ajouter le chemin du dossier contenant notre point d&#8217;entrée grâce à <code>Opal#append_path</code>.</p>
+
+<p>Cela veut dire que notre manifeste est lancé deux fois :</p>
+
+<ol>
+<li>En Ruby, lorsque la gem est appelée pour informer Opal des chemins à charger ;</li>
+<li>En Opal.rb pour traduire les <code>require</code> en directives <code>Sprockets</code>.</li>
+</ol>
+
+
+<h3 id="3-compiler-pour-rubymotion">3. Compiler pour RubyMotion</h3>
+
+<p>RubyMotion ne permet pas d&#8217;appeler <code>require</code> au runtime. Nous devons donc lui fournir la liste des fichiers à compiler. Il serait cependant plus intéressant de conserver notre succession de <code>require</code> et de nous en servir pour générer cette liste.</p>
+
+<p>Puisque notre manifeste est lancé avec Ruby, nous pouvons le faire en utilisant la technique suivante.</p>
+
+<p>Commençons par redéfinir la méthode <code>require</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">Config</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">rubymotion_require</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@files_to_require</span> <span class="o">||=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="vi">@files_to_require</span> <span class="o">&lt;&lt;</span> <span class="n">filename</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">alias</span> <span class="ss">:old_require</span> <span class="ss">:require</span>
+</span><span class='line'>  <span class="k">alias</span> <span class="ss">:require</span> <span class="ss">:rubymotion_require</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p>Nous appelons ensuite <code>require</code> comme d&#8217;habitude.</p>
+
+<p>Pour finir, nous construisons la liste des fichiers à compiler et remettons <code>require</code> en place une fois terminé.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">Config</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">alias</span> <span class="ss">:require</span> <span class="ss">:old_require</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">paths_to_require</span> <span class="o">=</span> <span class="vi">@files_to_require</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>      <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;.rb&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="o">*</span><span class="n">paths_to_require</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<h2 id="en-resume">En résumé</h2>
+
+<p>En utilisant quelques astuces et une organisation intelligente des fichiers, nous avons réussi à créer une gem qui fonctionne sur les serveurs, dans les applications lourdes, dans les navigateurs et sur mobiles. Cela permet de partager du code entre plusieurs applications.</p>
+
+<p>Vous pouvez très facilement adapter ces techniques à vos propres gems. Cela prend littéralement 20 lignes de code pour les rendre universelles.</p>
+</div>
+
+        <footer>
+          <p class="meta">
+            
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+            
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+<time datetime="2014-06-27T12:00:00+02:00" pubdate data-updated="true">27/06/2014</time>
+            
+
+<span class="categories">
+  
+    <a class='category' href='/tags/opal/'>opal</a>, <a class='category' href='/tags/ruby/'>ruby</a>, <a class='category' href='/tags/rubymotion/'>rubymotion</a>
+  
+</span>
+
+
+          </p>
+          <p class="meta">
+            
+              <a class="basic-alignment left" href="/article/dependency-sorting-in-ruby-with-tsort" title="Previous Post: Tri de dépendances en Ruby avec TSort">&laquo; Tri de dépendances en Ruby avec TSort</a>
+            
+            
+          </p>
+        </footer>
+
+        <section>
+          <h1>Commentaires</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
+      
+    </div>
+  </div>
+</article>
+
+
+        </div>
+
+        <aside class="sidebar col-sm-3">
+          <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+<section>
+  <h1>Recherche</h1>
+  <form role="search" action="http://google.com/search" method="get">
+    <div class="form-group">
+      <input type="hidden" name="q" value="site:vfsvp.fr" />
+      <input type="text" name="q" results="0" class="form-control" placeholder="Rechercher..." />
+    </div>
+  </form>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <p><a href="https://twitter.com/VFsvp">@VFsvp</a> sur Twitter</p>
+</section>
+
+<section>
+  <h1>Sponsors</h1>
+  <p>
+    <a href="http://www.tinci.fr"><img src="/images/sponsors/tinci.png" alt="Tinci" /></a>
+  </p>
+</section>
+
+        </aside>
+      </div>
+    </div>
+
+    <footer class="text-center">
+      <footer role="contentinfo">
+  <p>Copyright © 2014 - Simon Courtois (@simonc) -
+    <span class="credit">Publié grâce à
+    <a href="http://octopress.org">Octopress</a></span></p>
+</footer>
+
+    </footer>
+    <script type="text/javascript">
+  var disqus_shortname = 'vfsvp';
+
+  
+    var disqus_identifier = 'http://vfsvp.fr/article/gem-universelle-en-20-lignes';
+    var disqus_url = 'http://vfsvp.fr/article/gem-universelle-en-20-lignes';
+    var disqus_script = 'embed.js';
+  
+
+  (function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+  </body>
+</html>

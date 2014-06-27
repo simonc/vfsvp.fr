@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ember | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/ember/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-06-23T20:05:58+02:00</updated>
+  <updated>2014-06-27T17:27:18+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -28,7 +28,7 @@ d'oeil. Cet article s'adresse aux débutants qui souhaitent comprendre ce
 <!-- more -->
 
 
-<p>
+<p>{% raw %}
 Il est fréquent d'entendre les utilisateurs dire que la courbe d'apprentissage
 est raide mais qu'une fois les difficultés surmontées, {l-en Ember.js} est
 tout simplement phénoménal. Ça a été également le cas pour moi. Bien que les
@@ -1681,7 +1681,7 @@ C'est ici que les discussions prennent place (et c'est fait avec {l-en Ember})</
 tout ce qu'ils savaient sur {l-en Ember.js} durant mon apprentissage. Et un
 grand merci à <a href="https://twitter.com/tomdale">Tom Dale</a>, qui m'a aidé à la
 relecture de ce bien long article.
-</p>
+{% endraw %}</p>
 
 <p><script src="http://static.jsbin.com/js/embed.js"></script></p>
 

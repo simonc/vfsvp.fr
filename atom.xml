@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-06-23T20:05:58+02:00</updated>
+  <updated>2014-06-27T17:27:14+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -12,6 +12,206 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Une gem Ruby universelle en 20 lignes de code]]></title>
+    <link href="http://vfsvp.fr/article/gem-universelle-en-20-lignes"/>
+    <updated>2014-06-27T12:00:00+02:00</updated>
+    <id>http://vfsvp.fr/article/gem-universelle-en-20-lignes</id>
+    <content type="html"><![CDATA[<p>Source: <a href="http://blog.crossplatformruby.com/universal-ruby-gems-in-20-lines-of-code">Universal Ruby Gems in 20 Lines of Code de Michal Taszycki</a></p>
+
+<p>Les gems Ruby sont les blocs essentiels à la création d&#8217;applications Ruby Cross-Plateformes. Nous les utilisons pour encapsuler la logique de nos applications et extraire des fonctionnalités réutilisables sur différentes plateformes.</p>
+
+<p>Je vais vous montrer comment préparer une gem Ruby pour qu&#8217;elle fonctionne avec <strong>Ruby</strong>, <strong>Opal.rb</strong> et <strong>RubyMotion</strong> sans aucune modification. De cette façon vous pourrez l&#8217;utiliser dans vos applications Rails/iOS/OSX/Android/Navigateur Client.</p>
+
+<!-- more -->
+
+
+<p>Nous avons tout d&#8217;abord besoin d&#8217;un gem d&#8217;exemple&hellip;</p>
+
+<h2 id="la-gem-pig-latin">La gem pig_latin</h2>
+
+<p>La gem pig_latin est un simple utilitaire de traduction. Elle convertit n&#8217;importe quel mot anglais en son équivalent <a href="http://en.wikipedia.org/wiki/Pig_Latin">pig latin</a>.</p>
+
+<p>Nous pouvons l&#8217;utiliser comme ceci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#=&gt; &quot;osscray atformplay ubyray&quot;</span>
+</span></code></pre></div></figure>
+
+
+<p>La gem pig_latin est disponible sur <a href="https://github.com/crossplatformruby/pig_latin">github</a> vous pouvez donc en lire le code ou l&#8217;essayer.</p>
+
+<p>C&#8217;est une petite gem toute bête avec laquelle on peut s&#8217;amuser. Elle a cependant un aspect qui la rend particulièrement intéressante.</p>
+
+<p>Voyons ce qu&#8217;il se passe lorsque nous ajoutons la ligne suivante au Gemfile d&#8217;une application Rails ou RubyMotion.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;pig_latin&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git@github.com:crossplatformruby/pig_latin.git&#39;</span>
+</span></code></pre></div></figure>
+
+
+<p>Et bien&hellip;</p>
+
+<h2 id="cela-fonctionne-partout">Cela fonctionne partout !</h2>
+
+<p>Que vous utilisiez Rails, RubyMotion ou même une application en ligne de commande, ça fonctionne tout seul. Si vous utilisez Opal.rb dans votre application, vous pouvez appeler <code>require</code> dessus et l&#8217;utiliser dans votre navigateur.</p>
+
+<p>Essayez-la.</p>
+
+<h3 id="rails">Rails</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">TranslationsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@phrase</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:phrase</span><span class="o">]</span>
+</span><span class='line'>    <span class="vi">@translation</span> <span class="o">=</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="vi">@phrase</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="http://vfsvp.fr/images/universal_gems/rails.png" alt="Pig Latin avec Rails" /></p>
+
+<h3 id="opal-dot-rb">Opal.rb</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;opal&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;opal_ujs&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">puts</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="http://vfsvp.fr/images/universal_gems/opal.png" alt="Pig Latin dans un navigateur" /></p>
+
+<h3 id="ios">iOS</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="ss">didFinishLaunchingWithOptions</span><span class="p">:</span><span class="n">launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">alert</span> <span class="o">=</span> <span class="no">UIAlertView</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">show</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="http://vfsvp.fr/images/universal_gems/ios.png" alt="Pig Latin sur iOS" /></p>
+
+<h3 id="osx">OSX</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">applicationDidFinishLaunching</span><span class="p">(</span><span class="n">notification</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">buildMenu</span>
+</span><span class='line'>    <span class="n">buildWindow</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">alert</span> <span class="o">=</span> <span class="no">NSAlert</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">messageText</span> <span class="o">=</span> <span class="no">PigLatin</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&quot;cross platform ruby&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">alert</span><span class="o">.</span><span class="n">runModal</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">buildWindow</span>
+</span><span class='line'>    <span class="c1"># (...) details omis pour plus de clareté</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p><img src="http://vfsvp.fr/images/universal_gems/osx.png" alt="Pig Latin sur OS X" /></p>
+
+<h3 id="android-bientot">Android (bientôt)</h3>
+
+<p>Dans les mois qui viennent, RubyMotion permettra la création d&#8217;applications Ruby pour Android. Je mettrais à jour cet article quand ce sera possible. Il semble cependant qu&#8217;aucun réglage additionnel ne sera nécessaire.</p>
+
+<h2 id="comment-cela-fonctionne-t-il">Comment cela fonctionne-t-il ?</h2>
+
+<p>Lorsque l&#8217;on parle d&#8217;écrire une gem, la principale différence entre les plateformes est la façon dont les fichiers sont appelés.</p>
+
+<p>RubyMotion et Opal.rb ne permettent pas l&#8217;usage de <code>require</code> au runtime. Nous devons donc nous assurer que tous les fichiers de notre gem sont appelés en amont.</p>
+
+<p>En Ruby Cross-Plateforme, le fichier faisant office de point d&#8217;entrée devient le manifeste de la gem.</p>
+
+<h3 id="1-faire-fonctionner-la-gem-avec-ruby">1. Faire fonctionner la gem avec Ruby</h3>
+
+<p>Si votre seule plateforme est MRI ou Rubinius, votre point d&#8217;entrée, <code>pig_latin.rb</code>, doit ressembler à ceci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/version&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/word_translator&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/phrase_translator&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;pig_latin/class_methods&quot;</span>
+</span></code></pre></div></figure>
+
+
+<p>Aucun code spécifique à la gem ne doit être présent dans ce fichier, uniquement une suite d&#8217;appels à <code>require</code>, c&#8217;est important pour plus tard.</p>
+
+<h3 id="2-supporter-opal-dot-rb">2. Supporter Opal.rb</h3>
+
+<p>Il est facile de faire fonctionner notre manifeste sous Opal. Collez simplement le code ci-dessous n&#8217;importe où dans <code>pig_latin.rb</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">Opal</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">defined?</span><span class="p">(</span><span class="no">File</span><span class="p">)</span>
+</span><span class='line'>  <span class="no">Opal</span><span class="o">.</span><span class="n">append_path</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">))</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p>Il est plus difficile de comprendre pourquoi ça fonctionne.</p>
+
+<p>Lorsque Opal compile les fichiers, il transforme les appels à <code>require</code> en directives <code>Sprockets</code>. Cela veut dire qu&#8217;au moment où l&#8217;on appelle <code>application.rb</code>, il comprend les <code>require</code> mais ne sait pas où trouver les fichiers.</p>
+
+<p>C&#8217;est pour cette raison que nous devons ajouter le chemin du dossier contenant notre point d&#8217;entrée grâce à <code>Opal#append_path</code>.</p>
+
+<p>Cela veut dire que notre manifeste est lancé deux fois :</p>
+
+<ol>
+<li>En Ruby, lorsque la gem est appelée pour informer Opal des chemins à charger ;</li>
+<li>En Opal.rb pour traduire les <code>require</code> en directives <code>Sprockets</code>.</li>
+</ol>
+
+
+<h3 id="3-compiler-pour-rubymotion">3. Compiler pour RubyMotion</h3>
+
+<p>RubyMotion ne permet pas d&#8217;appeler <code>require</code> au runtime. Nous devons donc lui fournir la liste des fichiers à compiler. Il serait cependant plus intéressant de conserver notre succession de <code>require</code> et de nous en servir pour générer cette liste.</p>
+
+<p>Puisque notre manifeste est lancé avec Ruby, nous pouvons le faire en utilisant la technique suivante.</p>
+
+<p>Commençons par redéfinir la méthode <code>require</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">Config</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">rubymotion_require</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@files_to_require</span> <span class="o">||=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="vi">@files_to_require</span> <span class="o">&lt;&lt;</span> <span class="n">filename</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">alias</span> <span class="ss">:old_require</span> <span class="ss">:require</span>
+</span><span class='line'>  <span class="k">alias</span> <span class="ss">:require</span> <span class="ss">:rubymotion_require</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<p>Nous appelons ensuite <code>require</code> comme d&#8217;habitude.</p>
+
+<p>Pour finir, nous construisons la liste des fichiers à compiler et remettons <code>require</code> en place une fois terminé.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">Config</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">alias</span> <span class="ss">:require</span> <span class="ss">:old_require</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">paths_to_require</span> <span class="o">=</span> <span class="vi">@files_to_require</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>      <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;.rb&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="o">*</span><span class="n">paths_to_require</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></div></figure>
+
+
+<h2 id="en-resume">En résumé</h2>
+
+<p>En utilisant quelques astuces et une organisation intelligente des fichiers, nous avons réussi à créer une gem qui fonctionne sur les serveurs, dans les applications lourdes, dans les navigateurs et sur mobiles. Cela permet de partager du code entre plusieurs applications.</p>
+
+<p>Vous pouvez très facilement adapter ces techniques à vos propres gems. Cela prend littéralement 20 lignes de code pour les rendre universelles.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Tri de dépendances en Ruby avec TSort]]></title>
