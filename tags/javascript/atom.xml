@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: javascript | VF svp]]></title>
   <link href="http://vfsvp.fr/tags/javascript/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-06-27T17:27:18+02:00</updated>
+  <updated>2014-07-16T20:05:51+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -12,6 +12,230 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Créer un parallaxe correct]]></title>
+    <link href="http://vfsvp.fr/article/creer-parallaxe-correct"/>
+    <updated>2014-07-16T20:00:00+02:00</updated>
+    <id>http://vfsvp.fr/article/creer-parallaxe-correct</id>
+    <content type="html"><![CDATA[<p>Source: <a href="https://medium.com/@dhg/82ced812e61c">Parallax Done Right de Dave Gamache</a></p>
+
+<p>Obtenir de bonnes performance avec un parallaxe est difficile. Voici comment s'y
+prendre.</p>
+
+<p>TL;DR Il existe un certain nombre de solutions faciles pour améliorer les
+performances d'un parallaxe aux scroll. Jetez un œil à
+<a href="http://www.davegamache.com/parallax">cette démo</a> que j'ai créée pour voir ce
+que ça donne.</p>
+
+<!-- more -->
+
+
+<p>Le parallaxe est devenu, pour le meilleur ou pour le pire, une tendance de plus
+en plus populaire sur le web. Le premier site en parallaxe que j'ai vu est Ian
+Coyle’s BetterWorld pour Nike. Je suis tombé amoureux. Je n'avais encore jamais
+vu la technique à l'époque et cela m'a donné l'impression de quitter le web
+statique quasi-PDF pour faire un pas vers le futur.</p>
+
+<p>Depuis lors, le parallaxe a explosé. Il semble que chaque jour une nouvelle page
+marketing utilise cette technique… et pour une bonne raison : correctement
+effectué, ça peut avoir un rendu génial. Le problème est qu'une grande majorité
+des sites utilisant le parallaxe souffrent de terribles performances au scroll.
+Cela se ressent particulièrement sur les appareils avec une haute densité de
+pixels comme le MacBook Pro Retina.</p>
+
+<p>J'ai pas mal expérimenté les sites parallaxe et suis arrivé à une liste non
+exhaustive de &ldquo;Faire&rdquo; et &ldquo;Ne pas faire&rdquo; qui vous aideront je l'espère à
+rester sur les rails de la performance.</p>
+
+<p>Avant de commencer, je vous encourage à regarder
+<a href="http://www.davegamache.com/parallax">la démo</a> si vous ne l'avez pas déjà fait.</p>
+
+<h2>Quelques &ldquo;Faire&rdquo;</h2>
+
+<p><strong>Utilisez uniquement des propriétés dont l'animation est peu coûteuse pour le
+navigateur.</strong> À peu de choses près, la liste est : <em>translate3d</em>, <em>scale</em>,
+<em>rotation</em> et <em>opacity</em>. Si vous utilisez autre chose il sera probablement
+difficile d'atteindre 60fps (frames per second).</p>
+
+<pre><code class="javascript">$(animation.selector)
+  .css({ 'transform': 'translate3d(' + translateX +'px, ' +   translateY + 'px, 0) scale('+ scale +')',
+ 'opacity' : opacity
+})
+</code></pre>
+
+<p><strong>Utilisez window.requestAnimationFrame</strong> lorsque vous lancez l'animation en
+JS. Cela indique au navigateur d'animer les éléments avant le prochain
+<em>repaint</em> (calcul d'affichage des éléments). Préférez cela à l'ajustement
+direct des propriétés.</p>
+
+<pre><code class="javascript">window.requestAnimationFrame(animateElements);
+</code></pre>
+
+<p><strong>Arrondissez les valeurs.</strong> Si vous déplacez un object de 100px pendant que
+l'utilisateur scroll 200px (ce qui déplace l'objet à 50% de la vitesse normale),
+ne le laissez pas prendre une valeur comme <code>54.2356345234578px</code>, arrondissez
+cela au pixel le plus proche. Vous travaillez sur l'opacité ? Deux décimales
+suffiront.</p>
+
+<pre><code class="javascript">animationValue = +animationValue.toFixed(2)
+</code></pre>
+
+<p><strong>N'animez que les éléments dans le <em>viewport</em></strong>. Continuer de passer des
+milliers de valeurs à des éléments non affichés durant le scroll n'a pas de sens
+et peut rapidement être coûteux.</p>
+
+<pre><code>Tous les exemples de code que j'ai essayé pour illustré ce point m'ont semblé
+artificiels. Le simple sera de regarder le code de la démo pour comprendre
+comment le faire.
+</code></pre>
+
+<p><strong>N'animez que les éléments en position absolute ou fixed.</strong> Je ne suis pas 100%
+sûr du pourquoi mais j'ai constaté un important gain de performance en animant
+uniquement les éléments fixed/absolute. Dès que j'applique une animation à un
+élément relative/static, les fps souffrent.</p>
+
+<pre><code class="javascript">.parallaxing-element {
+  position: fixed;
+}
+</code></pre>
+
+<p><strong>Utilisez le scroll naturel de <code>&lt;body&gt;</code></strong>. Certains navigateurs, Safari en
+particulier, subissent une réelle chute de performance lorsque l'on scroll un
+autre élément que <em>body</em>. Honnêtement, je ne vois pas de bonne raison de le
+faire. Même quand tous les éléments de la page sont en position <em>fixed</em> et
+qu'il n'y a donc pas de réelle hauteur de scroll, utilisez simplement JS pour
+donner une hauteur correcte au body pour obtenir la hauteur de scroll dont vous
+avez besoin pour effectuer votre parallaxe.</p>
+
+<p><strong>Définissez toutes vos animations dans un objet</strong> et non sous forme de code
+spaghetti. Cela n'a pratiquement rien à voir avec les performances mais rend
+les choses bien plus faciles.</p>
+
+<pre><code class="javascript">keyframes = [
+  {
+    'duration' : '150%',
+    'animations' : [
+      {
+        'selector' : '.parallaxing-element',
+        'translateY' : -120,
+        'opacity' : 0
+      } , {
+        'selector' : '.another-element',
+        'translateY' : -100,
+        'opacity' : 0
+      }
+    ]
+  }
+]
+</code></pre>
+
+<h2>Quelques &ldquo;Ne pas faire&rdquo;</h2>
+
+<p><strong>Évitez background-size:cover</strong> à moins de vous être assuré que ça n'affecte
+pas les performances. En général, ça passe tant que vous n'animez pas cet
+élément mais si vous essayez par exemple de le translater, cela risque de poser
+de sérieux problèmes. Si vous avez réellement besoin de faire du parallaxe avec
+un élément à fond dynamique, essayez d'autres techniques.</p>
+
+<p><strong>Ne vous attachez pas directement à l'événement scroll.</strong> Utilisez un
+intervalle pour mettre à jour la position des éléments. L'événement scroll est
+appelé un nombre incroyable de fois par seconde et peut causer de sérieux
+problèmes de performances. Préférez mettre à jour les positions des éléments
+toutes les 10 ms ou quelque chose comme ça.</p>
+
+<pre><code class="javascript">scrollIntervalID = setInterval(animateStuff, 10);
+</code></pre>
+
+<p><strong>N'animez pas de grosses images ou redimensionnez-les considérablement.</strong>
+Forcer le navigateur à redimensionner des images (surtout les grandes) peut être
+très coûteux. Cela ne veux pas dire qu'utiliser <em>scale</em> sur une image est mal -
+d'après mon expérience ça fonctionne même plutôt bien - mais redimensionner une
+image de 4000px à 500px n'a pas de sens et coûte juste cher.</p>
+
+<p><strong>Évitez d'animer 100 choses en même temps</strong> si vous constatez des chutes de
+performance. Honnêtement, je n'ai jamais rencontré de problème en animant
+beaucoup d'éléments (même en animant 15 choses en même temps), mais je vous
+assure que cela peut arriver. J'ai également vu des soucis apparaitre lorsqu'un
+élément parent et ses enfants sont animés en simultanément.</p>
+
+<h2>Point rapide sur la démo</h2>
+
+<p>Quelle différence peuvent faire ces quelques règles ? Une énorme différence. En
+ignorer ne serait-ce qu'une ou deux peut faire l'écart en du beurre et plus de
+saccades qu'un film de Bruce Lee.</p>
+
+<p>Notez cependant ceci, la démo :</p>
+
+<ul>
+<li><strong>est légèrement superficielle</strong> et simple</li>
+<li><strong>est loin d'être parfaite</strong> en termes d'organisation et de nombre de
+fonctionnalités</li>
+<li><strong>ignore complètement</strong> la gestion des mobiles</li>
+<li><strong>peut planter</strong> si vous scrollez comme un(e) malade parce que je n'ai pas
+implémenté de garde-fous (ce qui ne serait pas très dur cela-dit)</li>
+<li><strong>n'a pas été vraiment testée</strong> sur différentes machines parce que je voyage
+et que je n'ai que mon MacBook Pro et le MacBook Air de ma copine. <em>Update:</em>
+quelqu'un sur internet m'a signalé que sur les machines Windows ça pouvait
+saccader, je corrige ça dès que je rentre de voyage, promis !</li>
+<li>est juste une démo à but éducatif, soyez sympas :)</li>
+</ul>
+
+
+<p>Si vous voulez voir comment le code fonctionne, inspectez la page le code JS ou
+<a href="https://github.com/dhg/davegamache/tree/master/parallax">regardez le code sur Github</a>.</p>
+
+<p>Mieux encore, regardez le site marketing de Dropbox pour
+<a href="http://www.carousel.com/">Carousel</a>. Ils ont suivi à peu près toutes ces
+règles et ont gracieusement laissé
+<a href="https://www.carousel.com/static/coffee/compiled/photos/carousel-static-site/index.js">leur code JS lisible</a>
+(il est assez simple à lire). La couche de vernis appliquée est assez
+incroyable. Le site a une version mobile et ils ont même poussé jusqu'à adoucir
+leur implémentation du scroll ce qui donne un effet presque liquide (pas
+nécessaire pour atteindre 60 fps mais une touche intéressante et appréciable).
+À noter également que certaines des règles ci-dessus me sont venues à la lecture
+de leur code - un grand bravo à
+<a href="https://twitter.com/destroytoday">@destroytoday</a> qui l'a implémenté !</p>
+
+<h2>Dernières notes</h2>
+
+<p>Voici quelques astuces supplémentaires qui vous intéresseront si vous souhaitez
+vous lancer dans le développement de parallaxe.</p>
+
+<ul>
+<li>Jetez un oeil à l'article de Krister Kari sur
+<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">les performances avec parallaxe</a>.
+Il développe en profondeur certaines règles énoncées précédemment ;</li>
+<li>Utilisez l'Inspecteur Chrome et allez dans Timeline > Frames pour enregistrer
+les FPS de quelques actions ou visitez about:flags dans Chrome et activez le
+compteur de FPS (je préfère cependant la version de l'Inspecteur qui peut
+dépasser 60 fps) ;</li>
+<li>C'est une simple touche de design mais adoucir les valeurs plutôt que de
+sortir directement les valeurs linéaires apporte beauuuuucoup au succès d'un
+parallaxe. Regardez la fonction <code>easeInOutQuad</code>
+<a href="https://github.com/dhg/davegamache/blob/master/parallax/js/picasso.js">du JS</a>
+si cela vous intéresse ;</li>
+<li>Attention, il s'agit d'une technique de parallaxe. Une autre technique
+performante (potentiellement plus performante) est l'utilisation des canvas.
+Je fuis cependant cette technique pour éviter la complexité qu'elle apporte.
+Cela dit, c'est une solution tout à fait viable. Cette technique est utilisée
+par exemple par <a href="https://medium.com/@dhg/82ced812e61c">Medium</a> ;</li>
+<li>Souvenez-vous que tous les navigateurs/appareils ne seront pas capables de
+gérer le parallaxe. Pensez aux solutions de repli pour les appareils tactiles,
+les petits écrans ou encore les vieux navigateurs. Encore une fois, j'ai
+ignoré cet aspect dans la démo ;</li>
+<li>Enfin, bien que je sois fan de parallaxe, je vous encourage à vous demandez si
+cela a du sens pour votre site, s'il a une valeur ajoutée ou s'il est juste
+&ldquo;cool&rdquo;. Ces deux raisons sont bonnes mais gardez toutefois en tête que le
+parallaxe ajoute une complexité à votre code.</li>
+</ul>
+
+
+<p>Bien ! C'est tout ce que j'ai à vous dire. Si vous avez des questions, idées ou
+corrections, je serais heureux d'en discuter. Venez me voir sur Twitter @dhg ou
+laissez juste un commentaire sur <a href="https://medium.com/@dhg/82ced812e61c">Medium</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Une introduction en profondeur à Ember.js]]></title>
@@ -28,7 +252,7 @@ d'oeil. Cet article s'adresse aux débutants qui souhaitent comprendre ce
 <!-- more -->
 
 
-<p>{% raw %}
+<p>
 Il est fréquent d'entendre les utilisateurs dire que la courbe d'apprentissage
 est raide mais qu'une fois les difficultés surmontées, {l-en Ember.js} est
 tout simplement phénoménal. Ça a été également le cas pour moi. Bien que les
@@ -1681,7 +1905,7 @@ C'est ici que les discussions prennent place (et c'est fait avec {l-en Ember})</
 tout ce qu'ils savaient sur {l-en Ember.js} durant mon apprentissage. Et un
 grand merci à <a href="https://twitter.com/tomdale">Tom Dale</a>, qui m'a aidé à la
 relecture de ce bien long article.
-{% endraw %}</p>
+</p>
 
 <p><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
@@ -1868,11 +2092,11 @@ jetons un oeil à la façon dont Angular implémente les contrôleurs.</p>
 
 <p>Reprenons l'exemple vu plus haut et regardons pas à pas comment pousser des
 données dans le DOM depuis un contrôleur. Angular utilise un système de template
-qui ressemble à ceci pour parler à votre HTML : {% raw %}<code>{{ handlebars }}</code>{% endraw %}. Idéalement, votre HTML ne contient aucun texte ou valeur en dur, cela
+qui ressemble à ceci pour parler à votre HTML : <code>{{ handlebars }}</code>. Idéalement, votre HTML ne contient aucun texte ou valeur en dur, cela
 permet de tirer un maximum d'Angular. Voici un exemple dans lequel nous poussons
 une chaîne de caractères dans le DOM :</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <div ng-app="myApp">
@@ -1882,7 +2106,7 @@ une chaîne de caractères dans le DOM :</p>
 </div>
 
 
-<pre><code>{% endraw %}
+<pre><code>
 </code></pre>
 
 <p>var myApp = angular.module(&lsquo;myApp&rsquo;, []);</p>
@@ -1935,7 +2159,7 @@ myApp.controller('UserCtrl', ['$scope', function ($scope) {
 
 <p>Poussons ces données vers le DOM pour les afficher :</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <div ng-app="myApp">
@@ -1947,7 +2171,7 @@ myApp.controller('UserCtrl', ['$scope', function ($scope) {
 
 
 <p>```
-{% endraw %}</p>
+</p>
 
 <p>Résultat:</p>
 
@@ -2262,7 +2486,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 
 <p>DOM usage:</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <div ng-app="myApp">
@@ -2274,7 +2498,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 
 
 <p>```
-{% endraw %}</p>
+</p>
 
 <p>Résultat :</p>
 
@@ -2283,7 +2507,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 
 <p>Et voici comment l'utiliser dans un <code>ng-repeat</code> :</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <ul>
@@ -2291,7 +2515,7 @@ myApp.controller('MainCtrl', ['$scope', function ($scope) {
 </ul>
 
 
-<pre><code>{% endraw %}
+<pre><code>
 
 Voici également un cas d'utilisation réel de filtres dans un contrôleur :
 </code></pre>
@@ -2312,13 +2536,13 @@ Voici également un cas d'utilisation réel de filtres dans un contrôleur :
 
 <p>Et son utilisation dans <code>ng-repeat</code> :</p>
 
-<p>{% raw %}
+<p>
 <code>html
 &lt;li ng-repeat="number in numbers | filter:greaterThanNum"&gt;
   {{ number }}
 &lt;/li&gt;
 </code>
-{% endraw %}</p>
+</p>
 
 <p>Résultat :</p>
 
@@ -2344,7 +2568,7 @@ temps.</p>
 utiliser les accolades pour afficher la donnée de mon modèle (ainsi que ses
 mises à jour) dans la vue :</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <div ng-app="myApp">
@@ -2355,7 +2579,7 @@ mises à jour) dans la vue :</p>
 </div>
 
 
-<pre><code>{% endraw %}
+<pre><code>
 </code></pre>
 
 <p>myApp.controller(&lsquo;MainCtrl&rsquo;, [&lsquo;$scope&rsquo;, function ($scope) {
@@ -2469,7 +2693,7 @@ ce qui nous donne &lsquo;Todd Motto&rsquo;.</p>
 
 <p>Il nous suffit maintenant de faire ceci dans le DOM :</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <div ng-controller="UserCtrl">
@@ -2477,7 +2701,7 @@ ce qui nous donne &lsquo;Todd Motto&rsquo;.</p>
 </div>
 
 
-<pre><code>{% endraw %}
+<pre><code>
 
 Ceci va afficher le nom de l'utilisateur. Nous allons faire un pas de plus et
 comprendre le _data-binding_ déclaratif et c'est là que ça devient vraiment
@@ -2530,7 +2754,7 @@ directive</code>ng-repeat` d'Angular qui va parcourir les données et générer 
 résultat sans que nous ayant à faire de <em>callbacks</em> ou de changements d'état,
 c'est gratuit :</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <ul>
@@ -2543,7 +2767,7 @@ c'est gratuit :</p>
 
 
 <p>```
-{% endraw %}</p>
+</p>
 
 <p>Résultat :</p>
 
@@ -2643,14 +2867,14 @@ habituellement JavaScript en écrivant beaucoup de code répétitif.</p>
 modifiez le DOM en fonction de l'état des données. Angular vous permet de faire
 la même chose sans écrire une ligne de JavaScript !</p>
 
-<p>{% raw %}
+<p>
 ``` html</p>
 
 <p>{{ data.length > 0 && 'My data' || 'No data' }}</p>
 
 
 <p>```
-{% endraw %}</p>
+</p>
 
 <p>Ce morceau de DOM va être automatiquement mis à jour, sans besoin de callback,
 au fur et à mesure que votre application récupère les données. Il vous indiquera
@@ -2820,13 +3044,13 @@ d'écrire de la logique sans contrôleur.</li>
 <p>Un exemple rapide, vous pouvez utiliser <code>ng-repeat</code> sans contrôleur en
 fournissant directement les données :</p>
 
-<p>{% raw %}
+<p>
 <code>html
 &lt;li ng-repeat="number in [1,2,3,4,5,6,7,8,9]"&gt;
   {{ number }}
 &lt;/li&gt;
 </code>
-{% endraw %}</p>
+</p>
 
 <p>Pour un test rapide c'est acceptable mais je vous conseille de toujours avoir
 un contrôleur lorsque vous développez.</p>

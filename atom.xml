@@ -4,7 +4,7 @@
   <title><![CDATA[VF svp]]></title>
   <link href="http://vfsvp.fr/atom.xml" rel="self"/>
   <link href="http://vfsvp.fr/"/>
-  <updated>2014-06-27T17:27:14+02:00</updated>
+  <updated>2014-07-16T20:05:51+02:00</updated>
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
@@ -12,6 +12,236 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Créer un parallaxe correct]]></title>
+    <link href="http://vfsvp.fr/article/creer-parallaxe-correct"/>
+    <updated>2014-07-16T20:00:00+02:00</updated>
+    <id>http://vfsvp.fr/article/creer-parallaxe-correct</id>
+    <content type="html"><![CDATA[<p>Source: <a href="https://medium.com/@dhg/82ced812e61c">Parallax Done Right de Dave Gamache</a></p>
+
+<p>Obtenir de bonnes performance avec un parallaxe est difficile. Voici comment s&#8217;y
+prendre.</p>
+
+<p>TL;DR Il existe un certain nombre de solutions faciles pour améliorer les
+performances d&#8217;un parallaxe aux scroll. Jetez un œil à
+<a href="http://www.davegamache.com/parallax">cette démo</a> que j&#8217;ai créée pour voir ce
+que ça donne.</p>
+
+<!-- more -->
+
+
+<p>Le parallaxe est devenu, pour le meilleur ou pour le pire, une tendance de plus
+en plus populaire sur le web. Le premier site en parallaxe que j&#8217;ai vu est Ian
+Coyle’s BetterWorld pour Nike. Je suis tombé amoureux. Je n&#8217;avais encore jamais
+vu la technique à l&#8217;époque et cela m&#8217;a donné l&#8217;impression de quitter le web
+statique quasi-PDF pour faire un pas vers le futur.</p>
+
+<p>Depuis lors, le parallaxe a explosé. Il semble que chaque jour une nouvelle page
+marketing utilise cette technique… et pour une bonne raison : correctement
+effectué, ça peut avoir un rendu génial. Le problème est qu&#8217;une grande majorité
+des sites utilisant le parallaxe souffrent de terribles performances au scroll.
+Cela se ressent particulièrement sur les appareils avec une haute densité de
+pixels comme le MacBook Pro Retina.</p>
+
+<p>J&#8217;ai pas mal expérimenté les sites parallaxe et suis arrivé à une liste non
+exhaustive de &ldquo;Faire&rdquo; et &ldquo;Ne pas faire&rdquo; qui vous aideront je l&#8217;espère à
+rester sur les rails de la performance.</p>
+
+<p>Avant de commencer, je vous encourage à regarder
+<a href="http://www.davegamache.com/parallax">la démo</a> si vous ne l&#8217;avez pas déjà fait.</p>
+
+<h2 id="quelques-faire">Quelques &ldquo;Faire&rdquo;</h2>
+
+<p><strong>Utilisez uniquement des propriétés dont l&#8217;animation est peu coûteuse pour le
+navigateur.</strong> À peu de choses près, la liste est : <em>translate3d</em>, <em>scale</em>,
+<em>rotation</em> et <em>opacity</em>. Si vous utilisez autre chose il sera probablement
+difficile d&#8217;atteindre 60fps (frames per second).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">animation</span><span class="p">.</span><span class="nx">selector</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">css</span><span class="p">({</span> <span class="s1">&#39;transform&#39;</span><span class="o">:</span> <span class="s1">&#39;translate3d(&#39;</span> <span class="o">+</span> <span class="nx">translateX</span> <span class="o">+</span><span class="s1">&#39;px, &#39;</span> <span class="o">+</span>   <span class="nx">translateY</span> <span class="o">+</span> <span class="s1">&#39;px, 0) scale(&#39;</span><span class="o">+</span> <span class="nx">scale</span> <span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">,</span>
+</span><span class='line'> <span class="s1">&#39;opacity&#39;</span> <span class="o">:</span> <span class="nx">opacity</span>
+</span><span class='line'><span class="p">})</span>
+</span></code></pre></div></figure>
+
+
+<p><strong>Utilisez window.requestAnimationFrame</strong> lorsque vous lancez l&#8217;animation en
+JS. Cela indique au navigateur d&#8217;animer les éléments avant le prochain
+<em>repaint</em> (calcul d&#8217;affichage des éléments). Préférez cela à l&#8217;ajustement
+direct des propriétés.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nb">window</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animateElements</span><span class="p">);</span>
+</span></code></pre></div></figure>
+
+
+<p><strong>Arrondissez les valeurs.</strong> Si vous déplacez un object de 100px pendant que
+l&#8217;utilisateur scroll 200px (ce qui déplace l&#8217;objet à 50% de la vitesse normale),
+ne le laissez pas prendre une valeur comme <code>54.2356345234578px</code>, arrondissez
+cela au pixel le plus proche. Vous travaillez sur l&#8217;opacité ? Deux décimales
+suffiront.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">animationValue</span> <span class="o">=</span> <span class="o">+</span><span class="nx">animationValue</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div></figure>
+
+
+<p><strong>N&#8217;animez que les éléments dans le <em>viewport</em></strong>. Continuer de passer des
+milliers de valeurs à des éléments non affichés durant le scroll n&#8217;a pas de sens
+et peut rapidement être coûteux.</p>
+
+<pre><code>Tous les exemples de code que j'ai essayé pour illustré ce point m'ont semblé
+artificiels. Le simple sera de regarder le code de la démo pour comprendre
+comment le faire.
+</code></pre>
+
+<p><strong>N&#8217;animez que les éléments en position absolute ou fixed.</strong> Je ne suis pas 100%
+sûr du pourquoi mais j&#8217;ai constaté un important gain de performance en animant
+uniquement les éléments fixed/absolute. Dès que j&#8217;applique une animation à un
+élément relative/static, les fps souffrent.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="p">.</span><span class="nx">parallaxing</span><span class="o">-</span><span class="nx">element</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">position</span><span class="o">:</span> <span class="nx">fixed</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></div></figure>
+
+
+<p><strong>Utilisez le scroll naturel de <code>&lt;body&gt;</code></strong>. Certains navigateurs, Safari en
+particulier, subissent une réelle chute de performance lorsque l&#8217;on scroll un
+autre élément que <em>body</em>. Honnêtement, je ne vois pas de bonne raison de le
+faire. Même quand tous les éléments de la page sont en position <em>fixed</em> et
+qu&#8217;il n&#8217;y a donc pas de réelle hauteur de scroll, utilisez simplement JS pour
+donner une hauteur correcte au body pour obtenir la hauteur de scroll dont vous
+avez besoin pour effectuer votre parallaxe.</p>
+
+<p><strong>Définissez toutes vos animations dans un objet</strong> et non sous forme de code
+spaghetti. Cela n&#8217;a pratiquement rien à voir avec les performances mais rend
+les choses bien plus faciles.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">keyframes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="s1">&#39;duration&#39;</span> <span class="o">:</span> <span class="s1">&#39;150%&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s1">&#39;animations&#39;</span> <span class="o">:</span> <span class="p">[</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="s1">&#39;selector&#39;</span> <span class="o">:</span> <span class="s1">&#39;.parallaxing-element&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;translateY&#39;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;opacity&#39;</span> <span class="o">:</span> <span class="mi">0</span>
+</span><span class='line'>      <span class="p">}</span> <span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s1">&#39;selector&#39;</span> <span class="o">:</span> <span class="s1">&#39;.another-element&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;translateY&#39;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;opacity&#39;</span> <span class="o">:</span> <span class="mi">0</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">]</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></div></figure>
+
+
+<h2 id="quelques-ne-pas-faire">Quelques &ldquo;Ne pas faire&rdquo;</h2>
+
+<p><strong>Évitez background-size:cover</strong> à moins de vous être assuré que ça n&#8217;affecte
+pas les performances. En général, ça passe tant que vous n&#8217;animez pas cet
+élément mais si vous essayez par exemple de le translater, cela risque de poser
+de sérieux problèmes. Si vous avez réellement besoin de faire du parallaxe avec
+un élément à fond dynamique, essayez d&#8217;autres techniques.</p>
+
+<p><strong>Ne vous attachez pas directement à l&#8217;événement scroll.</strong> Utilisez un
+intervalle pour mettre à jour la position des éléments. L&#8217;événement scroll est
+appelé un nombre incroyable de fois par seconde et peut causer de sérieux
+problèmes de performances. Préférez mettre à jour les positions des éléments
+toutes les 10 ms ou quelque chose comme ça.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">scrollIntervalID</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="nx">animateStuff</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+</span></code></pre></div></figure>
+
+
+<p><strong>N&#8217;animez pas de grosses images ou redimensionnez-les considérablement.</strong>
+Forcer le navigateur à redimensionner des images (surtout les grandes) peut être
+très coûteux. Cela ne veux pas dire qu&#8217;utiliser <em>scale</em> sur une image est mal -
+d&#8217;après mon expérience ça fonctionne même plutôt bien - mais redimensionner une
+image de 4000px à 500px n&#8217;a pas de sens et coûte juste cher.</p>
+
+<p><strong>Évitez d&#8217;animer 100 choses en même temps</strong> si vous constatez des chutes de
+performance. Honnêtement, je n&#8217;ai jamais rencontré de problème en animant
+beaucoup d&#8217;éléments (même en animant 15 choses en même temps), mais je vous
+assure que cela peut arriver. J&#8217;ai également vu des soucis apparaitre lorsqu&#8217;un
+élément parent et ses enfants sont animés en simultanément.</p>
+
+<h2 id="point-rapide-sur-la-demo">Point rapide sur la démo</h2>
+
+<p>Quelle différence peuvent faire ces quelques règles ? Une énorme différence. En
+ignorer ne serait-ce qu&#8217;une ou deux peut faire l&#8217;écart en du beurre et plus de
+saccades qu&#8217;un film de Bruce Lee.</p>
+
+<p>Notez cependant ceci, la démo :</p>
+
+<ul>
+<li><strong>est légèrement superficielle</strong> et simple</li>
+<li><strong>est loin d&#8217;être parfaite</strong> en termes d&#8217;organisation et de nombre de
+fonctionnalités</li>
+<li><strong>ignore complètement</strong> la gestion des mobiles</li>
+<li><strong>peut planter</strong> si vous scrollez comme un(e) malade parce que je n&#8217;ai pas
+implémenté de garde-fous (ce qui ne serait pas très dur cela-dit)</li>
+<li><strong>n&#8217;a pas été vraiment testée</strong> sur différentes machines parce que je voyage
+et que je n&#8217;ai que mon MacBook Pro et le MacBook Air de ma copine. <em>Update:</em>
+quelqu&#8217;un sur internet m&#8217;a signalé que sur les machines Windows ça pouvait
+saccader, je corrige ça dès que je rentre de voyage, promis !</li>
+<li>est juste une démo à but éducatif, soyez sympas :)</li>
+</ul>
+
+
+<p>Si vous voulez voir comment le code fonctionne, inspectez la page le code JS ou
+<a href="https://github.com/dhg/davegamache/tree/master/parallax">regardez le code sur Github</a>.</p>
+
+<p>Mieux encore, regardez le site marketing de Dropbox pour
+<a href="http://www.carousel.com/">Carousel</a>. Ils ont suivi à peu près toutes ces
+règles et ont gracieusement laissé
+<a href="https://www.carousel.com/static/coffee/compiled/photos/carousel-static-site/index.js">leur code JS lisible</a>
+(il est assez simple à lire). La couche de vernis appliquée est assez
+incroyable. Le site a une version mobile et ils ont même poussé jusqu&#8217;à adoucir
+leur implémentation du scroll ce qui donne un effet presque liquide (pas
+nécessaire pour atteindre 60 fps mais une touche intéressante et appréciable).
+À noter également que certaines des règles ci-dessus me sont venues à la lecture
+de leur code - un grand bravo à
+<a href="https://twitter.com/destroytoday">@destroytoday</a> qui l&#8217;a implémenté !</p>
+
+<h2 id="dernieres-notes">Dernières notes</h2>
+
+<p>Voici quelques astuces supplémentaires qui vous intéresseront si vous souhaitez
+vous lancer dans le développement de parallaxe.</p>
+
+<ul>
+<li>Jetez un oeil à l&#8217;article de Krister Kari sur
+<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">les performances avec parallaxe</a>.
+Il développe en profondeur certaines règles énoncées précédemment ;</li>
+<li>Utilisez l&#8217;Inspecteur Chrome et allez dans Timeline > Frames pour enregistrer
+les FPS de quelques actions ou visitez about:flags dans Chrome et activez le
+compteur de FPS (je préfère cependant la version de l&#8217;Inspecteur qui peut
+dépasser 60 fps) ;</li>
+<li>C&#8217;est une simple touche de design mais adoucir les valeurs plutôt que de
+sortir directement les valeurs linéaires apporte beauuuuucoup au succès d&#8217;un
+parallaxe. Regardez la fonction <code>easeInOutQuad</code>
+<a href="https://github.com/dhg/davegamache/blob/master/parallax/js/picasso.js">du JS</a>
+si cela vous intéresse ;</li>
+<li>Attention, il s&#8217;agit d&#8217;une technique de parallaxe. Une autre technique
+performante (potentiellement plus performante) est l&#8217;utilisation des canvas.
+Je fuis cependant cette technique pour éviter la complexité qu&#8217;elle apporte.
+Cela dit, c&#8217;est une solution tout à fait viable. Cette technique est utilisée
+par exemple par <a href="https://medium.com/@dhg/82ced812e61c">Medium</a> ;</li>
+<li>Souvenez-vous que tous les navigateurs/appareils ne seront pas capables de
+gérer le parallaxe. Pensez aux solutions de repli pour les appareils tactiles,
+les petits écrans ou encore les vieux navigateurs. Encore une fois, j&#8217;ai
+ignoré cet aspect dans la démo ;</li>
+<li>Enfin, bien que je sois fan de parallaxe, je vous encourage à vous demandez si
+cela a du sens pour votre site, s&#8217;il a une valeur ajoutée ou s&#8217;il est juste
+&ldquo;cool&rdquo;. Ces deux raisons sont bonnes mais gardez toutefois en tête que le
+parallaxe ajoute une complexité à votre code.</li>
+</ul>
+
+
+<p>Bien ! C&#8217;est tout ce que j&#8217;ai à vous dire. Si vous avez des questions, idées ou
+corrections, je serais heureux d&#8217;en discuter. Venez me voir sur Twitter @dhg ou
+laissez juste un commentaire sur <a href="https://medium.com/@dhg/82ced812e61c">Medium</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Une gem Ruby universelle en 20 lignes de code]]></title>
