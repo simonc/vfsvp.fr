@@ -11,6 +11,10 @@ use Rack::Deflater
 
 class SinatraStaticServer < Sinatra::Base
 
+  get(/(.*apprendre-angular-en-un-jour-le-guide-ultime.*)/) do
+    redirect to('http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime/')
+  end
+
   get(/.+/) do
     send_sinatra_file(request.path) {404}
   end
