@@ -8,11 +8,11 @@
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
-    
+
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
+
   <entry>
     <title type="html"><![CDATA[Créer un parallaxe correct]]></title>
     <link href="http://vfsvp.fr/article/creer-parallaxe-correct"/>
@@ -236,7 +236,7 @@ corrections, je serais heureux d'en discuter. Venez me voir sur Twitter @dhg ou
 laissez juste un commentaire sur <a href="https://medium.com/@dhg/82ced812e61c">Medium</a>.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Une introduction en profondeur à Ember.js]]></title>
     <link href="http://vfsvp.fr/article/une-introduction-en-profondeur-a-emberjs"/>
@@ -1955,12 +1955,12 @@ relecture de ce bien long article.
 [EXT_SMALL]: /images/ember/console-ember-extension1-300x156.png</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Apprendre Angular en un jour, le guide ultime]]></title>
-    <link href="http://tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime"/>
+    <link href="http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime"/>
     <updated>2013-11-02T00:00:00+01:00</updated>
-    <id>http://tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime</id>
+    <id>http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime</id>
     <content type="html"><![CDATA[<p>Source: <a href="http://toddmotto.com/ultimate-guide-to-learning-angular-js-in-one-day/">Ultimate guide to learning AngularJS in one day par Todd Motto</a></p>
 
 <h2>Qu'est-ce qu'AngularJS ?</h2>
@@ -3126,5 +3126,5 @@ récupérer <a href="https://chrome.google.com/webstore/detail/angularjs-bataran
 <p>Apprenez comment <a href="http://toddmotto.com/creating-an-angularjs-directive-from-one-of-your-existing-plugins-scripts">créer votre propre directive</a> depuis un script ou un plugin.</p>
 ]]></content>
   </entry>
-  
+
 </feed>

@@ -1,9 +1,1359 @@
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta http-equiv="refresh" content="0;URL=http://tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime">
+    <meta charset="utf-8">
+    <title>Apprendre Angular en un jour, le guide ultime · VF svp</title>
+    <meta name="author" content="Simon Courtois (@simonc)" />
+    <meta name="description" content="" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="canonical" href="
+  http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime
+" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/stylesheets/style.css" media="screen" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="alternate" href="/atom.xml" title="VF svp" type="application/atom+xml" />
+
+    <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
   </head>
+
   <body>
-    Cet article est maintenant disponible sur <a href="http://tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime">Le Blog Tinci</a>
+    <div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#menu">
+        <span class="sr-only">Voir la navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">VFsvp</a>
+    </div>
+    <div id="menu" class="collapse navbar-collapse navbar-right">
+      <ul class="main-nav nav nav-pills">
+        <li><a href="/">Blog</a></li>
+        <li><a href="/blog/archives">Archives</a></li>
+        <li>
+          <a href="/atom.xml" rel="subscribe-rss" title="Suivre via RSS">
+            <i class="fa fa-rss"></i> RSS
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+
+<article class="article" role="article">
+  <div class="row">
+    <div class="col-sm-2">
+      <p class="article-date">
+
+          <span class="day">02/11</span>
+          <span class="year">2013</span>
+
+      </p>
+      <p class="article-comments-count">
+        <a href="#" title="Commentaires">0</a>
+        <i class="fa fa-comment"></i>
+      </p>
+    </div>
+    <div class="col-sm-10 article-body">
+      <header>
+
+          <h1 class="article-title">Apprendre Angular en un jour, le guide ultime</h1>
+          <div class="sharing">
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime" data-via="VFsvp" data-counturl="http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime" >Tweet</a>
+  <div class="g-plusone" data-size="medium" data-href="http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime"></div>
+</div>
+
+
+      </header>
+
+
+        <div class="article-content"><p>Source: <a href="http://toddmotto.com/ultimate-guide-to-learning-angular-js-in-one-day/">Ultimate guide to learning AngularJS in one day par Todd Motto</a></p>
+
+<h2 id="quest-ce-quangularjs">Qu&#8217;est-ce qu&#8217;AngularJS ?</h2>
+
+<p>Angular est un framework MVC/MVVM côté client, développé en JavaScript, ce qui
+est obligatoire pour faire une application moderne à page unique (ou même un
+site internet). C&#8217;est un grand bond vers le futur de HTML et vers ce que HTML5
+apporte. C&#8217;est également un grand bol d&#8217;air frais dans le monde des applications
+web modernes. Cet article est une vue de bout en bout, issue de mon expérience,
+et contient des conseils et astuces glanés au travers de mon utilisation
+d&#8217;Angular.</p>
+
+<!-- more -->
+
+
+<h2 id="terminologie">Terminologie</h2>
+
+<p>Angular a une courbe d&#8217;apprentissage assez courte qui consiste principalement à
+appréhender la terminologie et la &ldquo;pensée MVC&rdquo;. MVC signifie
+Modèle-Vue-Contrôleur. Survolons un peu les différents composants et voyons un
+peu la terminologie en jetant un oeil sur les APIs essentielles d&#8217;Angular.</p>
+
+<h3 id="mvc">MVC</h3>
+
+<p>Vous avez probablement déjà entendu parler de MVC. Utilisé dans de nombreux
+langages de programmation pour apporter une structure/architecture à une
+application. En voici les composants :</p>
+
+<dl>
+<dt>Modèle</dt>
+<dd>   structure donnée représentant une entité de l&#8217;application, généralement
+transmise en JSON. Pour bien démarrer avec Angular, quelques notions de JSON
+sont nécessaires, cela vous permettra de faire communiquer votre serveur et vos
+vues. Un groupe d&#8217;<em>id</em> d&#8217;utilisateurs pourrait par exemple ressembler à ceci :</dd>
+</dl>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;users&quot;</span> <span class="p">:</span> <span class="p">[{</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Joe Bloggs&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;82047392&quot;</span>
+</span><span class='line'>  <span class="p">},{</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;65198013&quot;</span>
+</span><span class='line'>  <span class="p">}]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></div></figure>
+
+
+<p>Vous pouvez accéder à cette information de deux façons. En passant par une XHR
+(XMLHttp Request), vous connaissez sûrement <code>$.ajax</code> en jQuery, Angular
+l&#8217;encapsule dans <code>$http</code>. L&#8217;autre méthode est de l&#8217;écrire dans le code de la
+page pour qu&#8217;elle soit chargée pendant l&#8217;interprétation (depuis un datastore ou
+une base de données). Une fois que vous avez accès à l&#8217;information, vous pouvez
+mettre à jour votre modèle et le renvoyer.</p>
+
+<dl>
+<dt>Vue</dt>
+<dd>   La vue est simple, c&#8217;est votre HTML et/ou la sortie générée. Lorsque vous
+utilisez un framework MVC, vous utilisez les données issues du Modèle pour
+mettre votre Vue à jour et afficher les bonnes informations dans votre HTML.</dd>
+<dt>Contrôleur</dt>
+<dd>   Comme son nom l&#8217;indique, cette couche contrôle des choses. Mais quelles
+choses ? Des données. Les contrôleurs permettent à votre serveur de communiquer
+avec la Vue, c&#8217;est le messager, vous pouvez donc mettre vos données à jour à la
+volée via ces canaux de communication entre le serveur et le client.</dd>
+</dl>
+
+<h3 id="mettre-en-place-un-projet-angularjs-lessentiel">Mettre en place un projet AngularJS (l&#8217;essentiel)</h3>
+
+<p>Tout d&#8217;abord, nous devons mettre en place le minimum vital d&#8217;un projet Angular.
+Nous devons mettre en place certaines choses avant de commencer. Cela revient,
+en général, à ajouter une déclaration <code>ng-app</code>, écrire un contrôleur pour parler
+à la vue puis l&#8217;inclusion d&#8217;Angular et un attachement au DOM. Voici
+l&#8217;essentiel :</p>
+
+<p>Un peu de HTML avec les déclarations <code>ng-*</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;myApp&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="c">&lt;!-- logique du contrôleur --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Un module Angular et un contrôleur :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// Magie du contrôleur</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Avant de nous lancer, nous devons créer un module Angular dans lequel nous
+allons placer toute notre logique. Il existe plusieurs manières de déclarer des
+modules et vous pouvez chaîner toute votre logique (je n&#8217;aime pas cette
+méthode) :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span><span class='line'><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{...}])</span>
+</span><span class='line'><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;NavCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{...}])</span>
+</span><span class='line'><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;UserCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{...}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>La mise en place un module global s&#8217;est révélée être la meilleure pratique sur
+les projets Angular sur lesquels j&#8217;ai travaillé. L&#8217;absence de point-virgules ou
+les fermetures accidentelles de chaîne se sont montrées contre productives et
+on souvent généré des erreurs de compilation. Préférez cette approche :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{...}]);</span>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;NavCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{...}]);</span>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;UserCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{...}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Chaque nouveau fichier que je crée utilise le namespace <code>myApp</code> ce qui le
+restreint à l&#8217;application. Oui, je crée un nouveau fichier pour chaque
+Contrôleur, Directive, Factory ou tout autre élément (vous me remercierez plus
+tard). Joignez les dans un fichier à la volée en utilisant Grunt ou un outil
+similaire.</p>
+
+<h3 id="controleurs">Contrôleurs</h3>
+
+<p>Maintenant que vous avez une idée de ce qu&#8217;est le MVC et que tout est en place,
+jetons un oeil à la façon dont Angular implémente les contrôleurs.</p>
+
+<p>Reprenons l&#8217;exemple vu plus haut et regardons pas à pas comment pousser des
+données dans le DOM depuis un contrôleur. Angular utilise un système de template
+qui ressemble à ceci pour parler à votre HTML : <code>{{ handlebars }}</code>. Idéalement, votre HTML ne contient aucun texte ou valeur en dur, cela
+permet de tirer un maximum d&#8217;Angular. Voici un exemple dans lequel nous poussons
+une chaîne de caractères dans le DOM :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;myApp&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    {{ text }}
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s1">&#39;Hello, Angular fanatic.&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Voici le Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/mN7QB/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Le concept clé ici est <code>$scope</code> que vous passez à toutes vos fonctions au sein
+d&#8217;un contrôleur. <code>$scope</code> fait référence à l&#8217;élément courant (ou zone courante)
+dans le DOM (ce qui est différent de <code>this</code>). Il encapsule intelligemment les
+données et la logique pour que celles-ci soit limitées à l&#8217;élément. Cela apporte
+un notion de publique/privé à JavaScript, ce qui est fantastique.</p>
+
+<p>Le concept de <code>$scope</code> peut faire peur de prime abord mais c&#8217;est votre canal de
+communication avec le DOM depuis le serveur (ou depuis les données statiques si
+vous en avez). La démo donne une petite idée de comment &ldquo;pousser&rdquo; des données
+dans le DOM.</p>
+
+<p>Regardons maintenant une structure de données plus représentative que nous avons
+hypothétiquement récupérée depuis le serveur pour afficher les détails de
+l&#8217;utilisateur. À partir de maintenant, j&#8217;utiliserai des données statiques, je
+vous montrerai plus tard comment récupérer dynamiquement des données JSON.</p>
+
+<p>Commençons par un peu de JavaScript :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;UserCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Créons un namespace pour les détails de l&#39;utilisateur</span>
+</span><span class='line'>    <span class="c1">// Également utile pour une aide visuelle dans le DOM</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">details</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s2">&quot;username&quot;</span><span class="o">:</span> <span class="s2">&quot;Todd Motto&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;89101112&quot;</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Poussons ces données vers le DOM pour les afficher :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;myApp&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;UserCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;username&quot;</span><span class="nt">&gt;</span>Welcome, {{ user.details.username }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>User ID: {{ user.details.id }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Résultat:</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/425KU/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Il est important de noter que les contrôleurs ont pour but de gérer les données
+et de contenir des fonctions (ou événements) qui parlent au serveur pour
+envoyer/recevoir des données JSON. Aucune manipulation du DOM ne doit y prendre
+place, pas de jQuery ici donc. La manipulation du DOM se fait par les directives
+que nous allons voir ensuite.</p>
+
+<p>Astuce : dans la documentation d&#8217;Angular (au moment de la rédaction de cet
+article) leur exemples créent un contrôleur comme ceci :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">MainCtrl</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">//...</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></div></figure>
+
+
+<p>&hellip; N&#8217;en faites rien. Cela expose toutes vos fonctions au contexte global et ne
+les cantonne pas à votre application. Cela signifie également que vous ne pouvez
+pas <em>minifier</em> votre code ou le tester facilement. Ne remplissez pas le
+namespace global et gardez vos contrôleurs dans votre application.</p>
+
+<h3 id="directives">Directives</h3>
+
+<p>Une directive (<a href="http://toddmotto.com/creating-an-angularjs-directive-from-one-of-your-existing-plugins-scripts">lisez mon article sur les directives issues de scripts/plugins
+existants [en]</a>),
+dans sa forme la plus simple, est un petit morceau de template HTML, utilisé de
+préférence à plusieurs endroits de l&#8217;application. C&#8217;est un moyen facile
+d&#8217;injecter sans effort du DOM dans votre application ou d&#8217;effectuer des
+interactions particulières avec le DOM. Les directives ne sont pas simples pour
+autant et la courbe d&#8217;apprentissage pour les maitriser est assez importante. Ce
+qui suit devrait tout de même vous donner un bon point de départ.</p>
+
+<p>À quoi servent donc les directives ? Beaucoup de choses dont la création de
+composants DOM (onglets ou éléments de navigation) - tout dépend de l&#8217;usage que
+votre application fait de l&#8217;interface utilisateur. Si vous avez, par exemple,
+joué un peu avec <code>ng-show</code> ou <code>ng-hide</code>, ce sont des directives (qui n&#8217;injectent
+pas de DOM).</p>
+
+<p>Pour cet exercice, je vais faire simple et créer un type de bouton personnalisé
+(appelé <code>customButton</code>) qui injecte quelques balises que je déteste devoir
+écrire partout. Il y a plusieurs façons de définir une directive dans le DOM.
+Voici quelques exemples :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="c">&lt;!-- 1: déclaration en tant qu&#39;attribut --&gt;</span>
+</span><span class='line'><span class="nt">&lt;a</span> <span class="na">custom-button</span><span class="nt">&gt;</span>Click me<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;!-- 2: en tant que nouvel élément --&gt;</span>
+</span><span class='line'><span class="nt">&lt;custom</span><span class="na">-button</span><span class="nt">&gt;</span>Click me<span class="err">&lt;</span>/custom-button&gt;
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;!-- 3: en tant que classe (pour être compatible avec les vieux IE) --&gt;</span>
+</span><span class='line'><span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;custom-button&quot;</span><span class="nt">&gt;</span>Click me<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;!-- 4: en tant que commentaire (peu adapté à cette démo) --&gt;</span>
+</span><span class='line'><span class="c">&lt;!-- directive: custom-button --&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Je préfère les utiliser sous forme d&#8217;attribut. Les éléments personnalisés
+feront partie de futures versions de HTML5 sous le nom de <em>Web Components</em> mais
+Angular les considère comme assez instables, en particulier pour les vieux
+navigateurs.</p>
+
+<p>Vous savez maintenant comment utiliser une directive, créons maintenant notre
+bouton. Encore une fois, j&#8217;utilise le namespace <code>myApp</code>. Voici une directive
+dans sa forme la plus simple :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;customButton&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// manipulation du DOM et événements</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></div></figure>
+
+
+<p>Je définis ma directive avec la méthode <code>.directive()</code> en lui passant le nom de
+la directive <code>'customButton'</code>. Lorsque vous capitalisez une lettre dans le nom
+d&#8217;une directive, il faut utiliser un tiret lorsque vous vous en servez (comme
+dans l&#8217;exemple vu plus haut).</p>
+
+<p>Une directive retourne une référence vers elle-même via un Object et accepte un
+certain nombre de paramètres. Selon moi, les plus importants à connaitre sont
+<code>restrict</code>, <code>replace</code>, <code>transclude</code>, <code>template</code>, <code>templateUrl</code> et, bien sûr, la
+propriété <code>link</code>. Ajoutons les :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;customButton&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">transclude</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;&lt;a href=&quot;&quot; class=&quot;myawesomebutton&quot; ng-transclude&gt;&#39;</span> <span class="o">+</span>
+</span><span class='line'>                <span class="s1">&#39;&lt;i class=&quot;icon-ok-sign&quot;&gt;&lt;/i&gt;&#39;</span> <span class="o">+</span>
+</span><span class='line'>              <span class="s1">&#39;&lt;/a&gt;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// DOM manipulation/events here!</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></div></figure>
+
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/VC4H2/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Utilisez <em>Inspecter l&#8217;Élément</em> pour vérifier que les balises ont bien été
+injectées. Je sais, il n&#8217;y a pas d&#8217;icône parce que je n&#8217;ai pas inclus <em>Font
+Awesome</em>, mais vous voyez le principe. En ce qui concerne les propriétés d&#8217;une
+directive :</p>
+
+<dl>
+<dt>restrict</dt>
+<dd>   Indique la méthode d&#8217;accès à l&#8217;élément. Si votre projet doit être
+compatible avec d&#8217;anciennes versions d&#8217;IE, préférez une déclaration de type
+attribut ou classe. Indiquer <code>'A'</code> signifie <em>attribut</em>, <code>'E'</code> signifie
+<em>élément</em>, <code>'C'</code> signifie <em>classe</em> et <code>'M'</code> signifie <em>commentaire</em>. La valeur
+par défaut est <code>'EA'</code>. Oui, il est tout à fait possible d&#8217;utiliser plusieurs
+méthodes d&#8217;accès en même temps.</dd>
+<dt>replace</dt>
+<dd>   Indique si le balisage appelant la directive doit être remplacé ou non.
+Dans l&#8217;exemple précédent, vous pouvez voir que le DOM initial est remplacé par
+le template de la directive.</dd>
+<dt>transclude</dt>
+<dd>   Indique si le DOM original doit être copié dans la directive. Dans notre
+exemple, le texte &lsquo;Click me&rsquo; apparait dans la directive lorsque celle-ci est
+affichée.</dd>
+<dt>template</dt>
+<dd>   Un template, comme ci-dessus, permet de déclarer le balisage à injecter. Il
+est préférable d&#8217;utiliser cette propriété pour de petits bouts de HTML
+uniquement. Les templates injectés sont compilés par Angular, vous pouvez donc
+utiliser des balises handlebars et les <em>bindings</em> dans ceux-ci.</dd>
+<dt>templateUrl</dt>
+<dd>   Similaire à <code>template</code>, permet de garder les templates dans leurs propres
+fichiers ou au sein de balises <code>&lt;script&gt;</code>. Cette propriété permet d&#8217;indiquer
+l&#8217;URL du template à utiliser. Pour des morceaux de HTML un peu plus complexes,
+il est préférable de les placer chacun dans un fichier spécifique, dans un
+dossier <em>templates</em> :</dd>
+</dl>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;customButton&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;templates/customButton.html&#39;</span>
+</span><span class='line'>    <span class="c1">// directive stuff...</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></div></figure>
+
+
+<p>Et dans votre fichier (nom insensible à la casse) :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="c">&lt;!-- dans customButton.html --&gt;</span>
+</span><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;&quot;</span> <span class="na">class=</span><span class="s">&quot;myawesomebutton&quot;</span> <span class="na">ng-transclude</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">&quot;icon-ok-sign&quot;</span><span class="nt">&gt;&lt;/i&gt;</span>
+</span><span class='line'><span class="nt">&lt;/a&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>L&#8217;intérêt de cette technique est que le fichier HTML va être mis en cache par le
+navigateur. Une alternative, qui n&#8217;est pas mise en cache, est de déclarer le
+template dans une balise <code>&lt;script&gt;</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/ng-template&quot;</span> <span class="na">id=</span><span class="s">&quot;customButton.html&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;myawesomebutton&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">transclude</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nx">i</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;icon-ok-sign&quot;</span><span class="o">&gt;&lt;</span><span class="err">/i&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Cela indique à Angular que c&#8217;est un <code>ng-template</code> et lui donne un ID. Angular va
+chercher le <em>ng-template</em> ou le fichier <em>*.hml</em>. Je préfère utiliser des
+fichiers <em>*.html</em>, ils sont plus faciles à gérer, augmentent les performances et
+gardent le DOM propre. Si vous avez une centaine de directives, ce sera plus
+simple pour les parcourir.</p>
+
+<h3 id="services">Services</h3>
+
+<p>Les services sont souvent une notion un peu floue. D&#8217;après mes lectures et ma
+propre expérience, les services sont plus un design pattern de style qu&#8217;un réel
+apport de fonctionnalité. J&#8217;ai lu le code source d&#8217;Angular et à priori ils sont
+très proches des factories. Ils passent par le même compilateur et semble avoir
+de nombreuses fonctionnalités en commun. Il semble que les services soient
+préférables pour <em>singleton</em> et les factories pour les fonctions plus complexes
+comme les <em>Object Literals</em> ou d&#8217;autres cas plus compliqués.</p>
+
+<p>Voici un exemple de service qui multiplie deux nombres :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;Math&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">multiply</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">y</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></div></figure>
+
+
+<p>Il s&#8217;utilise ensuite comme ceci dans un contrôleur :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// outputs 288</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">multiply</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Je sais, une multiplication ne nécessite pas un service en soi mais vous voyez
+où je veux en venir.</p>
+
+<p>Lorsque l&#8217;on crée un service (ou une factory) il faut utiliser l&#8217;injection de
+dépendance pour indiquer à Angular de le prendre en charge. Sans cela, on aura
+une erreur de compilation et notre contrôleur plantera. Vous avez sans doute
+remarqué la partie <code>function ($scope)</code> du contrôleur, c&#8217;est une simple
+injection de dépendance, c&#8217;est ici que le code doit être placé. Vous aurez
+remarqué également le <code>['$scope']</code> placé avant, j&#8217;y reviendrai plus tard. Voici
+comment utiliser une injection de dépendance pour dire à Angular que vous voulez
+utiliser un service :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="c1">// Passez Math</span>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;Math&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nb">Math</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// outputs 288</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">multiply</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<h3 id="factories">Factories</h3>
+
+<p>Passer des services aux factories devrait être assez simple, on pourrait créer
+un <em>Object Literal</em> dans une factory ou simplement fournir des méthodes plus
+avancées :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;Server&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="nx">post</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></div></figure>
+
+
+<p>Je crée ici un wrapper personnalisé pour l&#8217;objet XHR de Angular. Après injection
+de dépendance dans le contrôleur, l&#8217;utilisation est aisée :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;Server&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">Server</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">jsonGet</span> <span class="o">=</span> <span class="s1">&#39;http://myserver/getURL&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">jsonPost</span> <span class="o">=</span> <span class="s1">&#39;http://myserver/postURL&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">Server</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">jsonGet</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">Server</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">jsonPost</span><span class="p">);</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Si vous vouliez surveiller des changements côté serveur, vous pourriez mettre
+en place <code>Server.poll(jsonPoll)</code> ou, si vous utilisez par exemple un socket,
+vous pourriez mettre en place <code>Server.socket(jsonSocket)</code>. Ce mécanisme permet
+de modulariser le code et de créer des outils réutilisables tout en gardant le
+code des contrôleur à son minimum.</p>
+
+<h3 id="filtres">Filtres</h3>
+
+<p>Les filtres sont utiles avec les tableaux de données mais également en dehors
+des boucles. Si vous parcourez une collection de données et que vous souhaitez
+les filtrer, vous êtes au bon endroit. Les filtres peuvent également s&#8217;utiliser
+pour filtrer la saisie d&#8217;un utilisateur dans un champ <code>&lt;input&gt;</code> par exemple. Les
+filtres s&#8217;utilisent de deux façons : dans un contrôleur ou sous forme de
+méthode. Voici la version en méthode, qui peut s&#8217;utiliser partout :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;reverse&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">input</span><span class="p">,</span> <span class="nx">uppercase</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">out</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">input</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">out</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="o">+</span> <span class="nx">out</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">uppercase</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">out</span> <span class="o">=</span> <span class="nx">out</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">out</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Contrôleur inclus pour fournir des données</span>
+</span><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">greeting</span> <span class="o">=</span> <span class="s1">&#39;Todd Motto&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>DOM usage:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;myApp&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>Sans filtre: {{ greeting }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>Reverse: {{ greeting | reverse }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/pmh4s/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Et voici comment l&#8217;utiliser dans un <code>ng-repeat</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;number in myNumbers |filter:oddNumbers&quot;</span><span class="nt">&gt;</span>{{ number }}<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Voici également un cas d&#8217;utilisation réel de filtres dans un contrôleur :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">lowerBound</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Does the Filters</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">greaterThanNum</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">item</span> <span class="o">&gt;</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">lowerBound</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Et son utilisation dans <code>ng-repeat</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;number in numbers | filter:greaterThanNum&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  {{ number }}
+</span><span class='line'><span class="nt">&lt;/li&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/cZbCf/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>Voilà notre tour des briques majeures d&#8217;Angular terminé. Ce n&#8217;est que le tout
+début de notre plongée en eaux profondes, mais c&#8217;est amplement suffisant pour
+vous permettre de créer votre première application Angular.</p>
+
+<h2 id="binding-de-donnees-a-deux-sens">Binding de données à deux sens</h2>
+
+<p>La première fois que j&#8217;ai entendu parler de <em>binding</em> de données à deux sens, je
+n&#8217;étais pas sûr de bien comprendre. La meilleure façon de le décrire est sous la
+forme d&#8217;un cercle de données synchronisées : si le modèle est mis à jour, la vue
+est mise à jour automatiquement ; si la vue est mise à jour, le modèle est
+automatiquement mis à jour. Cela veut dire que sans rien faire, la donnée est
+synchronisée. Si je <em>bind</em> un <code>ng-model</code> à un <code>&lt;input&gt;</code> et commence à taper dans
+ce dernier, cela crée un modèle (ou met à jour un modèle existant) en même
+temps.</p>
+
+<p>Je crée ici le <code>&lt;input&gt;</code> et lui <em>bind</em> un modèle <code>myModel</code>, je peux ensuite
+utiliser les accolades pour afficher la donnée de mon modèle (ainsi que ses
+mises à jour) dans la vue :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;myApp&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;myModel&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Start typing...&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>My model data: {{ myModel }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// On capture la donnée du modèle</span>
+</span><span class='line'>  <span class="c1">// et/ou on l&#39;initialise avec une chaîne de caractères vide</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">myModel</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/qrr3q/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2 id="appels-xhr-slash-ajax-slash-$http-et-binding-json">Appels XHR/Ajax/$http et binding JSON</h2>
+
+<p>Vous savez maintenant comment envoyer des données à <code>$scope</code> et comment
+fonctionne le <em>binding</em> de données dans les modèles. Il est donc maintenant
+temps de simuler quelques XHR vers le serveur. Ce n&#8217;est pas essentiel pour un
+site web classique, à moins d&#8217;avoir des besoins Ajax spécifiques, c&#8217;est donc
+plus orienté vers la récupération de données pour une application web.</p>
+
+<p>En développement local, vous utilisez probablement Java, ASP .NET, PHP ou une
+autre techno pour faire tourner l&#8217;application. Que vous contactiez une bonne de
+données locale ou que vous utilisiez ce serveur comme une API pour communiquer
+avec une autre ressource, la mise en place est globalement la même.</p>
+
+<p>C&#8217;est ici que &lsquo;dollar http&rsquo; entre en scène. C&#8217;est dorénavant votre meilleur ami.
+La méthode <code>$http</code> d&#8217;Angular est un <em>wrapper</em> bien pratique pour accéder aux
+données du serveur et est d&#8217;une utilisation très simple. Voici un petit exemple
+pour une requête <em>GET</em> qui, comme vous l&#8217;aurez deviné, récupère des données
+depuis le serveur. Sa syntaxe est très proche de celle de jQuery, la transition
+est donc aisée :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$http</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;//localhost:9000/someUrl&#39;</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Angular vous retourne ce qu&#8217;on appelle une <em>promise</em> ce qui est une façon très
+efficace et lisible de gérer les <em>callbacks</em>. Les <em>promises</em> sont rattachées à
+la fonction qui les as créées via la notation <code>.myPromise()</code>. Tout
+naturellement, nous avons la main sur <code>success</code> et <code>error</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$http</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;//localhost:9000/someUrl&#39;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// données récupérées avec succès</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// erreur de récupération :(</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Tout à fait lisible. C&#8217;est ici que nous fusionnons la vue et le serveur en
+y attachant un modèle ou en mettant le modèle à jour dans le DOM. Disons que
+tout est déjà mis en place et affichons un nom d&#8217;utilisateur dans le DOM à
+partir d&#8217;un appel Ajax.</p>
+
+<p>En théorie, nous devrions concevoir notre JSON en premier, ce qui affecte la
+façon dont on l&#8217;attache à nos données. Faisons simple, voici ce que le serveur
+nous fournit :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Todd Motto&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;80138731&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></div></figure>
+
+
+<p>Nous allons recevoir un <em>Object</em> (que nous appellerons <em>data</em>, on peut voir que
+<em>data</em> est passé à notre handler) et devons interagir avec la propriété
+<code>data.user</code>. Dans <code>data.user</code>, nous trouvons <code>name</code> et <code>id</code>. Obtenir leur valeur
+est assez simple, il nous suffit par exemple de faire appel à <code>data.user.name</code>
+ce qui nous donne &lsquo;Todd Motto&rsquo;.</p>
+
+<p>Le code JavaScript :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;UserCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Crée un Object user</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Initialise le modèle avec une chaîne vide</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Nous voulons effectuer la requête</span>
+</span><span class='line'>  <span class="c1">// et obtenir le nom de l&#39;utilisateur</span>
+</span><span class='line'>  <span class="nx">$http</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;//localhost:9000/someUrlForGettingUsername&#39;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Ici nous assignons cet utilisateur à</span>
+</span><span class='line'>    <span class="c1">// notre modèle existant !</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Une erreur est survenue</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Il nous suffit maintenant de faire ceci dans le DOM :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;UserCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;p&gt;</span>{{ user.username }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Ceci va afficher le nom de l&#8217;utilisateur. Nous allons faire un pas de plus et
+comprendre le <em>data-binding</em> déclaratif et c&#8217;est là que ça devient vraiment
+intéressant.</p>
+
+<h2 id="data-binding-declaratif">Data-binding déclaratif</h2>
+
+<p>La philosophie d&#8217;Angular est de créer du HTML dynamique, riche en
+fonctionnalités et d&#8217;effectuer, de façon transparente, beaucoup de choses dont
+on n&#8217;oserait à peine rêver côté web client. Et c&#8217;est exactement ce qu&#8217;ils ont
+fait.</p>
+
+<p>Imaginons que nous venons de faire une requête Ajax pour récupérer une liste
+d&#8217;emails avec leur sujet ainsi que leur date d&#8217;envoi et souhaitons les afficher
+dans le DOM. C&#8217;est là qu&#8217;Angular montre toute sa force. Nous allons tout
+d&#8217;abord devoir écrire un contrôleur d&#8217;emails :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;EmailsCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Crée un Object emails</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">emails</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Nous écrivons ici en dur les données normalement</span>
+</span><span class='line'>  <span class="c1">// reçues du serveur</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">emails</span><span class="p">.</span><span class="nx">messages</span> <span class="o">=</span> <span class="p">[{</span>
+</span><span class='line'>        <span class="s2">&quot;from&quot;</span><span class="o">:</span> <span class="s2">&quot;Steve Jobs&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;subject&quot;</span><span class="o">:</span> <span class="s2">&quot;I think I&#39;m holding my phone wrong :/&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;sent&quot;</span><span class="o">:</span> <span class="s2">&quot;2013-10-01T08:05:59Z&quot;</span>
+</span><span class='line'>    <span class="p">},{</span>
+</span><span class='line'>        <span class="s2">&quot;from&quot;</span><span class="o">:</span> <span class="s2">&quot;Ellie Goulding&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;subject&quot;</span><span class="o">:</span> <span class="s2">&quot;I&#39;ve got Starry Eyes, lulz&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;sent&quot;</span><span class="o">:</span> <span class="s2">&quot;2013-09-21T19:45:00Z&quot;</span>
+</span><span class='line'>    <span class="p">},{</span>
+</span><span class='line'>        <span class="s2">&quot;from&quot;</span><span class="o">:</span> <span class="s2">&quot;Michael Stipe&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;subject&quot;</span><span class="o">:</span> <span class="s2">&quot;Everybody hurts, sometimes.&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;sent&quot;</span><span class="o">:</span> <span class="s2">&quot;2013-09-12T11:38:30Z&quot;</span>
+</span><span class='line'>    <span class="p">},{</span>
+</span><span class='line'>        <span class="s2">&quot;from&quot;</span><span class="o">:</span> <span class="s2">&quot;Jeremy Clarkson&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;subject&quot;</span><span class="o">:</span> <span class="s2">&quot;Think I&#39;ve found the best car... In the world&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;sent&quot;</span><span class="o">:</span> <span class="s2">&quot;2013-09-03T13:15:11Z&quot;</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Nous devons maintenant faire le lien avec notre HTML. C&#8217;est là que nous allons
+utiliser le <em>binding</em> déclaratif pour indiquer ce que va faire l&#8217;application -
+créer notre premier morceau de HTML dynamique. Nous allons utiliser la
+directive <code>ng-repeat</code> d&#8217;Angular qui va parcourir les données et générer un
+résultat sans que nous ayant à faire de <em>callbacks</em> ou de changements d&#8217;état,
+c&#8217;est gratuit :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;message in emails.messages&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>From: {{ message.from }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>Subject: {{ message.subject }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;p&gt;</span>{{ message.sent | date:&#39;MMM d, y h:mm:ss a&#39; }}<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/TAVQc/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<p>J&#8217;ai également ajouté un <em>filtre</em> pour vous montrer comment afficher
+correctement une date UTC.</p>
+
+<p>Documentez vous sur les directives <code>ng-*</code> d&#8217;Angular, cela vous permettra
+d&#8217;exploiter pleinement le <em>binding</em> de directives, cela vous montre comment
+faire le lien entre les données du serveur, la couche modèle et la vue et
+comment afficher les données.</p>
+
+<h2 id="les-fonctions-de-scope">Les fonctions de <em>scope</em></h2>
+
+<p>Après le <em>binding</em> de directives, les fonctions de <em>scope</em> sont la suite logique
+dans la création d&#8217;une application. Voici une fonction assez simple nous
+permettant de supprimer un email dans notre collection :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">deleteEmail</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">emails</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Astuce: Il est important de penser en termes de suppression au niveau du modèle.
+Vous ne touchez à rien de ce qui concerne le DOM, Angular est un framework MVC
+et se charge de tout grâce à son binding de données à deux sens et à son
+fonctionnement sans callbacks, il vous suffit d&#8217;organiser votre code de façon
+à ce qu&#8217;il réponde à vos données !</p>
+
+<p>L&#8217;attachement des fonctions au scope se fait également par le biais des
+directives <code>ng-*</code>, dans le cas suivant, il s&#8217;agit de <code>ng-click</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">ng-click=</span><span class="s">&quot;deleteEmail($index)&quot;</span><span class="nt">&gt;</span>Delete email<span class="nt">&lt;/a&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Ceci est très différent d&#8217;un événement <em>click</em> inline et ce pour plusieurs
+raisons dont je vous parlerai bientôt. Comme vous pouvez le voir, je passe
+<code>$index</code> en paramètre. Angular sait quel élément vous êtes en train de
+supprimer :</p>
+
+<p>Résulat (supprimez quelques emails !) :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/BgZmt/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2 id="methodes-de-dom-declaratives">Méthodes de DOM déclaratives</h2>
+
+<p>Nous allons maintenant voir les méthodes de DOM. Elles sont commes les
+directives et permettent d&#8217;ajouter au DOM des fonctionnalités pour lesquelles
+vous auriez, en temps normal, beaucoup de code à écrire. Un très bon exemple
+serait une navigation déroulante. En utilisant <code>ng-show</code> et <code>ng-click</code> nous
+pouvons mettre cela en place très simplement :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;&quot;</span> <span class="na">ng-click=</span><span class="s">&quot;toggle = !toggle&quot;</span><span class="nt">&gt;</span>Afficher menu<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">ng-show=</span><span class="s">&quot;toggle&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>Lien 1<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>Lien 2<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;li&gt;</span>Lien 3<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>C&#8217;est ici que MVVM entre en jeu. Comme vous pouvez le voir, il n&#8217;y a pas de
+contrôleur à écrire. Nous reviendrons bientôt sur MVVM.</p>
+
+<p>Résultat (vous pouvez dérouler le menu) :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/ZUyW5/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2 id="les-expressions">Les expressions</h2>
+
+<p>C&#8217;est une des choses que je préfère dans Angular, ce pour quoi on utilise
+habituellement JavaScript en écrivant beaucoup de code répétitif.</p>
+
+<p>Avez-vous déjà fait ceci ?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">elem</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">otherElem</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">&#39;No data&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">otherElem</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">&#39;My data&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></div></figure>
+
+
+<p>Ce pourrait par exemple être le callback d&#8217;une requête <em>GET</em> dans lequel vous
+modifiez le DOM en fonction de l&#8217;état des données. Angular vous permet de faire
+la même chose sans écrire une ligne de JavaScript !</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;p&gt;</span>{{ data.length &gt; 0 <span class="err">&amp;&amp;</span> &#39;My data&#39; || &#39;No data&#39; }}<span class="nt">&lt;/p&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Ce morceau de DOM va être automatiquement mis à jour, sans besoin de callback,
+au fur et à mesure que votre application récupère les données. Il vous indiquera
+si des données sont présentes ou non. Il y a une de très nombreux cas d&#8217;usage et
+Angular le gère automatiquement grâce au binding de données à deux sens.</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/XCwcr/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2 id="routage-et-vues-dynamiques">Routage et vues dynamiques</h2>
+
+<p>La philosophie des applications côté client (et des applications web en
+général) est assez simple : Vous avez un header, un footer, une sidebar et le
+contenu au milieu injecte du contenu par magie en fonction de l&#8217;URL.</p>
+
+<p>Angular facilite beaucoup la mise en place d&#8217;un tel mécanisme, ce qu&#8217;on
+appellerait les vues dynamiques. Les vues sont injectées dynamiquement au
+travers de <code>$routeProvider</code>, en fonction de l&#8217;URL.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">   * $routeProvider</span>
+</span><span class='line'><span class="cm">   */</span>
+</span><span class='line'>  <span class="nx">$routeProvider</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;views/main.html&#39;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">otherwise</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">redirectTo</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Lorsque vous êtes sur l&#8217;URL <code>/</code> (la page d&#8217;accueil du site), le template utilisé
+est <code>main.html</code>. Vous devez appeler votre vue initiale <code>main.html</code> puisque vous
+avez déjà un fichier <code>index.html</code> contenant votre site en page unique. Il est
+très simple d&#8217;ajouter des vues supplémentaires en fonction de l&#8217;URL :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">   * $routeProvider</span>
+</span><span class='line'><span class="cm">   */</span>
+</span><span class='line'>  <span class="nx">$routeProvider</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;views/main.html&#39;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/emails&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;views/emails.html&#39;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">otherwise</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">redirectTo</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Nous pouvons par exemple charger le HTML de notre liste d&#8217;emails quand on visite
+l&#8217;URL <code>emails.html</code>. Vous pouvez créer une application sophistiquée avec assez
+peu d&#8217;efforts.</p>
+
+<p><code>$routeProvider</code> propose d&#8217;autres fonctionnalités qui valent la peine de
+fouiller un peu, mais avec ceci vous avez déjà de quoi faire des choses
+intéressantes. Il y a, par exemple, les intercepteurs <code>$http</code> qui émettent des
+événements lorsqu&#8217;une requête Ajax est en cours, ce qui permettrait d&#8217;afficher
+un spinner pendant que les données sont récupérées.</p>
+
+<h2 id="donnees-statiques-globales">Données statiques globales</h2>
+
+<p>Gmail récupère une bonne partie de ses données en les écrivant en JSON dans la
+page (inspectez les sources de la page). Si vous voulez accéder instantanément à
+vos données dès le chargement de l&#8217;application et accélérer son lancement, cette
+technique est très pratique.</p>
+
+<p>Lorsque je développe nos applications, des balises issues de Java sont insérez
+dans le DOM et, une fois l&#8217;application chargée, les données viennent du serveur.
+Je parle ici de Java mais vous pouvez utiliser n&#8217;importe quel langage côté
+serveur. Voici comment ajouter le JSON dans votre page et comment le charger
+ensuite depuis un contrôleur :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="c">&lt;!-- dans index.html (en bas de page) --&gt;</span>
+</span><span class='line'><span class="nt">&lt;script&gt;</span>
+</span><span class='line'><span class="nb">window</span><span class="p">.</span><span class="nx">globalData</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'><span class="nx">globalData</span><span class="p">.</span><span class="nx">emails</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">baliseJavaPourGenererLesMessages</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Ma balise Java va être remplacée par les bonnes données au moment de l&#8217;affichage
+et Angular va affiche instantanément les emails. Récupérez simplement les
+données dans un contrôleur :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;EmailsCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">emails</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Assigner les données initiales !</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">emails</span><span class="p">.</span><span class="nx">messages</span> <span class="o">=</span> <span class="nx">globalData</span><span class="p">.</span><span class="nx">emails</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<h2 id="minification-reduction-du-code">Minification (réduction du code)</h2>
+
+<p>Je vais parler rapidement de minification avec le code Angular. Vous avez
+probablement joué un peu avec Angular et avez peut-être utilisé un
+<em>minifier</em>&hellip; et eu une erreur !</p>
+
+<p>Minifier le code AngularJS est simple, vous devez simplement spécifier les
+injections de dépendances dans un tableau, avant la fonction :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;Dependency&#39;</span><span class="p">,</span> <span class="s1">&#39;Service&#39;</span><span class="p">,</span> <span class="s1">&#39;Factory&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">Dependency</span><span class="p">,</span> <span class="nx">Service</span><span class="p">,</span> <span class="nx">Factory</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// code</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Une fois minifié :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='javascript'><span class='line'><span class="nx">myApp</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;Dependency&#39;</span><span class="p">,</span> <span class="s1">&#39;Service&#39;</span><span class="p">,</span> <span class="s1">&#39;Factory&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">,</span><span class="nx">c</span><span class="p">,</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// a = $scope</span>
+</span><span class='line'>  <span class="c1">// b = Dependency</span>
+</span><span class='line'>  <span class="c1">// c = Service</span>
+</span><span class='line'>  <span class="c1">// d = Factory</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// $scope alias usage</span>
+</span><span class='line'>  <span class="nx">a</span><span class="p">.</span><span class="nx">someFunction</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{...};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></div></figure>
+
+
+<p>Rappelez-vous bien de garder la liste des injections dans le même ordre que les
+paramètres de la fonction, vous risqueriez un bon mal de crâne dans le cas
+contraire.</p>
+
+<h2 id="differences-avec-mvc-et-mvvm">Différences avec MVC et MVVM</h2>
+
+<p>Nous arrivons à la fin de ce long article sur AngularJS. Je vais cependant faire
+une passe rapide sur les différences avec MVC/MVVM dont AngularJS est fier :</p>
+
+<ul>
+<li><em>MVC</em>: parle avec un contrôleur, Modèle-Vue-Contrôleur</li>
+<li><em>MVVM</em>: encapsule une <em>binding</em> de données décalaratif qui, téchniquement, se
+parle à lui-même. Modèle-Vue-Vue-Modèle. Le modèle parle à la vue et la vue
+peut parler au modèle. Le binding de données à deux sens d&#8217;Angular permet de
+garder cette synchronisation sans rian avoir à écrire. Cela vous permet
+d&#8217;écrire de la logique sans contrôleur.</li>
+</ul>
+
+
+<p>Un exemple rapide, vous pouvez utiliser <code>ng-repeat</code> sans contrôleur en
+fournissant directement les données :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;number in [1,2,3,4,5,6,7,8,9]&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  {{ number }}
+</span><span class='line'><span class="nt">&lt;/li&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Pour un test rapide c&#8217;est acceptable mais je vous conseille de toujours avoir
+un contrôleur lorsque vous développez.</p>
+
+<p>Résultat :</p>
+
+<iframe width="100%" height="300" src="http://jsfiddle.net/toddmotto/C9GHF/embedded/result,js,html" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+
+<h2 id="html5-web-components">HTML5 Web Components</h2>
+
+<p>Comme nous l&#8217;avons vu plus haut, AngularJS permet de créer des éléments
+personnalisés :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="nt">&lt;myCustomElement&gt;&lt;/myCustomElement&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Cela permet d&#8217;aligner le web avec le futur de HTML5 qui introduit les <em>web
+components</em> et l&#8217;élément <code>&lt;template&gt;</code>. Angular nous permet de les utiliser dès
+aujourd&#8217;hui. Les <em>web components</em> mélangent éléments personnalisés et injection
+dynamique de JavaScript pour peupler dynamiquement la vue, c&#8217;est très excitant
+et déjà possible avec Angular ! Ils ont un cran d&#8217;avance et permettent de
+s&#8217;assurer que ce qui arrive fonctionne - chapeau bas.</p>
+
+<h2 id="commentaires-de-scope">Commentaires de scope</h2>
+
+<p>Les commentaires de scopes sont, selon moi, utiles dans mon workflow. Plutôt que
+d&#8217;ajouter des commentaires comme ceci dans mon HTML :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="c">&lt;!-- header --&gt;</span>
+</span><span class='line'><span class="nt">&lt;header&gt;</span>
+</span><span class='line'>  Stuff.
+</span><span class='line'><span class="nt">&lt;/header&gt;</span>
+</span><span class='line'><span class="c">&lt;!-- /header --&gt;</span>
+</span></code></pre></div></figure>
+
+
+<p>Lorsque l&#8217;on parle d&#8217;Angular, il faut penser en termes de vues et de scopes, pas
+de DOM ! Les scopes sont cloisonnés, ce qui signifie que, à moins de partager
+délibérément les données entre les contrôleurs, vos données sont encapsulées et
+inaccessibles de l&#8217;extérieur. Je trouve que noter les régions cloisonnées aide
+beaucoup :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><pre><code class='html'><span class='line'><span class="c">&lt;!-- scope: MainCtrl --&gt;</span>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="c">&lt;!-- /scope: MainCtrl --&gt;</span>
+</span></code></pre></div></figure>
+
+
+<h2 id="debugger-angularjs">Debugger AngularJS</h2>
+
+<p>Il y a une extension Chrome géniale que les gens de Google recommandent pour
+développer et debugger avec Angular, il s&#8217;agit de Batarang et vous pouvez la
+récupérer <a href="https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk">ici</a>.</p>
+
+<p>Happy coding.</p>
+
+<h2 id="a-lire-egalement">À lire également</h2>
+
+<p>Apprenez comment <a href="http://toddmotto.com/creating-an-angularjs-directive-from-one-of-your-existing-plugins-scripts">créer votre propre directive</a> depuis un script ou un plugin.</p>
+</div>
+
+        <footer>
+          <p class="meta">
+
+
+
+<span class="byline author vcard">Posted by <span class="fn">Simon Courtois (simonc)</span></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-02T00:00:00+01:00" pubdate data-updated="true">02/11/2013</time>
+
+
+<span class="categories">
+
+    <a class='category' href='/tags/angular/'>angular</a>, <a class='category' href='/tags/javascript/'>javascript</a>
+
+</span>
+
+
+          </p>
+          <p class="meta">
+
+              <a class="basic-alignment left" href="/article/elixir-pour-les-rubyists-2" title="Previous Post: Elixir pour les rubyists (partie 2)">&laquo; Elixir pour les rubyists (partie 2)</a>
+
+
+              <a class="basic-alignment right" href="/article/guide-de-migration-vers-capistrano-3" title="Next Post: Guide de migration vers Capistrano 3">Guide de migration vers Capistrano 3 &raquo;</a>
+
+          </p>
+        </footer>
+
+        <section>
+          <h1>Commentaires</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
+
+    </div>
+  </div>
+</article>
+
+
+        </div>
+
+        <aside class="sidebar col-sm-3">
+          <section>
+  <h1>VF svp</h1>
+  <p>VF svp est un projet communautaire de traduction d'articles techniques.
+    Pour proposer une traduction, rendez-vous sur
+    <a href="http://github.com/simonc/vfsvp.fr" title="Page Github du projet VF svp">le Github du projet</a>.</p>
+</section>
+<section>
+  <h1>Recherche</h1>
+  <form role="search" action="http://google.com/search" method="get">
+    <div class="form-group">
+      <input type="hidden" name="q" value="site:vfsvp.fr" />
+      <input type="text" name="q" results="0" class="form-control" placeholder="Rechercher..." />
+    </div>
+  </form>
+</section>
+
+<section>
+  <h1>Twitter</h1>
+  <p><a href="https://twitter.com/VFsvp">@VFsvp</a> sur Twitter</p>
+</section>
+
+<section>
+  <h1>Sponsors</h1>
+  <p>
+    <a href="http://www.tinci.fr"><img src="/images/sponsors/tinci.png" alt="Tinci" /></a>
+  </p>
+</section>
+
+        </aside>
+      </div>
+    </div>
+
+    <footer class="text-center">
+      <footer role="contentinfo">
+  <p>Copyright © 2014 - Simon Courtois (@simonc) -
+    <span class="credit">Publié grâce à
+    <a href="http://octopress.org">Octopress</a></span></p>
+</footer>
+
+    </footer>
+    <script type="text/javascript">
+  var disqus_shortname = 'vfsvp';
+
+
+    var disqus_identifier = 'http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime';
+    var disqus_url = 'http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime';
+    var disqus_script = 'embed.js';
+
+
+  (function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15419839-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
   </body>
 </html>

@@ -8,11 +8,11 @@
   <id>http://vfsvp.fr/</id>
   <author>
     <name><![CDATA[Simon Courtois (@simonc)]]></name>
-    
+
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
+
   <entry>
     <title type="html"><![CDATA[Créer un parallaxe correct]]></title>
     <link href="http://vfsvp.fr/article/creer-parallaxe-correct"/>
@@ -242,7 +242,7 @@ corrections, je serais heureux d&#8217;en discuter. Venez me voir sur Twitter @d
 laissez juste un commentaire sur <a href="https://medium.com/@dhg/82ced812e61c">Medium</a>.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Une gem Ruby universelle en 20 lignes de code]]></title>
     <link href="http://vfsvp.fr/article/gem-universelle-en-20-lignes"/>
@@ -442,7 +442,7 @@ laissez juste un commentaire sur <a href="https://medium.com/@dhg/82ced812e61c">
 <p>Vous pouvez très facilement adapter ces techniques à vos propres gems. Cela prend littéralement 20 lignes de code pour les rendre universelles.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Tri de dépendances en Ruby avec TSort]]></title>
     <link href="http://vfsvp.fr/article/dependency-sorting-in-ruby-with-tsort"/>
@@ -578,7 +578,7 @@ dépendances, rassurez-vous,
 disponible en un clic.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Une introduction en profondeur à Ember.js]]></title>
     <link href="http://vfsvp.fr/article/une-introduction-en-profondeur-a-emberjs"/>
@@ -2363,7 +2363,7 @@ relecture de ce bien long article.</p>
 
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Guide de migration vers Capistrano 3]]></title>
     <link href="http://vfsvp.fr/article/guide-de-migration-vers-capistrano-3"/>
@@ -2662,7 +2662,7 @@ un mélange puissant. Quoi qu&#8217;il en soit, certaines bibliothèques comme
 écrire leurs règles vous-même.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Apprendre Angular en un jour, le guide ultime]]></title>
     <link href="http://www.tinci.fr/blog/apprendre-angular-en-un-jour-le-guide-ultime"/>
@@ -3785,7 +3785,7 @@ récupérer <a href="https://chrome.google.com/webstore/detail/angularjs-bataran
 <p>Apprenez comment <a href="http://toddmotto.com/creating-an-angularjs-directive-from-one-of-your-existing-plugins-scripts">créer votre propre directive</a> depuis un script ou un plugin.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Elixir pour les rubyists (partie 2)]]></title>
     <link href="http://vfsvp.fr/article/elixir-pour-les-rubyists-2"/>
@@ -3952,7 +3952,7 @@ vous ne changez sa valeur que pour le contexte de cette fonction.</p>
 <p>Voici la fin de la partie 2. À bientôt pour la partie 3.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Git est une structure de données purement fonctionnelle]]></title>
     <link href="http://vfsvp.fr/article/Git-est-une-structure-de-donnees-purement-fonctionnelle"/>
@@ -4307,7 +4307,7 @@ simple et le fait que dans toute structure de données fonctionnelle, rien n&#82
 jamais réellement perdu et peut être retrouvé (regardez <code>reflog</code>).</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Elixir pour les rubyists (partie 1)]]></title>
     <link href="http://vfsvp.fr/article/elixir-pour-les-rubyists-1"/>
@@ -4460,7 +4460,7 @@ fournit quelques fonctions bien connues des rubyists, comme <code>each</code> pa
 <p>C&#8217;est tout pour cette première partie. À bientôt pour <a href="http://vfsvp.fr/article/elixir-pour-les-rubyists-2">la deuxième</a>.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[6 façons de réduire la souffrance due aux tests fonctionnels avec Rails]]></title>
     <link href="http://vfsvp.fr/article/6-facons-de-reduire-la-souffrance-des-tests-fonctionnels-avec-Rails"/>
@@ -4815,7 +4815,7 @@ pour toujours. Refactorez de façon agressive, concevez intelligemment et aimez
 vos tests fonctionnels.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Les méthodes pack et unpack en Ruby]]></title>
     <link href="http://vfsvp.fr/article/les-methodes-pack-et-unpack-en-ruby"/>
@@ -5115,7 +5115,7 @@ un exemple :</p>
 valides.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (3/3)]]></title>
     <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-3-sur-3"/>
@@ -5341,7 +5341,7 @@ deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temp
 libre, elle pratique l&#8217;art martial appelé Naginata.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (2/3)]]></title>
     <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-2-sur-3"/>
@@ -5551,7 +5551,7 @@ deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temp
 libre, elle pratique l&#8217;art martial appelé Naginata.</p>
 ]]></content>
   </entry>
-  
+
   <entry>
     <title type="html"><![CDATA[Utiliser les Expressions Régulières en Ruby (1/3)]]></title>
     <link href="http://vfsvp.fr/article/utiliser-les-expressions-regulieres-en-ruby-1-sur-3"/>
@@ -5838,5 +5838,5 @@ deux mondes, elle s&#8217;efforce de créer une expérience unique. Sur son temp
 libre, elle pratique l&#8217;art martial appelé Naginata.</p>
 ]]></content>
   </entry>
-  
+
 </feed>
